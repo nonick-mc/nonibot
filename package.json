@@ -6,7 +6,7 @@
     "dev": "turbo run dev",
     "build": "turbo run build",
     "bot": "pnpm -C ./apps/bot",
-    "dashboard": "pnpm -C ./apps/dashboard",
+    "web": "pnpm -C ./apps/web",
     "database": "pnpm -C ./packages/database"
   },
   "engines": {
