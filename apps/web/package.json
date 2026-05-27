@@ -9,6 +9,11 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",
+    "@better-auth/infra": "^0.2.8",
+    "@repo/database": "workspace:*",
+    "better-auth": "^1.6.11",
+    "drizzle-orm": "catalog:",
+    "pg": "catalog:",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.475.0",
