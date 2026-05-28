@@ -29,6 +29,7 @@ export const auth = betterAuth({
       clientId: process.env.DISCORD_CLIENT_ID as string,
       clientSecret: process.env.DISCORD_CLIENT_SECRET as string,
       scope: ['guilds'],
+      prompt: 'consent',
       overrideUserInfoOnSignIn: true,
       mapProfileToUser: (profile) => {
         return {
