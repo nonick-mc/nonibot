@@ -7,7 +7,7 @@ settings:
 catalogs:
   default:
     discord-api-types:
-      specifier: ^0.38.47
+      specifier: 0.38.47
       version: 0.38.47
     drizzle-orm:
       specifier: ^0.45.2
@@ -160,6 +160,9 @@ importers:
       '@types/react-dom':
         specifier: ^19
         version: 19.2.3(@types/react@19.2.14)
+      discord-api-types:
+        specifier: 'catalog:'
+        version: 0.38.47
       shadcn:
         specifier: ^4.8.1
         version: 4.8.1(@types/node@20.19.41)(babel-plugin-macros@3.1.0)(typescript@5.9.3)
