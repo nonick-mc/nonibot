@@ -1,7 +1,9 @@
 import type { Metadata, Viewport } from 'next';
 import { Geist_Mono, Noto_Sans_JP } from 'next/font/google';
 import './globals.css';
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { ThemeProvider } from '@/components/theme-provider';
+import { Toaster } from '@/components/ui/sonner';
 import { cn } from '@/lib/utils';
 
 const notoSansJP = Noto_Sans_JP({
@@ -38,14 +40,17 @@ export default function RootLayout({
       className={cn('antialiased', geistMono.variable, 'font-sans', notoSansJP.variable)}
     >
       <body className='min-h-full flex flex-col'>
-        <ThemeProvider
-          attribute='class'
-          defaultTheme='system'
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
+        <NuqsAdapter>
+          <ThemeProvider
+            attribute='class'
+            defaultTheme='system'
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+            <Toaster />
+          </ThemeProvider>
+        </NuqsAdapter>
       </body>
     </html>
   );

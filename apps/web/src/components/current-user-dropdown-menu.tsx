@@ -68,7 +68,7 @@ export function CurrentUserDropdownMenu() {
         <DropdownMenuItem
           render={
             <Link href='/docs' target={inDashboard ? '_blank' : '_self'}>
-              <BookOpenIcon strokeWidth={2} className='mt-0.5' />
+              <BookOpenIcon className='mt-0.5' />
               ドキュメント
             </Link>
           }
@@ -77,7 +77,7 @@ export function CurrentUserDropdownMenu() {
         <DropdownMenuItem
           render={
             <Link href='/' target={inDashboard ? '_blank' : '_self'}>
-              <HouseIcon strokeWidth={2} className='mt-0.5' />
+              <HouseIcon className='mt-0.5' />
               ホームページ
             </Link>
           }
@@ -86,7 +86,7 @@ export function CurrentUserDropdownMenu() {
         <DropdownMenuItem
           render={
             <Link href={Links.SupportServer} target='_blank'>
-              <MessageCircleQuestionIcon strokeWidth={2} className='mt-0.5' />
+              <MessageCircleQuestionIcon className='mt-0.5' />
               サポートサーバー
             </Link>
           }
@@ -97,7 +97,7 @@ export function CurrentUserDropdownMenu() {
       <DropdownMenuGroup>
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>
-            <PaletteIcon strokeWidth={2} className='mt-0.5' />
+            <PaletteIcon className='mt-0.5' />
             テーマ
           </DropdownMenuSubTrigger>
           <DropdownMenuSubContent>
@@ -123,7 +123,7 @@ export function CurrentUserDropdownMenu() {
           }}
           variant='destructive'
         >
-          <LogOutIcon strokeWidth={2} className='mt-0.5' />
+          <LogOutIcon className='mt-0.5' />
           ログアウト
         </DropdownMenuItem>
       </DropdownMenuGroup>

@@ -3,6 +3,7 @@ import 'server-only';
 import { dash } from '@better-auth/infra';
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
+import { OAuth2Scopes } from 'discord-api-types/v10';
 import { db } from '@/lib/db';
 
 export const auth = betterAuth({
@@ -28,7 +29,7 @@ export const auth = betterAuth({
     discord: {
       clientId: process.env.DISCORD_CLIENT_ID as string,
       clientSecret: process.env.DISCORD_CLIENT_SECRET as string,
-      scope: ['guilds'],
+      scope: [OAuth2Scopes.Guilds],
       prompt: 'consent',
       overrideUserInfoOnSignIn: true,
       mapProfileToUser: (profile) => {
