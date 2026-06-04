@@ -1,7 +1,9 @@
 import type { Metadata, Viewport } from 'next';
 import { Geist_Mono, Noto_Sans_JP } from 'next/font/google';
+import NextTopLoader from 'nextjs-toploader';
 import './globals.css';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
+import { RouterEventsProvider } from '@/components/router-events-provider';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { cn } from '@/lib/utils';
@@ -49,6 +51,8 @@ export default function RootLayout({
           >
             {children}
             <Toaster />
+            <NextTopLoader color='#2563eb' showSpinner={false} />
+            <RouterEventsProvider />
           </ThemeProvider>
         </NuqsAdapter>
       </body>
