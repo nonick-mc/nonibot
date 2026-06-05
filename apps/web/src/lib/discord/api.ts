@@ -2,8 +2,13 @@ import 'server-only';
 
 import { type CreateFetchOption, createFetch } from '@better-fetch/fetch';
 import {
+  type APIGuild,
   PermissionFlagsBits,
   type RESTAPIPartialCurrentUserGuild,
+  type RESTGetAPICurrentUserGuildsQuery,
+  type RESTGetAPIGuildMemberResult,
+  type RESTGetAPIGuildQuery,
+  type RESTGetAPIGuildRolesResult,
   RouteBases,
   Routes,
 } from 'discord-api-types/v10';
@@ -42,9 +47,46 @@ const oauth2UserFetch = createFetch({
   ...defaultFetchOptions,
 });
 
-/** https://discord.com/developers/docs/resources/user#get-current-user-guilds */
-export async function getUserGuilds(next?: NextFetchRequestConfig) {
-  return await oauth2UserFetch<RESTAPIPartialCurrentUserGuild[], false>(Routes.userGuilds(), {
+/** @see https://discord.com/developers/docs/resources/user#get-current-user-guilds */
+export async function getUserGuilds(
+  query?: RESTGetAPICurrentUserGuildsQuery,
+  next?: NextFetchRequestConfig,
+) {
+  return oauth2UserFetch<RESTAPIPartialCurrentUserGuild[], false>(Routes.userGuilds(), {
+    query,
+    next,
+    throw: true,
+  });
+}
+
+/** @see https://discord.com/developers/docs/resources/guild#get-guild */
+export function getGuild(
+  guildId: string,
+  query?: RESTGetAPIGuildQuery,
+  next?: NextFetchRequestConfig,
+) {
+  return botFetch<APIGuild, false>(Routes.guild(guildId), {
+    query,
+    next,
+    throw: true,
+  });
+}
+
+/** @see https://discord.com/developers/docs/resources/guild#get-guild-member */
+export function getGuildMember(
+  guildId: string,
+  userId: string | '@me',
+  next?: NextFetchRequestConfig,
+) {
+  return botFetch<RESTGetAPIGuildMemberResult, false>(Routes.guildMember(guildId, userId), {
+    next,
+    throw: true,
+  });
+}
+
+/** @see https://discord.com/developers/docs/resources/guild#get-guild-roles */
+export function getRoles(guildId: string, next?: NextFetchRequestConfig) {
+  return botFetch<RESTGetAPIGuildRolesResult, false>(Routes.guildRoles(guildId), {
     next,
     throw: true,
   });
@@ -72,4 +114,20 @@ export const getManageableGuilds = cache(async () => {
   return guilds.filter((guild) =>
     hasPermission(guild.permissions, PermissionFlagsBits.ManageGuild),
   );
+});
+
+/** ユーザーのサーバー内での権限を取得 **/
+export const getGuildMemberPermissions = cache(async (guildId: string, userId: string) => {
+  const [member, roles] = await Promise.all([getGuildMember(guildId, userId), getRoles(guildId)]);
+
+  const currentMemberRoles = roles.filter(
+    (role) => member.roles.includes(role.id) || role.id === guildId,
+  );
+
+  let permissions = BigInt(0);
+  for (const role of currentMemberRoles) {
+    permissions |= BigInt(role.permissions);
+  }
+
+  return permissions.toString();
 });
