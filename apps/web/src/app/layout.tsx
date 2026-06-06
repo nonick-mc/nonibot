@@ -1,10 +1,10 @@
+import { RootProvider } from 'fumadocs-ui/provider/next';
 import type { Metadata, Viewport } from 'next';
 import { Geist_Mono, Noto_Sans_JP } from 'next/font/google';
 import NextTopLoader from 'nextjs-toploader';
 import './globals.css';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { RouterEventsProvider } from '@/components/router-events-provider';
-import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { cn } from '@/lib/utils';
 
@@ -41,20 +41,22 @@ export default function RootLayout({
       suppressHydrationWarning
       className={cn('antialiased', geistMono.variable, 'font-sans', notoSansJP.variable)}
     >
-      <body className='min-h-full flex flex-col'>
-        <NuqsAdapter>
-          <ThemeProvider
-            attribute='class'
-            defaultTheme='system'
-            enableSystem
-            disableTransitionOnChange
-          >
+      <body className='min-h-screen flex flex-col'>
+        <RootProvider
+          theme={{
+            attribute: 'class',
+            defaultTheme: 'system',
+            enableSystem: true,
+            disableTransitionOnChange: true,
+          }}
+        >
+          <NuqsAdapter>
             {children}
             <Toaster />
             <NextTopLoader color='#2563eb' showSpinner={false} />
             <RouterEventsProvider />
-          </ThemeProvider>
-        </NuqsAdapter>
+          </NuqsAdapter>
+        </RootProvider>
       </body>
     </html>
   );
