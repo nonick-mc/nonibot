@@ -1,7 +1,6 @@
 import { RootProvider } from 'fumadocs-ui/provider/next';
 import type { Metadata, Viewport } from 'next';
 import { Geist_Mono, Noto_Sans_JP } from 'next/font/google';
-import NextTopLoader from 'nextjs-toploader';
 import './globals.css';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { RouterEventsProvider } from '@/components/router-events-provider';
@@ -53,7 +52,6 @@ export default function RootLayout({
           <NuqsAdapter>
             {children}
             <Toaster />
-            <NextTopLoader color='#2563eb' showSpinner={false} />
             <RouterEventsProvider />
           </NuqsAdapter>
         </RootProvider>
