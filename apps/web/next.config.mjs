@@ -5,6 +5,9 @@ const nextConfig = {
   experimental: {
     typedEnv: true,
   },
+  images: {
+    remotePatterns: [new URL('https://cdn.nonick.net/**')],
+  },
   typedRoutes: true,
 };
 
