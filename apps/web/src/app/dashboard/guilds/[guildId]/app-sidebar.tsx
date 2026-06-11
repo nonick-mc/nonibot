@@ -14,7 +14,7 @@ export function AppSidebar({ guildId }: AppSidebarProps) {
   return (
     <Sidebar>
       <SidebarHeader className='pt-0'>
-        <div className='h-16 flex items-center'>
+        <div className='h-14 flex items-center'>
           <Link href='/dashboard'>
             <Logo height={17} />
           </Link>

@@ -11,7 +11,7 @@ import { NavbarBreadcrumb } from './navbar-breadcrumb';
 
 export function Navbar() {
   return (
-    <nav className='sticky top-0 z-10 px-6 flex items-center justify-between h-16 border-b bg-background'>
+    <nav className='sticky top-0 z-10 px-6 flex items-center justify-between h-14 border-b bg-background'>
       <div className='flex items-center gap-2'>
         <SidebarTrigger className='-ml-1' />
         <Separator orientation='vertical' className='mr-2' />
