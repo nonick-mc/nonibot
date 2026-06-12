@@ -146,6 +146,10 @@
   --invert-foreground: var(--color-zinc-50);
 }
 
+@utility container {
+  @apply px-4 mx-auto;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

@@ -7,15 +7,15 @@ export default function Layout({ children }: PropsWithChildren) {
   return (
     <>
       <Navbar />
-      <div className='max-w-7xl w-full p-6 mx-auto flex flex-col gap-6'>
-        <div className='flex max-sm:flex-col items-stretch justify-between gap-2'>
+      <main className='container max-w-6xl flex w-full flex-col gap-6 py-6'>
+        <div className='flex items-stretch justify-between gap-2 max-sm:flex-col'>
           <Suspense>
             <SearchInput />
           </Suspense>
           <InviteButton />
         </div>
         {children}
-      </div>
+      </main>
     </>
   );
 }
