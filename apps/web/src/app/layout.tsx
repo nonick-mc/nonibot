@@ -42,6 +42,11 @@ export default function RootLayout({
     >
       <body className='min-h-screen flex flex-col'>
         <RootProvider
+          i18n={{
+            translations: {
+              search: '検索...',
+            },
+          }}
           theme={{
             attribute: 'class',
             defaultTheme: 'system',
