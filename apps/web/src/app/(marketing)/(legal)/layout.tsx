@@ -1,3 +1,3 @@
 export default function Layout({ children }: LayoutProps<'/'>) {
-  return <article className='prose py-16 max-w-4xl mx-auto'>{children}</article>;
+  return <article className='container prose py-8 max-w-200 mx-auto'>{children}</article>;
 }
