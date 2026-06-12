@@ -8,6 +8,7 @@ import {
   MessageCircleQuestionIcon,
   PaletteIcon,
 } from 'lucide-react';
+import type { Route } from 'next';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
@@ -67,7 +68,7 @@ export function CurrentUserDropdownMenu() {
         )}
         <DropdownMenuItem
           render={
-            <Link href='/docs' target={inDashboard ? '_blank' : '_self'}>
+            <Link href={'/docs' as Route} target={inDashboard ? '_blank' : '_self'}>
               <BookOpenIcon className='mt-0.5' />
               ドキュメント
             </Link>
@@ -116,7 +117,11 @@ export function CurrentUserDropdownMenu() {
             await authClient.signOut({
               fetchOptions: {
                 onSuccess: () => {
-                  router.push('/');
+                  if (pathname === '/') {
+                    router.refresh();
+                  } else {
+                    router.push('/');
+                  }
                 },
               },
             });
