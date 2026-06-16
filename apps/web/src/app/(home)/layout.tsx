@@ -7,14 +7,14 @@ export default function Layout({ children }: LayoutProps<'/'>) {
   return (
     <HomeLayout
       {...baseOptions()}
-      style={{ '--fd-layout-width': 'var(--container-6xl)' } as object}
+      style={{ '--fd-layout-width': '1400px' } as object}
       links={[
         {
-          text: 'ドキュメント',
+          text: 'Docs',
           url: '/docs',
         },
         {
-          text: 'ブログ',
+          text: 'Blog',
           url: '/blog',
         },
         {
