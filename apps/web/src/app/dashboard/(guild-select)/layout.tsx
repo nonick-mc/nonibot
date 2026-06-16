@@ -7,7 +7,7 @@ export default function Layout({ children }: PropsWithChildren) {
   return (
     <>
       <Navbar />
-      <main className='container max-w-6xl flex w-full flex-col gap-6 py-6'>
+      <main className='container max-w-350 flex w-full flex-col gap-6 py-6'>
         <div className='flex items-stretch justify-between gap-2 max-sm:flex-col'>
           <Suspense>
             <SearchInput />
