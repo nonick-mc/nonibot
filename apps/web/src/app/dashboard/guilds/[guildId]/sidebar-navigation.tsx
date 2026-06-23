@@ -40,7 +40,7 @@ export function SidebarNavigation() {
                       <CollapsibleTrigger
                         render={
                           <SidebarMenuButton>
-                            <item.icon className='text-muted-foreground' />
+                            <item.icon className='text-muted-foreground mt-0.5' />
                             {item.title}
                             <ChevronRightIcon className='ml-auto transition-transform duration-200 group-data-open/collapsible:rotate-90' />
                           </SidebarMenuButton>
@@ -74,7 +74,7 @@ export function SidebarNavigation() {
                         isActive={segments[0] === item.key}
                         render={
                           <Link href={item.url(params.guildId) as Route}>
-                            <item.icon className='text-muted-foreground' />
+                            <item.icon className='text-muted-foreground mt-0.5' />
                             {item.title}
                           </Link>
                         }
