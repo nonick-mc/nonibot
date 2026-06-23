@@ -9,7 +9,7 @@ export default function Home() {
   const posts = blog.getPages();
 
   return (
-    <main className='container flex-1 max-w-350 w-full mx-auto px-4 py-8'>
+    <main className='container flex-1 max-w-350 w-full mx-auto py-8'>
       <h1 className='text-3xl font-black mb-8 font-mono'>最新情報</h1>
       <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
         {posts.map((post) => (
