@@ -40,14 +40,14 @@ export function HeroSection() {
             <Safari
               className='w-full h-auto hidden dark:block'
               mode='simple'
-              url='dashboard.nonick-js.com'
+              url='dashboard.bot.nonick.net'
               imageSrc='/app-screenshot-dark.png'
               width={1202}
             />
             <Safari
               className='w-full h-auto block dark:hidden'
               mode='simple'
-              url='dashboard.nonick-js.com'
+              url='dashboard.bot.nonick.net'
               imageSrc='/app-screenshot-light.png'
               width={1202}
             />

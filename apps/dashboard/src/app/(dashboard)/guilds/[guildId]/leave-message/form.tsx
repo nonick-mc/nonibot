@@ -181,7 +181,7 @@ export function SettingForm({ channels, setting }: FormProps) {
                     詳細は
                     <Button variant='link' className='h-auto p-0' asChild>
                       <Link
-                        href='https://nonick-js.com/docs/features/welcome-message'
+                        href='https://bot.nonick.net/docs/features/welcome-message'
                         target='_blank'
                       >
                         ドキュメント

@@ -21,17 +21,17 @@ export default function Page() {
             <LoginButton />
           </Suspense>
           <Button variant='secondary' asChild>
-            <Link href='https://nonick-js.com/docs/tutorial/introduction'>ログインについて</Link>
+            <Link href='https://bot.nonick.net/docs/tutorial/introduction'>ログインについて</Link>
           </Button>
         </div>
         <p className='text-sm text-muted-foreground'>
           ログインすることで、Nonibotの
           <Button variant='link' className='p-0 px-1 h-auto' asChild>
-            <Link href='https://nonick-js.com/tos'>利用規約</Link>
+            <Link href='https://bot.nonick.net/tos'>利用規約</Link>
           </Button>
           および
           <Button variant='link' className='p-0 px-1 h-auto' asChild>
-            <Link href='https://nonick-js.com/privacy-policy'>プライバシーポリシー</Link>
+            <Link href='https://bot.nonick.net/privacy-policy'>プライバシーポリシー</Link>
           </Button>
           に同意したとみなされます。
         </p>

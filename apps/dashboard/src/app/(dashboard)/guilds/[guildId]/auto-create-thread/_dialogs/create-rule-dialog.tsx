@@ -150,7 +150,7 @@ export function CreateRuleDialog({ channels, roles, rules }: CreateRuleDialogPro
                       <span>
                         <Link
                           className='inline-flex items-center text-primary hover:underline'
-                          href='https://nonick-js.com/docs/features/auto-create-thread#プレースホルダー'
+                          href='https://bot.nonick.net/docs/features/auto-create-thread#プレースホルダー'
                           target='_blank'
                         >
                           プレースホルダー
