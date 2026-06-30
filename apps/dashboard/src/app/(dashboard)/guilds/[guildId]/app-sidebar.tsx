@@ -28,7 +28,7 @@ export function AppSidebar({ guildId }: AppSidebarProps) {
       <SidebarHeader className='px-3 pt-0'>
         <div className='h-16 px-2 flex items-center'>
           <Link href='/'>
-            <Logo height={17} />
+            <Logo height={20} />
           </Link>
         </div>
         <div className='px-2'>

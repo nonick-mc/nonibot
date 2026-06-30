@@ -168,7 +168,7 @@ const command = new ChatInput(
       if (!interaction.appPermissions?.has(PermissionFlagsBits.ManageWebhooks))
         return interaction.reply({
           content:
-            '`❌` この機能を使用するには、NoNICK.jsに`ウェブフックの管理`権限を付与する必要があります。',
+            '`❌` この機能を使用するには、Nonibotに`ウェブフックの管理`権限を付与する必要があります。',
           ephemeral: true,
         });
       if (

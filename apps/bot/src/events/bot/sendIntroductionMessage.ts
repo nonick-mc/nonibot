@@ -1,4 +1,4 @@
-﻿import { success } from '@/constants/emojis';
+import { success } from '@/constants/emojis';
 import { dashboard, document, supportServer } from '@/constants/links';
 import { DiscordEventBuilder } from '@/modules/events';
 import { formatEmoji } from '@/modules/util';
@@ -45,7 +45,7 @@ export default new DiscordEventBuilder({
           .addTextDisplayComponents([
             new TextDisplayBuilder().setContent(
               [
-                'NoNICK.jsを採用していただきありがとうございます。',
+                'Nonibotを採用していただきありがとうございます。',
                 `搭載されている一部機能を使用するためには、${hyperlink('ダッシュボード', `${dashboard}/guilds/${guild.id}`)}から設定を行う必要があります。`,
                 `それぞれの機能の詳細については、${hyperlink('ドキュメント', document)}を閲覧してください。`,
               ].join('\n'),
