@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { autoCreateThreadRule } from '@repo/database';
@@ -204,7 +204,7 @@ export function CreateRuleDialog({ channels, roles, rules }: CreateRuleDialogPro
                         BotやWebhookが送信したメッセージを除外する
                       </FieldLabel>
                       <FieldDescription>
-                        NoNICK.jsから送信されたメッセージは常に除外されます。
+                        Nonibotから送信されたメッセージは常に除外されます。
                       </FieldDescription>
                     </FieldContent>
                     <Switch

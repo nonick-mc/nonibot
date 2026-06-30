@@ -1,6 +1,6 @@
-﻿![banner](./.github/assets/banner.png)
+![banner](./.github/assets/banner.png)
 
-# NoNICK.js
+# Nonibot
 Discordサーバーの運営をサポートする多機能BOTです。  
 「基本無料・オープンソース」の理念のもと、開発を続けています。
 

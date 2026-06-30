@@ -1,4 +1,4 @@
-﻿import { Button } from '@repo/ui/components/button';
+import { Button } from '@repo/ui/components/button';
 import { Card } from '@repo/ui/components/card';
 import type { Metadata } from 'next';
 import Link from 'next/link';
@@ -14,7 +14,7 @@ export default function Page() {
   return (
     <div className='min-h-dvh flex items-center justify-center px-6'>
       <Card className='max-w-[400px] w-full px-6 py-8 items-center'>
-        <Logo height={18} />
+        <Logo height={22} />
         <p className='text-xl font-bold'>ログインして続行</p>
         <div className='w-full flex flex-col gap-2'>
           <Suspense>
@@ -25,7 +25,7 @@ export default function Page() {
           </Button>
         </div>
         <p className='text-sm text-muted-foreground'>
-          ログインすることで、NoNICK.jsの
+          ログインすることで、Nonibotの
           <Button variant='link' className='p-0 px-1 h-auto' asChild>
             <Link href='https://nonick-js.com/tos'>利用規約</Link>
           </Button>

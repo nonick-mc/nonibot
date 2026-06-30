@@ -1,4 +1,4 @@
-﻿import {
+import {
   Accordion,
   AccordionContent,
   AccordionItem,
@@ -30,23 +30,23 @@ export function FaqSection({
           <Link className='text-foreground underline' href={'/docs/tutorial/introduction' as Route}>
             Botを導入する
           </Link>
-          ページにて、NoNICK.jsの導入方法を解説しています。
+          ページにて、Nonibotの導入方法を解説しています。
         </>
       ),
     },
     {
-      question: 'NoNICK.jsの使用に料金は発生しますか？',
+      question: 'Nonibotの使用に料金は発生しますか？',
       answer:
-        '現在、NoNICK.jsに有料プランは提供されておりません。そのため、全ての機能を無料で使用することができます。',
+        '現在、Nonibotに有料プランは提供されておりません。そのため、全ての機能を無料で使用することができます。',
     },
     {
       question:
         '日本語以外の言語で使用することはできますか？ (Can I use it in languages other than Japanese?)',
       answer: (
         <>
-          いいえ、NoNICK.jsは日本語のみをサポートしています。他の言語への対応予定は現時点ではありません。
+          いいえ、Nonibotは日本語のみをサポートしています。他の言語への対応予定は現時点ではありません。
           <br />
-          (No, NoNICK.js currently only supports Japanese. There are no plans to support other
+          (No, Nonibot currently only supports Japanese. There are no plans to support other
           languages at this time.)
         </>
       ),
