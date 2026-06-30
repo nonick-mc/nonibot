@@ -1,4 +1,4 @@
-﻿import {
+import {
   AttachmentBuilder,
   type ButtonInteraction,
   Colors,
@@ -69,7 +69,7 @@ export async function verifyForImageCaptcha(
           .setColor(Colors.Blurple)
           .setImage('attachment://nonick-js-captcha.jpeg')
           .setFooter({
-            text: 'NoNICK.jsはパスワードの入力やQRコードの読み取りを要求することは決してありません。',
+            text: 'Nonibotはパスワードの入力やQRコードの読み取りを要求することは決してありません。',
           }),
       ],
       files: [new AttachmentBuilder(image, { name: 'nonick-js-captcha.jpeg' })],

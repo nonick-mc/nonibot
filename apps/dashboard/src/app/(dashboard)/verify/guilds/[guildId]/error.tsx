@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { CardContent, CardDescription, CardHeader, CardTitle } from '@repo/ui/components/card';
 import {
@@ -15,7 +15,7 @@ export default function ErrorPage() {
   return (
     <>
       <CardHeader className='gap-6'>
-        <Logo height={16} />
+        <Logo height={18} />
         <div className='flex flex-col gap-1'>
           <CardTitle className='text-xl font-extrabold'>メンバー認証</CardTitle>
           <CardDescription>Discordアカウントで認証を行います。</CardDescription>

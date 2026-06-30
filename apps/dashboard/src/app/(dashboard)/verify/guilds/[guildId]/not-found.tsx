@@ -13,7 +13,7 @@ export default function NotFound() {
   return (
     <>
       <CardHeader className='gap-6'>
-        <Logo height={16} />
+        <Logo height={18} />
         <div className='flex flex-col gap-1'>
           <CardTitle className='text-xl font-extrabold'>メンバー認証</CardTitle>
           <CardDescription>Discordアカウントで認証を行います。</CardDescription>

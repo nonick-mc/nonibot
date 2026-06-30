@@ -78,7 +78,7 @@ const modal = new Modal({ customId: 'nonick-js:embedMaker-baseModal' }, (interac
   } catch {
     return interaction.reply({
       content:
-        '`❌` 無効なカラーコード、または色の名前が入力されました。[このページ](https://nonick-js.com/docs/nonick.js/features/embed/)を参考に正しい値を入力してください。',
+        '`❌` 無効なカラーコード、または色の名前が入力されました。[このページ](https://bot.nonick.net/docs/nonick.js/features/embed/)を参考に正しい値を入力してください。',
       ephemeral: true,
     });
   }

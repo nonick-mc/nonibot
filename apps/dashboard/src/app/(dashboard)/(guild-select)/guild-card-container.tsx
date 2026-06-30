@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { Button } from '@repo/ui/components/button';
 import {
@@ -33,7 +33,7 @@ export function GuildCardContainer({ guilds }: GuildCardContainerProps) {
             <ServerIcon />
           </EmptyMedia>
           <EmptyTitle>サーバーがありません</EmptyTitle>
-          <EmptyDescription>まずはサーバーにNoNICK.jsを導入しましょう！</EmptyDescription>
+          <EmptyDescription>まずはサーバーにNonibotを導入しましょう！</EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
           <Button asChild>
