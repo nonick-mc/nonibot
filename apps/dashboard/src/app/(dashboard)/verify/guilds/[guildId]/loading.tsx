@@ -1,4 +1,4 @@
-﻿import { CardContent, CardHeader } from '@repo/ui/components/card';
+import { CardContent, CardHeader } from '@repo/ui/components/card';
 import { Skeleton } from '@repo/ui/components/skeleton';
 import { Logo } from '@/components/logo';
 
@@ -6,7 +6,7 @@ export default function Loading() {
   return (
     <>
       <CardHeader className='gap-6'>
-        <Logo height={16} />
+        <Logo height={18} />
         <div className='flex flex-col gap-1'>
           <Skeleton className='h-7 w-[120px]' />
           <Skeleton className='h-5 w-[250px]' />

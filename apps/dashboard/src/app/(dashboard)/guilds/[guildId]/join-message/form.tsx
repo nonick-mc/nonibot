@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Alert, AlertDescription, AlertTitle } from '@repo/ui/components/alert';
@@ -188,7 +188,7 @@ export function SettingForm({ setting, channels }: FormProps) {
                     詳細は
                     <Button variant='link' className='h-auto p-0' asChild>
                       <Link
-                        href='https://nonick-js.com/docs/features/welcome-message'
+                        href='https://bot.nonick.net/docs/features/welcome-message'
                         target='_blank'
                       >
                         ドキュメント
@@ -206,12 +206,12 @@ export function SettingForm({ setting, channels }: FormProps) {
                     <CardContent>
                       <div className='flex gap-3'>
                         <Avatar className='size-10'>
-                          <AvatarImage src='/icon_300.png' alt='NoNICK.js' />
+                          <AvatarImage src='/profile_dark.png' alt='nonibot' />
                           <AvatarFallback>No</AvatarFallback>
                         </Avatar>
                         <div className='flex-1 flex flex-col gap-2'>
                           <div className='flex items-center gap-2'>
-                            <p className='font-medium'>NoNICK.js</p>
+                            <p className='font-medium'>nonibot</p>
                             <Badge className='h-5 mt-0.5 bg-[#5865F2] gap-0.5 px-1.5'>
                               <CheckIcon className='mt-0.5' />
                               アプリ

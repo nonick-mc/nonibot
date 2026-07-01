@@ -1,4 +1,4 @@
-﻿import { dashboard } from '@/constants/links';
+import { dashboard } from '@/constants/links';
 import { db } from '@/modules/drizzle';
 import { Button } from '@akki256/discord-interaction';
 import {
@@ -58,7 +58,7 @@ const verifyButton = new Button(
                 new TextDisplayBuilder().setContent(
                   [
                     '### 下のボタンから認証ページにアクセスしてください',
-                    '-# ⚠️ NoNICK.jsはパスワードの入力やQRコードの読み取りを要求することは決してありません。',
+                    '-# ⚠️ nonibotはパスワードの入力やQRコードの読み取りを要求することは決してありません。',
                   ].join('\n'),
                 ),
               ])

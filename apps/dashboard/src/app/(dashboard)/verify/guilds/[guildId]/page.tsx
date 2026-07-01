@@ -1,4 +1,4 @@
-﻿import { CardContent, CardDescription, CardHeader, CardTitle } from '@repo/ui/components/card';
+import { CardContent, CardDescription, CardHeader, CardTitle } from '@repo/ui/components/card';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Logo } from '@/components/logo';
@@ -30,7 +30,7 @@ export default async function Page({ params }: PageProps<'/verify/guilds/[guildI
   return (
     <>
       <CardHeader className='gap-6'>
-        <Logo height={16} />
+        <Logo height={18} />
         <div className='flex flex-col gap-1'>
           <CardTitle className='text-xl font-extrabold'>メンバー認証</CardTitle>
           <CardDescription>Discordアカウントで認証を行います。</CardDescription>

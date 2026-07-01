@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { autoCreateThreadRule } from '@repo/database';
@@ -150,7 +150,7 @@ export function CreateRuleDialog({ channels, roles, rules }: CreateRuleDialogPro
                       <span>
                         <Link
                           className='inline-flex items-center text-primary hover:underline'
-                          href='https://nonick-js.com/docs/features/auto-create-thread#プレースホルダー'
+                          href='https://bot.nonick.net/docs/features/auto-create-thread#プレースホルダー'
                           target='_blank'
                         >
                           プレースホルダー
@@ -204,7 +204,7 @@ export function CreateRuleDialog({ channels, roles, rules }: CreateRuleDialogPro
                         BotやWebhookが送信したメッセージを除外する
                       </FieldLabel>
                       <FieldDescription>
-                        NoNICK.jsから送信されたメッセージは常に除外されます。
+                        nonibotから送信されたメッセージは常に除外されます。
                       </FieldDescription>
                     </FieldContent>
                     <Switch

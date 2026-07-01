@@ -31,7 +31,7 @@ const context = new MessageContext(
     if (!webhook || !interaction.client.user.equals(webhook.owner as User))
       return interaction.reply({
         content:
-          '`❌` NoNICK.jsを使用し、かつ現在も有効なWebhookで投稿した埋め込みのみ編集できます。',
+          '`❌` nonibotを使用し、かつ現在も有効なWebhookで投稿した埋め込みのみ編集できます。',
         ephemeral: true,
       });
 

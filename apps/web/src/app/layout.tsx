@@ -6,8 +6,8 @@ import SearchDialog from '@/components/search';
 
 export const metadata: Metadata = {
   title: {
-    default: 'NoNICK.js',
-    template: '%s - NoNICK.js',
+    default: 'nonibot',
+    template: '%s - nonibot',
   },
   description: 'あなたのDiscordサーバーをもっと便利に。',
 };

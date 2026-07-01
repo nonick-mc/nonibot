@@ -1,4 +1,4 @@
-﻿import {
+import {
   DollarSignIcon,
   HeartIcon,
   LifeBuoyIcon,
@@ -41,13 +41,13 @@ const features: Feature[] = [
   {
     heading: '無料で使用可能',
     description:
-      '特定の機能を開放するために料金を支払う必要はありません。NoNICK.jsでは全ての機能を無料で使用することができます。',
+      '特定の機能を開放するために料金を支払う必要はありません。nonibotでは全ての機能を無料で使用することができます。',
     icon: <DollarSignIcon className='size-6' />,
   },
   {
     heading: '高い信頼性',
     description:
-      '現在、NoNICK.jsは1,000を超えるサーバーで導入されており、様々な規模のサーバー管理をサポートしています。',
+      '現在、nonibotは1,000を超えるサーバーで導入されており、様々な規模のサーバー管理をサポートしています。',
     icon: <ServerIcon className='size-6' />,
   },
 ];

@@ -1,4 +1,4 @@
-﻿import type { Route } from 'next';
+import type { Route } from 'next';
 import Link from 'next/link';
 import { Logo } from '@/components/logo';
 import { Links } from '@/lib/constants';
@@ -43,7 +43,7 @@ export function Footer() {
           <div className='grid grid-cols-2 gap-8 lg:grid-cols-6'>
             <div className='col-span-2 mb-8 lg:mb-0'>
               <div className='flex items-center gap-2 lg:justify-start'>
-                <Logo height={18} />
+                <Logo height={20} />
               </div>
               <p className='mt-4 font-bold'>あなたのDiscordサーバーをもっと便利に。</p>
             </div>
@@ -63,7 +63,7 @@ export function Footer() {
             ))}
           </div>
           <div className='text-muted-foreground mt-24 flex flex-col justify-between gap-4 border-t pt-8 text-sm font-medium md:flex-row md:items-center'>
-            <p>© {new Date().getFullYear()} NoNICK.js. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} nonibot. All rights reserved.</p>
             <ul className='flex gap-4'>
               {bottomLinks.map((link, linkIdx) => (
                 // biome-ignore lint/suspicious/noArrayIndexKey: need to use index

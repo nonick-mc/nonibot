@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Card, CardContent, CardHeader, CardTitle } from '@repo/ui/components/card';
@@ -123,7 +123,7 @@ export function SettingForm({ roles, botHighestRolePosition, setting }: FormProp
                           <FieldContent>
                             <FieldLabel htmlFor={field.name}>認証成功時に付与するロール</FieldLabel>
                             <FieldDescription>
-                              NoNICK.jsが所持しているロールより低い位置にあるロールを選択できます。
+                              nonibotが所持しているロールより低い位置にあるロールを選択できます。
                             </FieldDescription>
                             {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                           </FieldContent>
