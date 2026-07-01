@@ -45,7 +45,7 @@ export default new DiscordEventBuilder({
           .addTextDisplayComponents([
             new TextDisplayBuilder().setContent(
               [
-                'Nonibotを採用していただきありがとうございます。',
+                'nonibotを採用していただきありがとうございます。',
                 `搭載されている一部機能を使用するためには、${hyperlink('ダッシュボード', `${dashboard}/guilds/${guild.id}`)}から設定を行う必要があります。`,
                 `それぞれの機能の詳細については、${hyperlink('ドキュメント', document)}を閲覧してください。`,
               ].join('\n'),

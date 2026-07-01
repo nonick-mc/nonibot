@@ -63,7 +63,7 @@ export function Footer() {
             ))}
           </div>
           <div className='text-muted-foreground mt-24 flex flex-col justify-between gap-4 border-t pt-8 text-sm font-medium md:flex-row md:items-center'>
-            <p>© {new Date().getFullYear()} Nonibot. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} nonibot. All rights reserved.</p>
             <ul className='flex gap-4'>
               {bottomLinks.map((link, linkIdx) => (
                 // biome-ignore lint/suspicious/noArrayIndexKey: need to use index

@@ -33,7 +33,7 @@ export function GuildCardContainer({ guilds }: GuildCardContainerProps) {
             <ServerIcon />
           </EmptyMedia>
           <EmptyTitle>サーバーがありません</EmptyTitle>
-          <EmptyDescription>まずはサーバーにNonibotを導入しましょう！</EmptyDescription>
+          <EmptyDescription>まずはサーバーにnonibotを導入しましょう！</EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
           <Button asChild>

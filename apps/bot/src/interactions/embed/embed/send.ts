@@ -31,7 +31,7 @@ const sendEmbedButton = new Button(
         .find((v) => interaction.client.user.equals(v.owner as User))
         ?.edit({ channel: interaction.channelId })) ||
       (await interaction.guild.channels.createWebhook({
-        name: 'Nonibot',
+        name: 'nonibot',
         avatar: interaction.client.user.displayAvatarURL(),
         channel: interaction.channelId,
       }));

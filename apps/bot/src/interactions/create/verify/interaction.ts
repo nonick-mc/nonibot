@@ -58,7 +58,7 @@ const verifyButton = new Button(
                 new TextDisplayBuilder().setContent(
                   [
                     '### 下のボタンから認証ページにアクセスしてください',
-                    '-# ⚠️ Nonibotはパスワードの入力やQRコードの読み取りを要求することは決してありません。',
+                    '-# ⚠️ nonibotはパスワードの入力やQRコードの読み取りを要求することは決してありません。',
                   ].join('\n'),
                 ),
               ])

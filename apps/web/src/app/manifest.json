@@ -1,6 +1,6 @@
 {
-  "name": "Nonibot",
-  "short_name": "Nonibot",
+  "name": "nonibot",
+  "short_name": "nonibot",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",

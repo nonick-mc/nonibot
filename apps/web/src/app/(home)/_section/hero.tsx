@@ -18,7 +18,7 @@ export function HeroSection() {
                 もっと<span className='text-primary'>便利</span>に。
               </h1>
               <p className='text-muted-foreground text-balance lg:text-lg'>
-                Nonibotは、サーバー運営のサポートに特化した次世代のDiscordBotです。サーバー運営に関する便利な機能を幅広く搭載しています。
+                nonibotは、サーバー運営のサポートに特化した次世代のDiscordBotです。サーバー運営に関する便利な機能を幅広く搭載しています。
               </p>
             </div>
             <div className='pt-2 pb-12 flex justify-center gap-3'>

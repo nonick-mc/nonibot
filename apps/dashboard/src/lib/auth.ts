@@ -6,7 +6,7 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { db } from '@/lib/drizzle';
 
 export const auth = betterAuth({
-  appName: 'Nonibot',
+  appName: 'nonibot',
   baseURL: process.env.NEXT_PUBLIC_BETTER_AUTH_URL as string,
   database: drizzleAdapter(db, {
     provider: 'pg',

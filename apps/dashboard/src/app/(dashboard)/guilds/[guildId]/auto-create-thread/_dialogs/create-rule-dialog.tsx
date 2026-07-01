@@ -204,7 +204,7 @@ export function CreateRuleDialog({ channels, roles, rules }: CreateRuleDialogPro
                         BotやWebhookが送信したメッセージを除外する
                       </FieldLabel>
                       <FieldDescription>
-                        Nonibotから送信されたメッセージは常に除外されます。
+                        nonibotから送信されたメッセージは常に除外されます。
                       </FieldDescription>
                     </FieldContent>
                     <Switch

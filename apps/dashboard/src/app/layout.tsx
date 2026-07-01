@@ -10,8 +10,8 @@ const notoSansJP = Noto_Sans_JP({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Nonibot Dashboard',
-    template: '%s - Nonibot Dashboard',
+    default: 'nonibot Dashboard',
+    template: '%s - nonibot Dashboard',
   },
   description: 'あなたのDiscordサーバーをもっと便利に。',
 };

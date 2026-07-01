@@ -123,7 +123,7 @@ export function SettingForm({ roles, botHighestRolePosition, setting }: FormProp
                           <FieldContent>
                             <FieldLabel htmlFor={field.name}>認証成功時に付与するロール</FieldLabel>
                             <FieldDescription>
-                              Nonibotが所持しているロールより低い位置にあるロールを選択できます。
+                              nonibotが所持しているロールより低い位置にあるロールを選択できます。
                             </FieldDescription>
                             {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                           </FieldContent>

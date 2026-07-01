@@ -25,7 +25,7 @@ export default function Page() {
           </Button>
         </div>
         <p className='text-sm text-muted-foreground'>
-          ログインすることで、Nonibotの
+          ログインすることで、nonibotの
           <Button variant='link' className='p-0 px-1 h-auto' asChild>
             <Link href='https://bot.nonick.net/tos'>利用規約</Link>
           </Button>

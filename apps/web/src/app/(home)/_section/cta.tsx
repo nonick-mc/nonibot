@@ -11,10 +11,10 @@ export function CtaSection() {
         <Card className='flex w-full flex-col gap-16 overflow-hidden rounded-lg p-8 md:rounded-xl lg:flex-row lg:items-center lg:p-12'>
           <div className='flex-1'>
             <h3 className='mb-3 text-2xl font-semibold md:mb-4 md:text-4xl lg:mb-6'>
-              Nonibotを導入しよう
+              nonibotを導入しよう
             </h3>
             <p className='text-muted-foreground max-w-xl lg:text-lg'>
-              Nonibotを使用して、あなたのDiscordサーバーをさらに便利にしましょう。無料で使用することができ、導入も簡単です。
+              nonibotを使用して、あなたのDiscordサーバーをさらに便利にしましょう。無料で使用することができ、導入も簡単です。
             </p>
           </div>
           <div className='flex shrink-0 flex-col gap-2 sm:flex-row'>

@@ -199,12 +199,12 @@ export function SettingForm({ channels, setting }: FormProps) {
                     <CardContent>
                       <div className='flex gap-3'>
                         <Avatar className='size-10'>
-                          <AvatarImage src='/icon_300.png' alt='Nonibot' />
+                          <AvatarImage src='/icon_300.png' alt='nonibot' />
                           <AvatarFallback>No</AvatarFallback>
                         </Avatar>
                         <div className='flex-1 flex flex-col gap-2'>
                           <div className='flex items-center gap-2'>
-                            <p className='font-medium'>Nonibot</p>
+                            <p className='font-medium'>nonibot</p>
                             <Badge className='h-5 mt-0.5 bg-[#5865F2] gap-0.5 px-1.5'>
                               <CheckIcon className='mt-0.5' />
                               アプリ
