@@ -12,7 +12,7 @@ export function Navbar() {
     <header id='nd-nav' className='sticky top-0 z-40 h-14'>
       <div className='border-b bg-background/80 backdrop-blur-lg transition-colors'>
         <nav className='mx-auto flex h-14 w-full max-w-350 items-center px-6'>
-          <Logo height={17} />
+          <Logo height={18} />
           <div className='flex flex-1 flex-row items-center justify-end gap-1.5'>
             <DropdownMenu>
               <DropdownMenuTrigger render={<CurrentUserAvatar />} nativeButton={false} />

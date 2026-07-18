@@ -39,7 +39,7 @@ export default function Page() {
         </CardContent>
         <CardFooter>
           <p className='text-muted-foreground w-full text-center text-xs'>
-            ログインすることで、NoNICK.jsの{' '}
+            ログインすることで、nonibotの{' '}
             <Link
               href='/tos'
               className='transition-colors hover:text-foreground underline underline-offset-4'

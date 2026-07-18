@@ -19,7 +19,7 @@ export default async function Layout({
       <AppSidebar guildId={guildId} />
       <SidebarInset>
         <Navbar />
-        <div className='p-6 flex flex-col gap-6'>{children}</div>
+        <div className='p-6 lg:px-8 flex flex-col gap-6'>{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );

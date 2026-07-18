@@ -7,7 +7,7 @@ import { OAuth2Scopes } from 'discord-api-types/v10';
 import { db } from '@/lib/db';
 
 export const auth = betterAuth({
-  appName: 'NoNICK.js',
+  appName: 'nonibot',
   baseURL: process.env.BETTER_AUTH_URL as string,
   database: drizzleAdapter(db, {
     provider: 'pg',

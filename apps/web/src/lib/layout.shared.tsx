@@ -4,7 +4,7 @@ import { Logo } from '@/components/logo';
 export function baseOptions(): BaseLayoutProps {
   return {
     nav: {
-      title: <Logo height={17} />,
+      title: <Logo height={18} />,
     },
   };
 }

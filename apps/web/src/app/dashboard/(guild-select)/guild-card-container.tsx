@@ -52,7 +52,7 @@ export function GuildCardContainer({ guilds }: GuildCardContainerProps) {
             <StackedCardsIllustration />
           </EmptyMedia>
           <EmptyTitle>サーバーがありません</EmptyTitle>
-          <EmptyDescription>まずはサーバーにNoNICK.jsを導入しましょう！</EmptyDescription>
+          <EmptyDescription>まずはサーバーにnonibotを導入しましょう！</EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
           <Button

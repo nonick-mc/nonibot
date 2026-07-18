@@ -1,6 +1,6 @@
 {
-  "name": "NoNICK.js",
-  "short_name": "NoNICK.js",
+  "name": "nonibot",
+  "short_name": "nonibot",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
@@ -15,7 +15,7 @@
       "purpose": "maskable"
     }
   ],
-  "theme_color": "#0073f5",
-  "background_color": "#ffffff",
+  "theme_color": "#0b111f",
+  "background_color": "#0b111f",
   "display": "standalone"
 }

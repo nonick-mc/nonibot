@@ -16,7 +16,7 @@ export function AppSidebar({ guildId }: AppSidebarProps) {
       <SidebarHeader className='pt-0'>
         <div className='h-14 flex items-center'>
           <Link href='/dashboard'>
-            <Logo height={17} />
+            <Logo height={18} />
           </Link>
         </div>
         <Suspense fallback={<Skeleton className='h-12' />}>
