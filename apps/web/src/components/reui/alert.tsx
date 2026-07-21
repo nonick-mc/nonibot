@@ -18,7 +18,7 @@ const alertVariants = cva(
       variant: {
         default: 'bg-card text-card-foreground',
         destructive: 'border-destructive/30 bg-destructive/4 [&>svg]:text-destructive',
-        info: 'border-info/30 bg-info/4 [&>svg]:text-info',
+        info: 'border-primary/30 bg-primary/4 [&>svg]:text-primary',
         success: 'border-success/30 bg-success/4 [&>svg]:text-success',
         warning: 'border-warning/30 bg-warning/4 [&>svg]:text-warning',
         invert:
@@ -83,4 +83,3 @@ function AlertAction({ className, ...props }: React.ComponentProps<'div'>) {
 }
 
 export { Alert, AlertAction, AlertDescription, AlertTitle };
-
