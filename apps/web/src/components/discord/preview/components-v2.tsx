@@ -1,11 +1,10 @@
 'use client';
 
 import { ComponentType, SeparatorSpacingSize } from 'discord-api-types/v10';
-import { useState } from 'react';
 import type z from 'zod';
 import type { messageUserComponentsSchema } from '@/lib/discord/zod';
 import { cn } from '@/lib/utils';
-import { Separator as ShadcnSeparator } from '../ui/separator';
+import { Separator as ShadcnSeparator } from '../../ui/separator';
 import { DiscordImage } from './image';
 import { DiscordMarkdown } from './markdown';
 
