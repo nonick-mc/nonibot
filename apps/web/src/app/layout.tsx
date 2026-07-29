@@ -5,6 +5,7 @@ import './globals.css';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { RouterEventsProvider } from '@/components/router-events-provider';
 import { Toaster } from '@/components/ui/sonner';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 
 const notoSansJP = Noto_Sans_JP({
@@ -55,7 +56,7 @@ export default function RootLayout({
           }}
         >
           <NuqsAdapter>
-            {children}
+            <TooltipProvider>{children}</TooltipProvider>
             <Toaster />
             <RouterEventsProvider />
           </NuqsAdapter>

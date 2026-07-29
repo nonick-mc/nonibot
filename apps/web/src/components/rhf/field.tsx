@@ -1,6 +1,6 @@
 'use client';
 
-import { type ComponentProps, type ReactNode, createContext, useContext } from 'react';
+import { type ComponentProps, createContext, type ReactNode, useContext } from 'react';
 import {
   type Control,
   type FieldValues,
@@ -74,5 +74,7 @@ export function ControlledFieldError(props: ComponentProps<typeof FieldError>) {
   const { fieldState } = useControlledField();
   if (!fieldState.invalid) return null;
 
-  return <FieldError errors={[fieldState.error]} {...props} />;
+  const error = fieldState.error?.root ?? fieldState.error;
+
+  return <FieldError errors={[error]} {...props} />;
 }
