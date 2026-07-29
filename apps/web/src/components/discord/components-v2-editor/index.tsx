@@ -16,7 +16,6 @@ import {
 } from '@/components/ui/empty';
 import { cn } from '@/lib/utils';
 import { ComponentEditorByType } from './editors';
-import { GuildContext, type GuildContextValue } from './guild-context';
 
 type ComponentsV2EditorProps<
   T extends FieldValues,
@@ -27,7 +26,7 @@ type ComponentsV2EditorProps<
   fields: FieldArrayWithId<T, N>[];
   remove: UseFieldArrayRemove;
   move: UseFieldArrayMove;
-} & GuildContextValue;
+};
 
 export const ComponentsV2Editor = <
   T extends FieldValues,
@@ -38,9 +37,6 @@ export const ComponentsV2Editor = <
   fields,
   remove,
   move,
-  emojis,
-  roles,
-  channels,
 }: ComponentsV2EditorProps<T, N>) => {
   if (!fields.length) {
     return (
@@ -59,21 +55,19 @@ export const ComponentsV2Editor = <
   }
 
   return (
-    <GuildContext.Provider value={{ emojis, roles, channels }}>
-      <Sortable
-        className={cn('flex flex-col gap-4', className)}
-        value={fields.map((f) => ({ id: f.id }))}
-        onValueChange={() => {}}
-        getItemValue={(item) => item.id}
-        onMove={({ activeIndex, overIndex }) => move(activeIndex, overIndex)}
-        strategy='vertical'
-      >
-        {fields.map((field, index) => (
-          <SortableItem key={field.id} value={field.id}>
-            <ComponentEditorByType name={name} index={index} onRemove={() => remove(index)} />
-          </SortableItem>
-        ))}
-      </Sortable>
-    </GuildContext.Provider>
+    <Sortable
+      className={cn('flex flex-col gap-4', className)}
+      value={fields.map((f) => ({ id: f.id }))}
+      onValueChange={() => {}}
+      getItemValue={(item) => item.id}
+      onMove={({ activeIndex, overIndex }) => move(activeIndex, overIndex)}
+      strategy='vertical'
+    >
+      {fields.map((field, index) => (
+        <SortableItem key={field.id} value={field.id}>
+          <ComponentEditorByType name={name} index={index} onRemove={() => remove(index)} />
+        </SortableItem>
+      ))}
+    </Sortable>
   );
 };

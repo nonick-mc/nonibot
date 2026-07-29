@@ -3,12 +3,11 @@
 import { CDNRoutes, ImageFormat, RouteBases } from 'discord-api-types/v10';
 import { type parse, rules, SimpleMarkdown } from 'discord-markdown-parser';
 import type { ParserRules } from 'discord-markdown-parser/dist/simple-markdown';
-import { HashIcon } from 'lucide-react';
 import type { PropsWithChildren } from 'react';
 import { Fragment, type ReactNode, useState } from 'react';
 import twemoji from 'twemoji';
 import { cn } from '@/lib/utils';
-import { GuildNavigationMention, Mention } from './mention';
+import { ChannelMention, GuildNavigationMention, Mention, RoleMention } from './mention';
 
 // Component
 export function InlineCode({ children }: PropsWithChildren) {
@@ -243,16 +242,11 @@ function renderNode(node: ASTNode, key: number): ReactNode {
 
     // メンション
     case 'channel':
-      return (
-        <Mention key={key}>
-          <HashIcon />
-          チャンネル
-        </Mention>
-      );
+      return <ChannelMention key={key} id={node.id as string} />;
     case 'user':
       return <Mention key={key}>@ユーザー</Mention>;
     case 'role':
-      return <Mention key={key}>@ロール</Mention>;
+      return <RoleMention key={key} id={node.id as string} />;
     case 'everyone':
     case 'here':
       return <Mention key={key}>@{node.type}</Mention>;

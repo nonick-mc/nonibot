@@ -20,10 +20,10 @@ import { Popover, PopoverPanel, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { groupChannelsByCategory } from '@/lib/discord/utils';
 import { ChannelTypeIcon } from '../../channel-type-icon';
+import { useDiscordMessageContext } from '../../message-context';
 import { RoleColor } from '../../role-color';
 import { useComponentEditorContext } from '../context';
 import { EditorCard } from '../editor-card';
-import { useGuildContext } from '../guild-context';
 
 export function TextDisplayEditor() {
   const { control } = useFormContext();
@@ -67,7 +67,7 @@ function useTextareaInsert(textareaRef: RefObject<HTMLTextAreaElement | null>) {
 }
 
 function RoleMentionInsertButton({ textareaRef }: TextareaInsertComponentProps) {
-  const { roles } = useGuildContext();
+  const { roles } = useDiscordMessageContext();
   const { open, setOpen, handleSelect } = useTextareaInsert(textareaRef);
 
   return (
@@ -76,14 +76,14 @@ function RoleMentionInsertButton({ textareaRef }: TextareaInsertComponentProps) 
         <AtSignIcon />
         <span className='sr-only'>メンション</span>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className='max-h-100' align='end'>
+      <DropdownMenuContent className='max-h-100 no-scrollbar' align='end'>
         <DropdownMenuGroup>
           <DropdownMenuLabel>全般</DropdownMenuLabel>
-          <DropdownMenuItem onClick={() => handleSelect('@everyone')}>
+          <DropdownMenuItem className='gap-1.5' onClick={() => handleSelect('@everyone')}>
             <AtSignIcon className='mt-0.5 text-muted-foreground' />
             everyone
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleSelect('@here')}>
+          <DropdownMenuItem className='gap-1.5' onClick={() => handleSelect('@here')}>
             <AtSignIcon className='mt-0.5 text-muted-foreground' />
             here
           </DropdownMenuItem>
@@ -93,7 +93,7 @@ function RoleMentionInsertButton({ textareaRef }: TextareaInsertComponentProps) 
           <DropdownMenuLabel>ロール</DropdownMenuLabel>
           {roles.map((role) => (
             <DropdownMenuItem
-              onClick={() => handleSelect(`<@&${role.id}>`)}
+              onClick={() => handleSelect(`<@&${role.id}> `)}
               className='flex justify-between'
               key={role.id}
             >
@@ -118,7 +118,7 @@ function RoleMentionInsertButton({ textareaRef }: TextareaInsertComponentProps) 
 }
 
 function ChannelMentionInsertButton({ textareaRef }: TextareaInsertComponentProps) {
-  const { channels } = useGuildContext();
+  const { channels } = useDiscordMessageContext();
   const { open, setOpen, handleSelect } = useTextareaInsert(textareaRef);
 
   const { categories, groupedChannels, uncategorized } = useMemo(
@@ -132,11 +132,11 @@ function ChannelMentionInsertButton({ textareaRef }: TextareaInsertComponentProp
         <HashIcon />
         <span className='sr-only'>チャンネル</span>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className='max-h-100' align='end'>
+      <DropdownMenuContent className='max-h-100 no-scrollbar' align='end'>
         {uncategorized.length > 0 && (
           <DropdownMenuGroup>
             {uncategorized.map((ch) => (
-              <DropdownMenuItem onClick={() => handleSelect(`<#${ch.id}>`)} key={ch.id}>
+              <DropdownMenuItem onClick={() => handleSelect(`<#${ch.id}> `)} key={ch.id}>
                 <ChannelTypeIcon type={ch.type} />
                 {ch.name}
               </DropdownMenuItem>
@@ -152,7 +152,7 @@ function ChannelMentionInsertButton({ textareaRef }: TextareaInsertComponentProp
               <DropdownMenuGroup>
                 <DropdownMenuLabel>{category.name}</DropdownMenuLabel>
                 {channelsInCategory.map((ch) => (
-                  <DropdownMenuItem onClick={() => handleSelect(`<#${ch.id}>`)} key={ch.id}>
+                  <DropdownMenuItem onClick={() => handleSelect(`<#${ch.id}> `)} key={ch.id}>
                     <ChannelTypeIcon type={ch.type} />
                     {ch.name}
                   </DropdownMenuItem>
@@ -167,7 +167,7 @@ function ChannelMentionInsertButton({ textareaRef }: TextareaInsertComponentProp
 }
 
 function EmojiInsertButton({ textareaRef }: TextareaInsertComponentProps) {
-  const { emojis } = useGuildContext();
+  const { emojis } = useDiscordMessageContext();
   const { open, setOpen, handleSelect } = useTextareaInsert(textareaRef);
 
   return (

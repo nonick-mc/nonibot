@@ -7,7 +7,7 @@ type RoleColorProps = {
   className?: string;
 };
 
-function toHexColor(color: number) {
+export function toHexColor(color: number) {
   return `#${color.toString(16).padStart(6, '0')}`;
 }
 

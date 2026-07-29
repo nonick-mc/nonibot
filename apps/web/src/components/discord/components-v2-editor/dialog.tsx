@@ -35,7 +35,6 @@ import { messageUserComponentsSchema } from '@/lib/discord/zod';
 import { cn } from '@/lib/utils';
 import { DiscordMessage } from '../preview/message';
 import { ComponentsV2Editor } from '.';
-import type { GuildContextValue } from './guild-context';
 import { defaultComponentValues } from './schema';
 
 const schema = z.object({
@@ -46,14 +45,11 @@ type ComponentsV2EditorModalProps = {
   defaultValues: z.input<typeof schema>['components'];
   onSubmit: (values: z.infer<typeof schema>['components']) => void | Promise<void>;
   children: ComponentProps<typeof DialogTrigger>['render'];
-} & GuildContextValue;
+};
 
 export function ComponentsV2EditorDialog({
   defaultValues,
   onSubmit,
-  emojis,
-  roles,
-  channels,
   children,
 }: ComponentsV2EditorModalProps) {
   const [open, setOpen] = useState(false);
@@ -114,9 +110,6 @@ export function ComponentsV2EditorDialog({
               fields={fields}
               remove={remove}
               move={move}
-              emojis={emojis}
-              roles={roles}
-              channels={channels}
             />
             <div
               className={cn(

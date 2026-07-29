@@ -10,6 +10,7 @@ import {
   Volume2Icon,
 } from 'lucide-react';
 import type React from 'react';
+import { cn } from '@/lib/utils';
 
 const channelTypeIconMap: Partial<Record<GuildChannelType, React.ElementType>> = {
   [ChannelType.AnnouncementThread]: SpoolIcon,
@@ -24,9 +25,14 @@ const channelTypeIconMap: Partial<Record<GuildChannelType, React.ElementType>> =
   [ChannelType.PublicThread]: SpoolIcon,
 };
 
-export function ChannelTypeIcon({ type }: { type: GuildChannelType }) {
+type ChannelTypeIconProps = {
+  type: GuildChannelType;
+  className?: string;
+};
+
+export function ChannelTypeIcon({ type, className }: ChannelTypeIconProps) {
   const Icon = channelTypeIconMap[type];
   return Icon ? (
-    <Icon className='text-muted-foreground hover:text-muted-foreground mt-0.5' />
+    <Icon className={cn('text-muted-foreground hover:text-muted-foreground mt-0.5', className)} />
   ) : null;
 }
