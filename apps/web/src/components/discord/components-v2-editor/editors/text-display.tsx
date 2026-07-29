@@ -72,10 +72,14 @@ function RoleMentionInsertButton({ textareaRef }: TextareaInsertComponentProps) 
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
-      <DropdownMenuTrigger render={<InputGroupButton size='icon-xs' />}>
-        <AtSignIcon />
-        <span className='sr-only'>メンション</span>
-      </DropdownMenuTrigger>
+      <Tooltip>
+        <TooltipTrigger
+          render={<DropdownMenuTrigger render={<InputGroupButton size='icon-xs' />} />}
+        >
+          <AtSignIcon />
+        </TooltipTrigger>
+        <TooltipContent>メンション</TooltipContent>
+      </Tooltip>
       <DropdownMenuContent className='max-h-100 no-scrollbar' align='end'>
         <DropdownMenuGroup>
           <DropdownMenuLabel>全般</DropdownMenuLabel>
@@ -128,10 +132,14 @@ function ChannelMentionInsertButton({ textareaRef }: TextareaInsertComponentProp
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
-      <DropdownMenuTrigger render={<InputGroupButton size='icon-xs' />}>
-        <HashIcon />
-        <span className='sr-only'>チャンネル</span>
-      </DropdownMenuTrigger>
+      <Tooltip>
+        <TooltipTrigger
+          render={<DropdownMenuTrigger render={<InputGroupButton size='icon-xs' />} />}
+        >
+          <HashIcon />
+        </TooltipTrigger>
+        <TooltipContent>チャンネル</TooltipContent>
+      </Tooltip>
       <DropdownMenuContent className='max-h-100 no-scrollbar' align='end'>
         {uncategorized.length > 0 && (
           <DropdownMenuGroup>
@@ -172,10 +180,12 @@ function EmojiInsertButton({ textareaRef }: TextareaInsertComponentProps) {
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger render={<InputGroupButton size='icon-xs' />}>
-        <SmileIcon />
-        <span className='sr-only'>絵文字</span>
-      </PopoverTrigger>
+      <Tooltip>
+        <TooltipTrigger render={<PopoverTrigger render={<InputGroupButton size='icon-xs' />} />}>
+          <SmileIcon />
+        </TooltipTrigger>
+        <TooltipContent>絵文字</TooltipContent>
+      </Tooltip>
       <PopoverPanel side='top' align='end' initialFocus={false} finalFocus={false}>
         <DiscordEmojiPicker guildEmojis={emojis} onEmojiSelect={handleSelect} />
       </PopoverPanel>
