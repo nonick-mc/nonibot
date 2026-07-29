@@ -4,7 +4,7 @@
 @import "fumadocs-ui/css/shadcn.css";
 @import "fumadocs-ui/css/preset.css";
 
-@source "../../../../node_modules/@ferrucc-io/emoji-picker";
+@source "../../node_modules/@ferrucc-io/emoji-picker";
 
 @custom-variant dark (&:is(.dark *));
 
