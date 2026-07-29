@@ -106,6 +106,7 @@ export function MediaGalleryEditor() {
           )}
         </div>
         <Button
+          className='sm:w-fit'
           onClick={() => append({ media: { url: '' }, spoiler: false })}
           variant='outline'
           size='sm'

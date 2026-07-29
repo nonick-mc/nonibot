@@ -218,7 +218,7 @@ export function ContainerEditor() {
               <DropdownMenuTrigger
                 render={
                   <Button
-                    className='text-foreground'
+                    className='sm:w-fit text-foreground'
                     variant='outline'
                     size='sm'
                     disabled={fields.length >= 10}

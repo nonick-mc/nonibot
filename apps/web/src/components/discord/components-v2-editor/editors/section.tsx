@@ -116,7 +116,7 @@ export function SectionEditor() {
                 </Empty>
               )}
               <Button
-                className='text-foreground'
+                className='sm:w-fit text-foreground'
                 onClick={() => append(defaultComponentValues[ComponentType.TextDisplay])}
                 variant='outline'
                 size='sm'
