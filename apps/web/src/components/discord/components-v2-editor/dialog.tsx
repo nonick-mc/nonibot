@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ComponentType } from 'discord-api-types/v10';
+import { APIEmoji, ComponentType, type RESTGetAPIGuildEmojisResult } from 'discord-api-types/v10';
 import {
   BoxIcon,
   EyeIcon,
@@ -11,7 +11,7 @@ import {
   SaveIcon,
   TypeIcon,
 } from 'lucide-react';
-import { type ComponentProps, useEffect, useState } from 'react';
+import { type ComponentProps, PropsWithChildren, ReactNode, useEffect, useState } from 'react';
 import { FormProvider, useFieldArray, useForm, Watch } from 'react-hook-form';
 import z from 'zod';
 import { FormDevTool } from '@/components/form';
@@ -35,6 +35,7 @@ import { messageUserComponentsSchema } from '@/lib/discord/zod';
 import { cn } from '@/lib/utils';
 import { DiscordMessage } from '../preview/message';
 import { ComponentsV2Editor } from '.';
+import type { GuildContextValue } from './guild-context';
 import { defaultComponentValues } from './schema';
 
 const schema = z.object({
@@ -44,13 +45,16 @@ const schema = z.object({
 type ComponentsV2EditorModalProps = {
   defaultValues: z.input<typeof schema>['components'];
   onSubmit: (values: z.infer<typeof schema>['components']) => void | Promise<void>;
-  triggerRender: ComponentProps<typeof DialogTrigger>['render'];
-};
+  children: ComponentProps<typeof DialogTrigger>['render'];
+} & GuildContextValue;
 
 export function ComponentsV2EditorDialog({
   defaultValues,
   onSubmit,
-  triggerRender,
+  emojis,
+  roles,
+  channels,
+  children,
 }: ComponentsV2EditorModalProps) {
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'editor' | 'preview'>('editor');
@@ -78,7 +82,7 @@ export function ComponentsV2EditorDialog({
   return (
     <FormProvider {...form}>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger render={triggerRender} />
+        <DialogTrigger render={children} />
         <DialogContent className='flex flex-col max-h-[97vh] h-full sm:max-w-[98vw]'>
           <FormDevTool />
           <DialogHeader>
@@ -102,14 +106,17 @@ export function ComponentsV2EditorDialog({
           </Tabs>
           <div className='flex-1 flex gap-3 min-h-0'>
             <ComponentsV2Editor
-              name='components'
-              fields={fields}
-              remove={remove}
-              move={move}
               className={cn(
                 'flex-1 overflow-y-auto p-0.5 scroll-fade-y no-scrollbar',
                 activeTab === 'preview' && 'hidden md:block',
               )}
+              name='components'
+              fields={fields}
+              remove={remove}
+              move={move}
+              emojis={emojis}
+              roles={roles}
+              channels={channels}
             />
             <div
               className={cn(

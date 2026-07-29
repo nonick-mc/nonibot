@@ -1,22 +1,184 @@
 'use client';
 
-import { TypeIcon } from 'lucide-react';
+import { AtSignIcon, BotIcon, HashIcon, SmileIcon, TypeIcon } from 'lucide-react';
+import { Fragment, type RefObject, useMemo, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
+import { DiscordEmojiPicker } from '@/components/discord/emoji-picker';
 import { ControlledField, ControlledFieldError } from '@/components/rhf/field';
-import { ControlledTextarea } from '@/components/rhf/textarea';
+import { ControlledInputGroupTextarea } from '@/components/rhf/input-group';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { InputGroup, InputGroupAddon, InputGroupButton } from '@/components/ui/input-group';
+import { Popover, PopoverPanel, PopoverTrigger } from '@/components/ui/popover';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { groupChannelsByCategory } from '@/lib/discord/utils';
+import { ChannelTypeIcon } from '../../channel-type-icon';
+import { RoleColor } from '../../role-color';
 import { useComponentEditorContext } from '../context';
 import { EditorCard } from '../editor-card';
+import { useGuildContext } from '../guild-context';
 
 export function TextDisplayEditor() {
   const { control } = useFormContext();
   const { basePath } = useComponentEditorContext();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   return (
     <EditorCard icon={TypeIcon} title='テキスト'>
       <ControlledField control={control} name={`${basePath}.content`}>
-        <ControlledTextarea className='max-h-96' placeholder='テキストを入力' />
+        <InputGroup className='max-h-96'>
+          <ControlledInputGroupTextarea ref={textareaRef} placeholder='テキストを入力' />
+          <InputGroupAddon align='block-end' className='pt-0 flex justify-end gap-1'>
+            <ChannelMentionInsertButton textareaRef={textareaRef} />
+            <RoleMentionInsertButton textareaRef={textareaRef} />
+            <EmojiInsertButton textareaRef={textareaRef} />
+          </InputGroupAddon>
+        </InputGroup>
         <ControlledFieldError />
       </ControlledField>
     </EditorCard>
+  );
+}
+
+type TextareaInsertComponentProps = {
+  textareaRef: RefObject<HTMLTextAreaElement | null>;
+};
+
+function useTextareaInsert(textareaRef: RefObject<HTMLTextAreaElement | null>) {
+  const [open, setOpen] = useState(false);
+
+  function handleSelect(text: string) {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    textarea.focus();
+    document.execCommand('insertText', false, text);
+    setOpen(false);
+  }
+
+  return { open, setOpen, handleSelect };
+}
+
+function RoleMentionInsertButton({ textareaRef }: TextareaInsertComponentProps) {
+  const { roles } = useGuildContext();
+  const { open, setOpen, handleSelect } = useTextareaInsert(textareaRef);
+
+  return (
+    <DropdownMenu open={open} onOpenChange={setOpen}>
+      <DropdownMenuTrigger render={<InputGroupButton size='icon-xs' />}>
+        <AtSignIcon />
+        <span className='sr-only'>メンション</span>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className='max-h-100' align='end'>
+        <DropdownMenuGroup>
+          <DropdownMenuLabel>全般</DropdownMenuLabel>
+          <DropdownMenuItem onClick={() => handleSelect('@everyone')}>
+            <AtSignIcon className='mt-0.5 text-muted-foreground' />
+            everyone
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleSelect('@here')}>
+            <AtSignIcon className='mt-0.5 text-muted-foreground' />
+            here
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuLabel>ロール</DropdownMenuLabel>
+          {roles.map((role) => (
+            <DropdownMenuItem
+              onClick={() => handleSelect(`<@&${role.id}>`)}
+              className='flex justify-between'
+              key={role.id}
+            >
+              <div className='flex items-center gap-2'>
+                <RoleColor colors={role.colors} />
+                {role.name}
+              </div>
+              {role.managed && (
+                <Tooltip>
+                  <TooltipTrigger>
+                    <BotIcon className='text-muted-foreground' />
+                  </TooltipTrigger>
+                  <TooltipContent>自動で管理されたロール</TooltipContent>
+                </Tooltip>
+              )}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+function ChannelMentionInsertButton({ textareaRef }: TextareaInsertComponentProps) {
+  const { channels } = useGuildContext();
+  const { open, setOpen, handleSelect } = useTextareaInsert(textareaRef);
+
+  const { categories, groupedChannels, uncategorized } = useMemo(
+    () => groupChannelsByCategory(channels),
+    [channels],
+  );
+
+  return (
+    <DropdownMenu open={open} onOpenChange={setOpen}>
+      <DropdownMenuTrigger render={<InputGroupButton size='icon-xs' />}>
+        <HashIcon />
+        <span className='sr-only'>チャンネル</span>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className='max-h-100' align='end'>
+        {uncategorized.length > 0 && (
+          <DropdownMenuGroup>
+            {uncategorized.map((ch) => (
+              <DropdownMenuItem onClick={() => handleSelect(`<#${ch.id}>`)} key={ch.id}>
+                <ChannelTypeIcon type={ch.type} />
+                {ch.name}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuGroup>
+        )}
+        {categories.map((category, index) => {
+          const channelsInCategory = groupedChannels.get(category.id) ?? [];
+          if (channelsInCategory.length === 0) return null;
+          return (
+            <Fragment key={category.id}>
+              {(index > 0 || uncategorized.length > 0) && <DropdownMenuSeparator />}
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>{category.name}</DropdownMenuLabel>
+                {channelsInCategory.map((ch) => (
+                  <DropdownMenuItem onClick={() => handleSelect(`<#${ch.id}>`)} key={ch.id}>
+                    <ChannelTypeIcon type={ch.type} />
+                    {ch.name}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuGroup>
+            </Fragment>
+          );
+        })}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+function EmojiInsertButton({ textareaRef }: TextareaInsertComponentProps) {
+  const { emojis } = useGuildContext();
+  const { open, setOpen, handleSelect } = useTextareaInsert(textareaRef);
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger render={<InputGroupButton size='icon-xs' />}>
+        <SmileIcon />
+        <span className='sr-only'>絵文字</span>
+      </PopoverTrigger>
+      <PopoverPanel side='top' align='end' initialFocus={false} finalFocus={false}>
+        <DiscordEmojiPicker guildEmojis={emojis} onEmojiSelect={handleSelect} />
+      </PopoverPanel>
+    </Popover>
   );
 }
