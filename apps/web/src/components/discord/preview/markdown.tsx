@@ -1,12 +1,17 @@
 'use client';
 
+import type { Placeholder } from '@repo/placeholders';
 import { CDNRoutes, ImageFormat, RouteBases } from 'discord-api-types/v10';
 import { type parse, rules, SimpleMarkdown } from 'discord-markdown-parser';
 import type { ParserRules } from 'discord-markdown-parser/dist/simple-markdown';
+import { BracesIcon } from 'lucide-react';
 import type { PropsWithChildren } from 'react';
-import { Fragment, type ReactNode, useState } from 'react';
+import { Fragment, type ReactNode, useContext, useState } from 'react';
 import twemoji from 'twemoji';
+import { Badge } from '@/components/ui/badge';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
+import { DiscordMessageContext } from '../message-context';
 import { ChannelMention, GuildNavigationMention, Mention, RoleMention } from './mention';
 
 // Component
@@ -105,18 +110,12 @@ export function Twemoji({ name }: { name: string }) {
 // AST Parser
 type ASTNode = ReturnType<typeof parse>[number];
 
-// heading/subtext の元の match は prevCapture.slice(-1)[0] (最後のキャプチャグループ) を見るが、
-// LIST_R の最後のキャプチャグループはリスト記号のため、リスト直後に heading が検知されない。
-// prevCapture[0] (フルマッチ) の末尾で判定するよう上書きする。
 const atLineStart = (_: string, state: any) =>
   (state.prevCapture as string[] | null) === null ||
   (state.prevCapture as string[])[0].endsWith('\n');
 
-// 標準の LIST_R は「リスト記号で始まらない行もアイテムの続き」として吸収するため、
-// 通常テキストや heading がリスト内にネストされてしまう。
-// 独自 LIST_R では「リスト記号で始まる行の連続」だけにマッチし、
-// それ以外の行（通常テキスト・heading 等）の手前で停止する。
 const LIST_LOOKBEHIND_R = /(?:^|\n)( *)$/;
+const PLACEHOLDER_R = /^\{\{\s*(\w+)\s*\}\}/;
 const LIST_BULLET_PAT = '(?:[*+-]|\\d+\\.)';
 const CUSTOM_LIST_R = new RegExp(
   '^( *)(' +
@@ -161,14 +160,19 @@ const newRules: ParserRules = {
       /^<(id|\d{17,20}):(?:(customize|browse|guide)|(linked-roles)(:\d{17,20})?)>/.exec(source),
     parse: rules.guildNavigation.parse,
   },
+  placeholder: {
+    order: SimpleMarkdown.defaultRules.strong.order,
+    match: (source: string) => PLACEHOLDER_R.exec(source),
+    parse: (capture) => ({ key: capture[1] }),
+  },
 };
 
 const customParser = SimpleMarkdown.parserFor(newRules);
 
-function renderNode(node: ASTNode, key: number): ReactNode {
+function renderNode(node: ASTNode, key: number, placeholders: Placeholder | undefined): ReactNode {
   const content = node.content as ASTNode[] | string | undefined;
   const nested = Array.isArray(content)
-    ? renderNodes(content)
+    ? renderNodes(content, placeholders)
     : typeof content === 'string'
       ? content
       : null;
@@ -205,7 +209,7 @@ function renderNode(node: ASTNode, key: number): ReactNode {
         <Fragment key={key}>
           <Tag className={cn('my-1 pl-5', ordered ? 'list-decimal' : 'list-disc')}>
             {items.map((item, i) => (
-              <li key={i}>{renderNodes(item)}</li>
+              <li key={i}>{renderNodes(item, placeholders)}</li>
             ))}
           </Tag>
           {(node.trailingNewline as boolean) && <br />}
@@ -269,14 +273,36 @@ function renderNode(node: ASTNode, key: number): ReactNode {
     case 'twemoji':
       return <Twemoji key={key} name={node.name} />;
 
+    // プレースホルダー
+    case 'placeholder': {
+      const placeholderKey = node.key as string;
+
+      const placeholder = placeholders?.find((v) => v.key === placeholderKey);
+      if (!placeholder) return `{{${placeholderKey}}}`;
+
+      return (
+        <Tooltip key={key}>
+          <TooltipTrigger
+            render={
+              <span className='inline-flex items-center align-bottom cursor-pointer rounded-sm px-0.5 font-mono border border-primary [&_svg]:mt-0.5 [&_svg]:size-[1em]' />
+            }
+          >
+            {placeholderKey}
+          </TooltipTrigger>
+          <TooltipContent>{placeholder.description}</TooltipContent>
+        </Tooltip>
+      );
+    }
+
     default:
-      if (Array.isArray(content)) return <span key={key}>{renderNodes(content)}</span>;
+      if (Array.isArray(content))
+        return <span key={key}>{renderNodes(content, placeholders)}</span>;
       if (typeof content === 'string') return content;
       return null;
   }
 }
 
-function renderNodes(nodes: ASTNode[]): ReactNode {
+function renderNodes(nodes: ASTNode[], placeholders: Placeholder | undefined): ReactNode {
   const result: ReactNode[] = [];
   let i = 0;
   // 連結するtextノードを結合
@@ -289,7 +315,7 @@ function renderNodes(nodes: ASTNode[]): ReactNode {
       }
       result.push(text);
     } else {
-      result.push(renderNode(nodes[i], i));
+      result.push(renderNode(nodes[i], i, placeholders));
       i++;
     }
   }
@@ -297,10 +323,14 @@ function renderNodes(nodes: ASTNode[]): ReactNode {
 }
 
 export function DiscordMarkdown({ content }: { content: string }) {
+  const { placeholders } = useContext(DiscordMessageContext);
   if (!content) return null;
   return (
-    <span className='whitespace-pre-wrap break-words leading-tight'>
-      {renderNodes(customParser(content, { inline: true, extended: true, _list: true }))}
+    <span className='whitespace-pre-wrap wrap-break-words leading-tight'>
+      {renderNodes(
+        customParser(content, { inline: true, extended: true, _list: true }),
+        placeholders,
+      )}
     </span>
   );
 }

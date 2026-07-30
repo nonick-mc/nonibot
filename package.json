@@ -7,7 +7,8 @@
     "build": "turbo run build",
     "bot": "pnpm -C ./apps/bot",
     "web": "pnpm -C ./apps/web",
-    "database": "pnpm -C ./packages/database"
+    "database": "pnpm -C ./packages/database",
+    "placeholders": "pnpm -C ./packages/placeholders"
   },
   "engines": {
     "node": ">=22.0.0"

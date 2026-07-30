@@ -1,8 +1,9 @@
 import { HashIcon, Link2Icon, MilestoneIcon, TextSearchIcon } from 'lucide-react';
 import type { CSSProperties, PropsWithChildren } from 'react';
+import { useContext } from 'react';
 import { cn } from '@/lib/utils';
 import { ChannelTypeIcon } from '../channel-type-icon';
-import { useDiscordMessageContext } from '../message-context';
+import { DiscordMessageContext } from '../message-context';
 import { toHexColor } from '../role-color';
 
 type MentionProps = PropsWithChildren<{
@@ -81,7 +82,7 @@ export function GuildNavigationMention({ variant }: GuildNavigationMentionProps)
 }
 
 export function ChannelMention({ id }: { id: string }) {
-  const { channels } = useDiscordMessageContext();
+  const { channels = [] } = useContext(DiscordMessageContext);
   const channel = channels.find((c) => c.id === id);
 
   if (!channel) {
@@ -102,7 +103,7 @@ export function ChannelMention({ id }: { id: string }) {
 }
 
 export function RoleMention({ id }: { id: string }) {
-  const { roles } = useDiscordMessageContext();
+  const { roles = [] } = useContext(DiscordMessageContext);
   const role = roles.find((r) => r.id === id);
 
   if (!role) return <Mention>@ロール</Mention>;

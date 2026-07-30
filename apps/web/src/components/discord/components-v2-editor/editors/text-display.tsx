@@ -1,7 +1,7 @@
 'use client';
 
-import { AtSignIcon, BotIcon, HashIcon, SmileIcon, TypeIcon } from 'lucide-react';
-import { Fragment, type RefObject, useMemo, useRef, useState } from 'react';
+import { AtSignIcon, BotIcon, BracesIcon, HashIcon, SmileIcon, TypeIcon } from 'lucide-react';
+import { Fragment, type RefObject, useContext, useMemo, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { DiscordEmojiPicker } from '@/components/discord/emoji-picker';
 import { ControlledField, ControlledFieldError } from '@/components/rhf/field';
@@ -20,7 +20,7 @@ import { Popover, PopoverPanel, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { groupChannelsByCategory } from '@/lib/discord/utils';
 import { ChannelTypeIcon } from '../../channel-type-icon';
-import { useDiscordMessageContext } from '../../message-context';
+import { DiscordMessageContext } from '../../message-context';
 import { RoleColor } from '../../role-color';
 import { useComponentEditorContext } from '../context';
 import { EditorCard } from '../editor-card';
@@ -35,10 +35,15 @@ export function TextDisplayEditor() {
       <ControlledField control={control} name={`${basePath}.content`}>
         <InputGroup className='max-h-96'>
           <ControlledInputGroupTextarea ref={textareaRef} placeholder='テキストを入力' />
-          <InputGroupAddon align='block-end' className='pt-0 flex justify-end gap-1'>
-            <ChannelMentionInsertButton textareaRef={textareaRef} />
-            <RoleMentionInsertButton textareaRef={textareaRef} />
-            <EmojiInsertButton textareaRef={textareaRef} />
+          <InputGroupAddon align='block-end' className='pt-0 flex items-center justify-between'>
+            <div className='flex items-center gap-1'>
+              <PlaceholderInsertButton textareaRef={textareaRef} />
+            </div>
+            <div className='flex items-center gap-1'>
+              <ChannelMentionInsertButton textareaRef={textareaRef} />
+              <RoleMentionInsertButton textareaRef={textareaRef} />
+              <EmojiInsertButton textareaRef={textareaRef} />
+            </div>
           </InputGroupAddon>
         </InputGroup>
         <ControlledFieldError />
@@ -66,9 +71,48 @@ function useTextareaInsert(textareaRef: RefObject<HTMLTextAreaElement | null>) {
   return { open, setOpen, handleSelect };
 }
 
-function RoleMentionInsertButton({ textareaRef }: TextareaInsertComponentProps) {
-  const { roles } = useDiscordMessageContext();
+function PlaceholderInsertButton({ textareaRef }: TextareaInsertComponentProps) {
+  const { placeholders } = useContext(DiscordMessageContext);
   const { open, setOpen, handleSelect } = useTextareaInsert(textareaRef);
+
+  if (!placeholders) return null;
+
+  return (
+    <DropdownMenu open={open} onOpenChange={setOpen}>
+      <Tooltip>
+        <TooltipTrigger
+          render={<DropdownMenuTrigger render={<InputGroupButton size='icon-xs' />} />}
+        >
+          <BracesIcon />
+        </TooltipTrigger>
+        <TooltipContent>プレースホルダー</TooltipContent>
+      </Tooltip>
+      <DropdownMenuContent className='max-w-md w-full'>
+        <DropdownMenuGroup>
+          {placeholders.map(({ key, description }) => (
+            <DropdownMenuItem
+              key={key}
+              className='items-center gap-3'
+              onClick={() => handleSelect(`{{${key}}}`)}
+            >
+              <BracesIcon />
+              <div className='flex flex-col'>
+                <span className='font-mono'>{key}</span>
+                <span className='text-xs text-muted-foreground'>{description}</span>
+              </div>
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+function RoleMentionInsertButton({ textareaRef }: TextareaInsertComponentProps) {
+  const { roles } = useContext(DiscordMessageContext);
+  const { open, setOpen, handleSelect } = useTextareaInsert(textareaRef);
+
+  if (!roles) return null;
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -122,13 +166,15 @@ function RoleMentionInsertButton({ textareaRef }: TextareaInsertComponentProps) 
 }
 
 function ChannelMentionInsertButton({ textareaRef }: TextareaInsertComponentProps) {
-  const { channels } = useDiscordMessageContext();
+  const { channels } = useContext(DiscordMessageContext);
   const { open, setOpen, handleSelect } = useTextareaInsert(textareaRef);
 
   const { categories, groupedChannels, uncategorized } = useMemo(
-    () => groupChannelsByCategory(channels),
+    () => groupChannelsByCategory(channels ?? []),
     [channels],
   );
+
+  if (!channels) return null;
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -175,7 +221,7 @@ function ChannelMentionInsertButton({ textareaRef }: TextareaInsertComponentProp
 }
 
 function EmojiInsertButton({ textareaRef }: TextareaInsertComponentProps) {
-  const { emojis } = useDiscordMessageContext();
+  const { emojis } = useContext(DiscordMessageContext);
   const { open, setOpen, handleSelect } = useTextareaInsert(textareaRef);
 
   return (

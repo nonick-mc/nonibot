@@ -129,6 +129,9 @@ importers:
       '@repo/database':
         specifier: workspace:*
         version: link:../../packages/database
+      '@repo/placeholders':
+        specifier: workspace:*
+        version: link:../../packages/placeholders
       '@types/mdx':
         specifier: ^2.0.13
         version: 2.0.13
@@ -279,7 +282,17 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  packages/typescript-config: {}
+  packages/placeholders:
+    devDependencies:
+      '@types/json-templates':
+        specifier: ^3.0.3
+        version: 3.0.3
+      json-templates:
+        specifier: ^5.2.0
+        version: 5.2.0
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
 
 packages:
 
@@ -2379,6 +2392,9 @@ packages:
   '@types/hast@3.0.4':
     resolution: {integrity: sha512-WPs+bbQw5aCj+x6laNGWLH3wviHtoCv/P3+otBhbOhJgG8qtpdAMlTCxLtsTWA7LH1Oh/bFCHsBn0TPS5m30EQ==}
 
+  '@types/json-templates@3.0.3':
+    resolution: {integrity: sha512-5NlmREuok2eucnG/sT7rh85qsuxiGzNF1LYQ4caOCeob1eww0Sgw7fBrrug9sZa+BKKHym4U9NgCslWjIr2KFw==}
+
   '@types/lodash@4.17.24':
     resolution: {integrity: sha512-gIW7lQLZbue7lRSWEFql49QJJWThrTFFeIMJdp3eH4tKoxm1OvEPg02rm4wCCSHS0cL3/Fizimb35b7k8atwsQ==}
 
@@ -3822,6 +3838,9 @@ packages:
   json-schema-typed@8.0.2:
     resolution: {integrity: sha512-fQhoXdcvc3V28x7C7BMs4P5+kNlgUURe2jmUT1T//oBRMDrqy1QPelJimwZGo7Hg9VPV3EQV5Bnq4hbFy2vetA==}
 
+  json-templates@5.2.0:
+    resolution: {integrity: sha512-lZQvWIG58tE3S72EsYhkBE2dvON9OtnUTelcaLEbBSdXFm3SYshh0M3CxeJYYVuujN4cwVIQrgD3c9ceJc6FYA==}
+
   json5@2.2.3:
     resolution: {integrity: sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==}
     engines: {node: '>=6'}
@@ -4327,6 +4346,10 @@ packages:
   object-inspect@1.13.4:
     resolution: {integrity: sha512-W67iLl4J2EXEGTbfeHCffrjDfitvLANg0UlX3wFUUSTx92KXRFegMHUVgSqE+wvhAbi4WqjGg9czysTV2Epbew==}
     engines: {node: '>= 0.4'}
+
+  object-path@0.11.8:
+    resolution: {integrity: sha512-YJjNZrlXJFM42wTBn6zgOJVar9KFJvzx6sTWDte8sWZF//cnjl0BxHNpfZx+ZffXX63A9q0b1zsFiBX4g4X5KA==}
+    engines: {node: '>= 10.12.0'}
 
   object-treeify@1.1.33:
     resolution: {integrity: sha512-EFVjAYfzWqWsBMRHPMAXLCDIJnpMhdWAqR7xG6M6a2cs6PMFpl/+Z20w9zDW4vkxOFfddegBKq9Rehd0bxWE7A==}
@@ -7095,6 +7118,8 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
 
+  '@types/json-templates@3.0.3': {}
+
   '@types/lodash@4.17.24': {}
 
   '@types/mdast@4.0.4':
@@ -8512,6 +8537,10 @@ snapshots:
 
   json-schema-typed@8.0.2: {}
 
+  json-templates@5.2.0:
+    dependencies:
+      object-path: 0.11.8
+
   json5@2.2.3: {}
 
   jsonfile@4.0.0:
@@ -9225,6 +9254,8 @@ snapshots:
   object-assign@4.1.1: {}
 
   object-inspect@1.13.4: {}
+
+  object-path@0.11.8: {}
 
   object-treeify@1.1.33: {}
 

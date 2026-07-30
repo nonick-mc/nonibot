@@ -19,6 +19,7 @@
     "@hookform/resolvers": "^5.4.0",
     "@icons-pack/react-simple-icons": "^13.13.0",
     "@repo/database": "workspace:*",
+    "@repo/placeholders": "workspace:*",
     "@types/mdx": "^2.0.13",
     "@uiw/react-color": "^2.10.3",
     "better-auth": "^1.6.11",

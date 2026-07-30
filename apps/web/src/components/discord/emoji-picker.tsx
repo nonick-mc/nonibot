@@ -12,13 +12,15 @@ import {
 } from '../ui/emoji-picker';
 
 type DiscordEmojiPickerProps = {
-  guildEmojis: APIEmoji[];
+  guildEmojis?: APIEmoji[];
   onEmojiSelect?: (emoji: string) => void;
 };
 
-export function DiscordEmojiPicker({ guildEmojis, onEmojiSelect }: DiscordEmojiPickerProps) {
-  const customSections: CustomSection[] = [
-    {
+export function DiscordEmojiPicker({ guildEmojis = [], onEmojiSelect }: DiscordEmojiPickerProps) {
+  const customSections: CustomSection[] = [];
+
+  if (guildEmojis.length) {
+    customSections.push({
       id: 'custom',
       name: 'サーバー絵文字',
       priority: 1,
@@ -29,8 +31,8 @@ export function DiscordEmojiPicker({ guildEmojis, onEmojiSelect }: DiscordEmojiP
           name: emoji.name as string,
           imageUrl: `${RouteBases.cdn}/${CDNRoutes.emoji(emoji.id as string, emoji.animated ? ImageFormat.GIF : ImageFormat.WebP)}`,
         })),
-    },
-  ];
+    });
+  }
 
   const guildEmojiByName = useMemo(
     () => new Map(guildEmojis.map((emoji) => [emoji.name as string, emoji])),
