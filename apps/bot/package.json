@@ -10,7 +10,7 @@
   "dependencies": {
     "@akki256/discord-interaction": "^3.1.1",
     "@napi-rs/canvas": "0.1.59",
-    "adm-zip": "^0.5.17",
+    "adm-zip": "^0.6.0",
     "axios": "^1.16.0",
     "dayjs": "^1.11.20",
     "discord-api-types": "catalog:",
