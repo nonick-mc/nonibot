@@ -52,7 +52,6 @@ export async function GuildSwitcher({ currentGuildId }: GuildSwitcherProps) {
           />
           <DropdownMenuContent className='w-(--anchor-width)' align='center' side='bottom'>
             <DropdownMenuGroup>
-              <DropdownMenuLabel className='text-xs'>サーバー</DropdownMenuLabel>
               <DropdownMenuCheckboxItem checked>
                 <Avatar className='size-6'>
                   <AvatarImage
@@ -67,6 +66,10 @@ export async function GuildSwitcher({ currentGuildId }: GuildSwitcherProps) {
                 </Avatar>
                 <span>{currentGuild.name}</span>
               </DropdownMenuCheckboxItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuLabel className='text-xs'>他のサーバー</DropdownMenuLabel>
               <Suspense fallback={<GuildsMenuFallback />}>
                 <GuildsMenu currentGuildId={currentGuildId} />
               </Suspense>
