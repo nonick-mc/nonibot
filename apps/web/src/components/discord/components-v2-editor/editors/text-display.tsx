@@ -35,11 +35,9 @@ export function TextDisplayEditor() {
       <ControlledField control={control} name={`${basePath}.content`}>
         <InputGroup className='max-h-96'>
           <ControlledInputGroupTextarea ref={textareaRef} placeholder='テキストを入力' />
-          <InputGroupAddon align='block-end' className='pt-0 flex items-center justify-between'>
+          <InputGroupAddon align='block-end' className='pt-0 flex items-center justify-end'>
             <div className='flex items-center gap-1'>
               <PlaceholderInsertButton textareaRef={textareaRef} />
-            </div>
-            <div className='flex items-center gap-1'>
               <ChannelMentionInsertButton textareaRef={textareaRef} />
               <RoleMentionInsertButton textareaRef={textareaRef} />
               <EmojiInsertButton textareaRef={textareaRef} />
@@ -87,7 +85,7 @@ function PlaceholderInsertButton({ textareaRef }: TextareaInsertComponentProps) 
         </TooltipTrigger>
         <TooltipContent>プレースホルダー</TooltipContent>
       </Tooltip>
-      <DropdownMenuContent className='max-w-md w-full'>
+      <DropdownMenuContent align='end' className='max-w-md w-full'>
         <DropdownMenuGroup>
           {placeholders.map(({ key, description }) => (
             <DropdownMenuItem
