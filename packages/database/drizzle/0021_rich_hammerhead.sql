@@ -1,0 +1,20 @@
+CREATE TYPE "public"."send_trigger" AS ENUM('joined', 'verified');--> statement-breakpoint
+ALTER TABLE "audit_log" RENAME COLUMN "create_at" TO "created_at";--> statement-breakpoint
+ALTER TABLE "guild" RENAME COLUMN "create_at" TO "created_at";--> statement-breakpoint
+ALTER TABLE "report" RENAME COLUMN "create_at" TO "created_at";--> statement-breakpoint
+ALTER TABLE "public_rule"."auto_create_thread" RENAME COLUMN "create_at" TO "created_at";--> statement-breakpoint
+ALTER TABLE "public_setting"."auto_change_verify_level" RENAME COLUMN "create_at" TO "created_at";--> statement-breakpoint
+ALTER TABLE "public_setting"."auto_mod" RENAME COLUMN "create_at" TO "created_at";--> statement-breakpoint
+ALTER TABLE "public_setting"."auto_public" RENAME COLUMN "create_at" TO "created_at";--> statement-breakpoint
+ALTER TABLE "public_setting"."ban_log" RENAME COLUMN "create_at" TO "created_at";--> statement-breakpoint
+ALTER TABLE "public_setting"."join_message" RENAME COLUMN "create_at" TO "created_at";--> statement-breakpoint
+ALTER TABLE "public_setting"."kick_log" RENAME COLUMN "create_at" TO "created_at";--> statement-breakpoint
+ALTER TABLE "public_setting"."leave_message" RENAME COLUMN "create_at" TO "created_at";--> statement-breakpoint
+ALTER TABLE "public_setting"."message_delete_log" RENAME COLUMN "create_at" TO "created_at";--> statement-breakpoint
+ALTER TABLE "public_setting"."message_edit_log" RENAME COLUMN "create_at" TO "created_at";--> statement-breakpoint
+ALTER TABLE "public_setting"."message_expand" RENAME COLUMN "create_at" TO "created_at";--> statement-breakpoint
+ALTER TABLE "public_setting"."report" RENAME COLUMN "create_at" TO "created_at";--> statement-breakpoint
+ALTER TABLE "public_setting"."timeout_log" RENAME COLUMN "create_at" TO "created_at";--> statement-breakpoint
+ALTER TABLE "public_setting"."verification" RENAME COLUMN "create_at" TO "created_at";--> statement-breakpoint
+ALTER TABLE "public_setting"."voice_log" RENAME COLUMN "create_at" TO "created_at";--> statement-breakpoint
+ALTER TABLE "public_setting"."join_message" ADD COLUMN "send_trigger" "send_trigger" NOT NULL;
