@@ -1,4 +1,7 @@
-﻿import type { RESTPostAPIChannelMessageJSONBody } from 'discord-api-types/v10';
+﻿import type {
+  APIMessageTopLevelComponent,
+  RESTPostAPIChannelMessageJSONBody,
+} from 'discord-api-types/v10';
 import { boolean, integer, jsonb, pgEnum, pgSchema, text } from 'drizzle-orm/pg-core';
 import { timestamps } from '../utils';
 import { guild } from './guild';
@@ -10,12 +13,17 @@ const guildId = text('guild_id')
   .references(() => guild.id, { onDelete: 'cascade' });
 
 // #region JoinMessage
+export const sendTriggerEnum = pgEnum('send_trigger', ['joined', 'passedMembershipGate']);
 export const joinMessageSetting = settingSchema.table('join_message', {
   guildId,
   enabled: boolean('enabled').notNull(),
   channel: text('channel'),
+  sendTrigger: sendTriggerEnum('send_trigger').notNull(),
   ignoreBot: boolean('ignore_bot').notNull(),
-  message: jsonb('message').$type<RESTPostAPIChannelMessageJSONBody>().notNull(),
+  messageComponents: jsonb('message_components')
+    .$type<APIMessageTopLevelComponent>()
+    .array()
+    .notNull(),
   ...timestamps,
 });
 // #endregion
@@ -26,7 +34,10 @@ export const leaveMessageSetting = settingSchema.table('leave_message', {
   enabled: boolean('enabled').notNull(),
   channel: text('channel'),
   ignoreBot: boolean('ignore_bot').notNull(),
-  message: jsonb('message').$type<RESTPostAPIChannelMessageJSONBody>().notNull(),
+  messageComponents: jsonb('message_components')
+    .$type<APIMessageTopLevelComponent>()
+    .array()
+    .notNull(),
   ...timestamps,
 });
 // #endregion
