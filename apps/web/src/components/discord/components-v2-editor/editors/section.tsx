@@ -55,7 +55,7 @@ export function SectionEditor() {
               <FieldDescription>画像は右側に表示されます。</FieldDescription>
               <ControlledFieldError />
             </FieldContent>
-            <InputGroup>
+            <InputGroup className='@md/field-group:w-sm!'>
               <ControlledInputGroupInput ref={thumbnailUrlRef} placeholder='URLを入力' />
               <InputGroupAddon align='inline-start'>
                 <LinkIcon />
