@@ -39,6 +39,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Links } from '@/lib/constants';
 import {
   createMessageUserComponentsSchema,
   type MessageUserComponentsSchema,
@@ -139,7 +140,7 @@ export function ComponentsV2EditorDialog({
                     <DiscordMessage
                       components={components}
                       username='nonibot'
-                      avatarUrl='https://cdn.nonick.net/nonibot/profile_dark.png'
+                      avatarUrl={Links.AvatarUrl}
                       showAppTag
                       verified
                     />
