@@ -1,11 +1,11 @@
 import { CheckIcon } from 'lucide-react';
 import { useState } from 'react';
 import type z from 'zod';
-import type { messageUserComponentsSchema } from '@/lib/discord/zod';
+import type { MessageUserComponentsSchema } from '@/lib/discord/zod';
 import { ComponentV2 } from './components-v2';
 
 export type MessagePreviewProps = {
-  components: z.input<typeof messageUserComponentsSchema>;
+  components: z.input<MessageUserComponentsSchema>;
   username: string;
   avatarUrl: string;
   showAppTag?: boolean;

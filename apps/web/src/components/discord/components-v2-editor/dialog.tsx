@@ -11,7 +11,15 @@ import {
   SaveIcon,
   TypeIcon,
 } from 'lucide-react';
-import { type ComponentProps, PropsWithChildren, ReactNode, useEffect, useState } from 'react';
+import {
+  type ComponentProps,
+  PropsWithChildren,
+  ReactNode,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { FormProvider, useFieldArray, useForm, Watch } from 'react-hook-form';
 import z from 'zod';
 import { FormDevTool } from '@/components/form';
@@ -31,19 +39,19 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { messageUserComponentsSchema } from '@/lib/discord/zod';
+import {
+  createMessageUserComponentsSchema,
+  type MessageUserComponentsSchema,
+} from '@/lib/discord/zod';
 import { cn } from '@/lib/utils';
+import { DiscordMessageContext } from '../message-context';
 import { DiscordMessage } from '../preview/message';
 import { ComponentsV2Editor } from '.';
 import { defaultComponentValues } from './schema';
 
-const schema = z.object({
-  components: messageUserComponentsSchema,
-});
-
 type ComponentsV2EditorModalProps = {
-  defaultValues: z.input<typeof schema>['components'];
-  onSubmit: (values: z.infer<typeof schema>['components']) => void | Promise<void>;
+  defaultValues: z.input<MessageUserComponentsSchema>;
+  onSubmit: (values: z.infer<MessageUserComponentsSchema>) => void | Promise<void>;
   children: ComponentProps<typeof DialogTrigger>['render'];
 };
 
@@ -54,6 +62,12 @@ export function ComponentsV2EditorDialog({
 }: ComponentsV2EditorModalProps) {
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'editor' | 'preview'>('editor');
+  const { placeholders } = useContext(DiscordMessageContext);
+
+  const schema = useMemo(
+    () => z.object({ components: createMessageUserComponentsSchema(placeholders) }),
+    [placeholders],
+  );
 
   const form = useForm({
     resolver: zodResolver(schema),

@@ -9,7 +9,14 @@ import {
   PlusIcon,
   Trash2Icon,
 } from 'lucide-react';
-import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
+import { useRef } from 'react';
+import {
+  type Control,
+  Controller,
+  type FieldValues,
+  useFieldArray,
+  useFormContext,
+} from 'react-hook-form';
 import { Sortable, SortableItem, SortableItemHandle } from '@/components/reui/sortable';
 import {
   ControlledField,
@@ -19,10 +26,11 @@ import {
 import { ControlledInputGroupInput } from '@/components/rhf/input-group';
 import { Button } from '@/components/ui/button';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
-import { InputGroup, InputGroupAddon } from '@/components/ui/input-group';
+import { InputGroup, InputGroupAddon, InputGroupButton } from '@/components/ui/input-group';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useComponentEditorContext } from '../context';
 import { EditorCard } from '../editor-card';
+import { PlaceholderPickerButton } from '../placeholder-picker-button';
 
 export function MediaGalleryEditor() {
   const form = useFormContext();
@@ -54,40 +62,11 @@ export function MediaGalleryEditor() {
                   <SortableItemHandle>
                     <GripVerticalIcon className='size-4 text-muted-foreground' />
                   </SortableItemHandle>
-                  <ControlledField
+                  <MediaGalleryItemUrlField
                     control={form.control}
-                    name={`${basePath}.items.${itemIndex}.media.url`}
-                  >
-                    <InputGroup>
-                      <ControlledInputGroupInput placeholder='URLを入力' />
-                      <InputGroupAddon align='inline-start'>
-                        <LinkIcon />
-                      </InputGroupAddon>
-                      <InputGroupAddon align='inline-end'>
-                        <Tooltip>
-                          <Controller
-                            control={form.control}
-                            name={`${basePath}.items.${itemIndex}.spoiler`}
-                            render={({ field }) => (
-                              <TooltipTrigger
-                                render={
-                                  <Button
-                                    onClick={() => field.onChange(!field.value)}
-                                    variant='ghost'
-                                    size='icon-sm'
-                                  >
-                                    {field.value ? <EyeOffIcon /> : <EyeIcon />}
-                                  </Button>
-                                }
-                              />
-                            )}
-                          />
-                          <TooltipContent>ネタバレ添付ファイル</TooltipContent>
-                        </Tooltip>
-                      </InputGroupAddon>
-                    </InputGroup>
-                    <ControlledFieldError />
-                  </ControlledField>
+                    basePath={basePath}
+                    itemIndex={itemIndex}
+                  />
                   <Button onClick={() => remove(itemIndex)} size='icon-sm' variant='ghost'>
                     <Trash2Icon className='text-destructive' />
                   </Button>
@@ -117,5 +96,51 @@ export function MediaGalleryEditor() {
         </Button>
       </div>
     </EditorCard>
+  );
+}
+
+type MediaGalleryItemUrlFieldProps = {
+  control: Control<FieldValues>;
+  basePath: string;
+  itemIndex: number;
+};
+
+function MediaGalleryItemUrlField({ control, basePath, itemIndex }: MediaGalleryItemUrlFieldProps) {
+  const urlRef = useRef<HTMLInputElement>(null);
+
+  return (
+    <ControlledField control={control} name={`${basePath}.items.${itemIndex}.media.url`}>
+      <InputGroup>
+        <ControlledInputGroupInput ref={urlRef} placeholder='URLを入力' />
+        <InputGroupAddon align='inline-start'>
+          <LinkIcon />
+        </InputGroupAddon>
+        <InputGroupAddon align='inline-end'>
+          <div className='flex items-center gap-0.5'>
+            <PlaceholderPickerButton inputRef={urlRef} urlOnly mode='replace' />
+            <Tooltip>
+              <Controller
+                control={control}
+                name={`${basePath}.items.${itemIndex}.spoiler`}
+                render={({ field }) => (
+                  <TooltipTrigger
+                    render={
+                      <InputGroupButton
+                        onClick={() => field.onChange(!field.value)}
+                        size='icon-xs'
+                      />
+                    }
+                  >
+                    {field.value ? <EyeOffIcon /> : <EyeIcon />}
+                  </TooltipTrigger>
+                )}
+              />
+              <TooltipContent>ネタバレ添付ファイル</TooltipContent>
+            </Tooltip>
+          </div>
+        </InputGroupAddon>
+      </InputGroup>
+      <ControlledFieldError />
+    </ControlledField>
   );
 }

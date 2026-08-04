@@ -9,6 +9,7 @@ import {
   LinkIcon,
   PlusIcon,
 } from 'lucide-react';
+import { useRef } from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import { Sortable, SortableItem } from '@/components/reui/sortable';
 import {
@@ -20,17 +21,19 @@ import { ControlledInputGroupInput } from '@/components/rhf/input-group';
 import { Button } from '@/components/ui/button';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { FieldContent, FieldDescription, FieldGroup } from '@/components/ui/field';
-import { InputGroup, InputGroupAddon } from '@/components/ui/input-group';
+import { InputGroup, InputGroupAddon, InputGroupButton } from '@/components/ui/input-group';
 import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useComponentEditorContext } from '../context';
 import { EditorCard } from '../editor-card';
+import { PlaceholderPickerButton } from '../placeholder-picker-button';
 import { defaultComponentValues } from '../schema';
 import { ComponentEditorByType } from './index';
 
 export function SectionEditor() {
   const form = useFormContext();
   const { basePath } = useComponentEditorContext();
+  const thumbnailUrlRef = useRef<HTMLInputElement>(null);
 
   const { fields, append, remove, move } = useFieldArray({
     control: form.control,
@@ -53,11 +56,12 @@ export function SectionEditor() {
               <ControlledFieldError />
             </FieldContent>
             <InputGroup>
-              <ControlledInputGroupInput placeholder='URLを入力' />
+              <ControlledInputGroupInput ref={thumbnailUrlRef} placeholder='URLを入力' />
               <InputGroupAddon align='inline-start'>
                 <LinkIcon />
               </InputGroupAddon>
-              <InputGroupAddon align='inline-end'>
+              <InputGroupAddon className='gap-0.5' align='inline-end'>
+                <PlaceholderPickerButton inputRef={thumbnailUrlRef} urlOnly mode='replace' />
                 <Tooltip>
                   <Controller
                     control={form.control}
@@ -65,15 +69,14 @@ export function SectionEditor() {
                     render={({ field }) => (
                       <TooltipTrigger
                         render={
-                          <Button
+                          <InputGroupButton
                             onClick={() => field.onChange(!field.value)}
-                            variant='ghost'
-                            size='icon-sm'
-                          >
-                            {field.value ? <EyeOffIcon /> : <EyeIcon />}
-                          </Button>
+                            size='icon-xs'
+                          />
                         }
-                      />
+                      >
+                        {field.value ? <EyeOffIcon /> : <EyeIcon />}
+                      </TooltipTrigger>
                     )}
                   />
                   <TooltipContent>ネタバレ添付ファイル</TooltipContent>

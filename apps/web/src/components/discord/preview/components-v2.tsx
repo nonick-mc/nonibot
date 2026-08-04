@@ -2,13 +2,13 @@
 
 import { ComponentType, SeparatorSpacingSize } from 'discord-api-types/v10';
 import type z from 'zod';
-import type { messageUserComponentsSchema } from '@/lib/discord/zod';
+import type { MessageUserComponentsSchema } from '@/lib/discord/zod';
 import { cn } from '@/lib/utils';
 import { Separator as ShadcnSeparator } from '../../ui/separator';
 import { DiscordImage } from './image';
 import { DiscordMarkdown } from './markdown';
 
-type PreviewComponents = z.input<typeof messageUserComponentsSchema>;
+type PreviewComponents = z.input<MessageUserComponentsSchema>;
 type PreviewComponent = PreviewComponents[number];
 
 type ComponentProps<T extends ComponentType> = {

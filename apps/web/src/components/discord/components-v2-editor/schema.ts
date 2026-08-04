@@ -1,6 +1,6 @@
 import { ComponentType, SeparatorSpacingSize } from 'discord-api-types/v10';
 import type z from 'zod';
-import type { messageUserComponentsSchema } from '@/lib/discord/zod';
+import type { MessageUserComponentsSchema } from '@/lib/discord/zod';
 
 export const defaultComponentValues: Record<
   | ComponentType.TextDisplay
@@ -8,7 +8,7 @@ export const defaultComponentValues: Record<
   | ComponentType.MediaGallery
   | ComponentType.Separator
   | ComponentType.Container,
-  z.input<typeof messageUserComponentsSchema>[number]
+  z.input<MessageUserComponentsSchema>[number]
 > = {
   [ComponentType.TextDisplay]: {
     type: ComponentType.TextDisplay,
