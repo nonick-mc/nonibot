@@ -127,7 +127,7 @@ export function ComponentsV2EditorDialog({
             />
             <div
               className={cn(
-                'flex-1 flex flex-col p-6 bg-discord-background border rounded-xl',
+                'flex-1 flex flex-col max-sm:p-4 p-6 bg-discord-background border rounded-xl',
                 activeTab === 'editor' && 'hidden md:flex',
               )}
             >
