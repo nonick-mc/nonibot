@@ -1,11 +1,13 @@
 'use client';
 
 import { ComponentType, SeparatorSpacingSize } from 'discord-api-types/v10';
+import { useContext } from 'react';
 import type z from 'zod';
 import type { MessageUserComponentsSchema } from '@/lib/discord/zod';
 import { cn } from '@/lib/utils';
 import { Separator as ShadcnSeparator } from '../../ui/separator';
-import { DiscordImage } from './image';
+import { DiscordMessageContext } from '../message-context';
+import { DiscordImage, resolveUrlPlaceholder } from './image';
 import { DiscordMarkdown } from './markdown';
 
 type PreviewComponents = z.input<MessageUserComponentsSchema>;
@@ -45,46 +47,47 @@ export function Section({ component }: ComponentProps<ComponentType.Section>) {
 }
 
 export function MediaGallery({ component }: ComponentProps<ComponentType.MediaGallery>) {
+  const { placeholders } = useContext(DiscordMessageContext);
   const items = component.items.filter((item) => item.media.url);
   if (!items.length) return null;
 
   if (items.length === 1) {
+    const isPlaceholder = resolveUrlPlaceholder(items[0].media.url, placeholders) !== undefined;
     return (
       <DiscordImage
         src={items[0].media.url}
         alt={items[0].description ?? undefined}
         spoiler={items[0].spoiler}
+        className={cn(isPlaceholder && 'aspect-square')}
       />
     );
   }
 
   if (items.length === 3) {
     return (
-      <div className='grid grid-cols-2 gap-0.5 overflow-hidden rounded'>
+      <div className='grid grid-cols-2 gap-1 overflow-hidden'>
         <DiscordImage
           src={items[0].media.url}
           alt={items[0].description ?? undefined}
           spoiler={items[0].spoiler}
-          className='row-span-2 h-full rounded-none'
+          className='row-span-2 h-full aspect-square'
         />
         <DiscordImage
           src={items[1].media.url}
           alt={items[1].description ?? undefined}
           spoiler={items[1].spoiler}
-          className='rounded-none'
         />
         <DiscordImage
           src={items[2].media.url}
           alt={items[2].description ?? undefined}
           spoiler={items[2].spoiler}
-          className='rounded-none'
         />
       </div>
     );
   }
 
   return (
-    <div className='grid grid-cols-2 gap-0.5 overflow-hidden rounded'>
+    <div className='grid grid-cols-2 gap-1 overflow-hidden'>
       {items.map((item, i) => (
         <DiscordImage
           // biome-ignore lint/suspicious/noArrayIndexKey: There are no usable elements other than the index
@@ -92,7 +95,7 @@ export function MediaGallery({ component }: ComponentProps<ComponentType.MediaGa
           src={item.media.url}
           alt={item.description ?? undefined}
           spoiler={item.spoiler}
-          className='aspect-square rounded-none'
+          className='aspect-square'
         />
       ))}
     </div>

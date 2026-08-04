@@ -1,5 +1,6 @@
 'use client';
 
+import type { Placeholder } from '@repo/placeholders';
 import { ImageIcon } from 'lucide-react';
 import { useContext } from 'react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -7,6 +8,13 @@ import { cn } from '@/lib/utils';
 import { DiscordMessageContext } from '../message-context';
 
 const PlaceHolderRegex = /^\{\{\s*(\w+)\s*\}\}$/;
+
+/** srcがURLとして使用可能なプレースホルダーの場合、そのプレースホルダーを返す */
+export function resolveUrlPlaceholder(src: string, placeholders: Placeholder | undefined) {
+  const key = PlaceHolderRegex.exec(src)?.[1];
+  const placeholder = key ? placeholders?.find((v) => v.key === key) : undefined;
+  return placeholder?.isUrl ? placeholder : undefined;
+}
 
 type DiscordImageProps = {
   src: string;
@@ -18,11 +26,8 @@ type DiscordImageProps = {
 export function DiscordImage({ src, alt, className, spoiler }: DiscordImageProps) {
   const { placeholders } = useContext(DiscordMessageContext);
 
-  const placeholderKey = PlaceHolderRegex.exec(src)?.[1];
-  const placeholder = placeholderKey
-    ? placeholders?.find((v) => v.key === placeholderKey)
-    : undefined;
-  const isUrlPlaceholder = placeholder?.isUrl === true;
+  const placeholder = resolveUrlPlaceholder(src, placeholders);
+  const isUrlPlaceholder = placeholder !== undefined;
 
   const image = (
     <div
@@ -33,8 +38,13 @@ export function DiscordImage({ src, alt, className, spoiler }: DiscordImageProps
       )}
     >
       {isUrlPlaceholder ? (
-        <div className='flex h-full w-full flex-col items-center justify-center gap-1 px-1 py-1 text-center'>
-          <ImageIcon className='size-6' />
+        <div
+          className={cn(
+            'flex h-full w-full flex-col items-center justify-center gap-1 px-1 py-1 text-center',
+            spoiler && 'blur-2xl',
+          )}
+        >
+          <ImageIcon className='size-6 text-muted-foreground' />
           <span className='w-full truncate text-xs font-mono'>{placeholder?.key}</span>
         </div>
       ) : (
