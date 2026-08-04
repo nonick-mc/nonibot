@@ -17,7 +17,6 @@ import {
   ControlledFieldError,
   ControlledFieldLabel,
 } from '@/components/rhf/field';
-import { ControlledInputGroupInput } from '@/components/rhf/input-group';
 import { Button } from '@/components/ui/button';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { FieldContent, FieldDescription, FieldGroup } from '@/components/ui/field';
@@ -25,6 +24,7 @@ import { InputGroup, InputGroupAddon, InputGroupButton } from '@/components/ui/i
 import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useComponentEditorContext } from '../context';
+import { DebouncedUrlInput } from '../debounced-url-input';
 import { EditorCard } from '../editor-card';
 import { PlaceholderPickerButton } from '../placeholder-picker-button';
 import { defaultComponentValues } from '../schema';
@@ -56,7 +56,7 @@ export function SectionEditor() {
               <ControlledFieldError />
             </FieldContent>
             <InputGroup className='@md/field-group:w-sm!'>
-              <ControlledInputGroupInput ref={thumbnailUrlRef} placeholder='URLを入力' />
+              <DebouncedUrlInput inputRef={thumbnailUrlRef} placeholder='URLを入力' />
               <InputGroupAddon align='inline-start'>
                 <LinkIcon />
               </InputGroupAddon>

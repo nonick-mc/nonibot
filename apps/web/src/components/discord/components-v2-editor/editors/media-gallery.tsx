@@ -23,12 +23,12 @@ import {
   ControlledFieldError,
   ControlledFieldProvider,
 } from '@/components/rhf/field';
-import { ControlledInputGroupInput } from '@/components/rhf/input-group';
 import { Button } from '@/components/ui/button';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { InputGroup, InputGroupAddon, InputGroupButton } from '@/components/ui/input-group';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useComponentEditorContext } from '../context';
+import { DebouncedUrlInput } from '../debounced-url-input';
 import { EditorCard } from '../editor-card';
 import { PlaceholderPickerButton } from '../placeholder-picker-button';
 
@@ -111,7 +111,7 @@ function MediaGalleryItemUrlField({ control, basePath, itemIndex }: MediaGallery
   return (
     <ControlledField control={control} name={`${basePath}.items.${itemIndex}.media.url`}>
       <InputGroup>
-        <ControlledInputGroupInput ref={urlRef} placeholder='URLを入力' />
+        <DebouncedUrlInput inputRef={urlRef} placeholder='URLを入力' />
         <InputGroupAddon align='inline-start'>
           <LinkIcon />
         </InputGroupAddon>
