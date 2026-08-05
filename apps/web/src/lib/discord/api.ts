@@ -6,6 +6,8 @@ import {
   PermissionFlagsBits,
   type RESTAPIPartialCurrentUserGuild,
   type RESTGetAPICurrentUserGuildsQuery,
+  type RESTGetAPIGuildChannelsResult,
+  type RESTGetAPIGuildEmojisResult,
   type RESTGetAPIGuildMemberResult,
   type RESTGetAPIGuildQuery,
   type RESTGetAPIGuildRolesResult,
@@ -87,6 +89,22 @@ export function getGuildMember(
 /** @see https://discord.com/developers/docs/resources/guild#get-guild-roles */
 export function getRoles(guildId: string, next?: NextFetchRequestConfig) {
   return botFetch<RESTGetAPIGuildRolesResult, false>(Routes.guildRoles(guildId), {
+    next,
+    throw: true,
+  });
+}
+
+/** @see https://discord.com/developers/docs/resources/guild#get-guild-channels */
+export function getChannels(guildId: string, next?: NextFetchRequestConfig) {
+  return botFetch<RESTGetAPIGuildChannelsResult, false>(Routes.guildChannels(guildId), {
+    next,
+    throw: true,
+  });
+}
+
+/** @see https://discord.com/developers/docs/resources/emoji#list-guild-emojis */
+export function getGuildEmojis(guildId: string, next?: NextFetchRequestConfig) {
+  return botFetch<RESTGetAPIGuildEmojisResult, false>(Routes.guildEmojis(guildId), {
     next,
     throw: true,
   });
