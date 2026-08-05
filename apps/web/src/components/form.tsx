@@ -1,11 +1,11 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { SaveIcon } from 'lucide-react';
+import { InfoIcon, SaveIcon, TrashIcon } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useFormContext, useFormState } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
-import { Item, ItemActions, ItemContent, ItemDescription } from '@/components/ui/item';
+import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia } from '@/components/ui/item';
 import { Spinner } from '@/components/ui/spinner';
 
 const DevTool = dynamic(() => import('@hookform/devtools').then((module) => module.DevTool), {
@@ -26,7 +26,10 @@ export function FormChangePublisher() {
           transition={{ duration: 0.8, type: 'spring', bounce: 0.5 }}
           className='fixed bottom-4 right-4 z-50'
         >
-          <Item variant='outline' className='bg-background shadow-lg border-border'>
+          <Item className='items-center bg-card shadow-lg border border-border'>
+            <ItemMedia className='self-center! translate-y-0!'>
+              <InfoIcon className='size-5 mt-0.5 text-warning' />
+            </ItemMedia>
             <ItemContent className='max-sm:hidden'>
               <ItemDescription className='text-sm font-medium text-foreground'>
                 保存されていない変更があります！
