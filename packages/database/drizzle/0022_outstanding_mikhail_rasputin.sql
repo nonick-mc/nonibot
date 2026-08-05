@@ -17,11 +17,7 @@ UPDATE "public_setting"."join_message" SET "message_components" = ARRAY[
 UPDATE "public_setting"."leave_message" SET "message_components" = ARRAY[
 	jsonb_build_object(
 		'type', 10,
-		'content', '### ' || regexp_replace(coalesce("message"->0->>'title', ''), '!\[([^\]]+)\]', '{{\1}}', 'g')
-	),
-	jsonb_build_object(
-		'type', 10,
-		'content', regexp_replace(coalesce("message"->0->>'description', ''), '!\[([^\]]+)\]', '{{\1}}', 'g')
+		'content', regexp_replace(coalesce("message"->0->>'contents', ''), '!\[([^\]]+)\]', '{{\1}}', 'g')
 	)
 ]::jsonb[];--> statement-breakpoint
 ALTER TABLE "public_setting"."join_message" ALTER COLUMN "message_components" SET NOT NULL;--> statement-breakpoint
