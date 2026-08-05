@@ -24,6 +24,11 @@ export const joinMessageSetting = settingSchema.table('join_message', {
     .$type<APIMessageTopLevelComponent>()
     .array()
     .notNull(),
+  dmEnabled: boolean('dm_enabled').notNull(),
+  dmMessageComponents: jsonb('dm_message_components')
+    .$type<APIMessageTopLevelComponent>()
+    .array()
+    .notNull(),
   ...timestamps,
 });
 // #endregion
