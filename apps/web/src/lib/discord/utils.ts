@@ -49,12 +49,17 @@ export function sortRoles(roles: APIRole[]) {
 }
 
 /** チャンネルをカテゴリごとに仕分け */
-export function groupChannelsByCategory(channels: APIGuildChannel<GuildChannelType>[]) {
+export function groupChannelsByCategory(
+  channels: APIGuildChannel<GuildChannelType>[],
+  includeCategories = false,
+) {
   const categories = channels
     .filter((ch): ch is APIGuildCategoryChannel => ch.type === ChannelType.GuildCategory)
     .sort((a, b) => a.position - b.position);
 
-  const selectableChannels = channels.filter((ch) => ch.type !== ChannelType.GuildCategory);
+  const selectableChannels = includeCategories
+    ? channels
+    : channels.filter((ch) => ch.type !== ChannelType.GuildCategory);
 
   const groupedChannels = new Map<string, APIGuildChannel<GuildChannelType>[]>();
   const uncategorized: APIGuildChannel<GuildChannelType>[] = [];

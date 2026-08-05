@@ -252,6 +252,10 @@ function useComboboxAnchor() {
   return React.useRef<HTMLDivElement | null>(null);
 }
 
+function useComboboxFilteredItems<T>() {
+  return ComboboxPrimitive.useFilteredItems<T>();
+}
+
 export {
   Combobox,
   ComboboxChip,
@@ -269,4 +273,5 @@ export {
   ComboboxTrigger,
   ComboboxValue,
   useComboboxAnchor,
+  useComboboxFilteredItems,
 };
