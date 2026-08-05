@@ -46,8 +46,7 @@ export function SettingForm({
   roles,
   enabledVerificationGate,
 }: FormProps) {
-  const { guildId } =
-    useParams<Awaited<PageProps<'/dashboard/guilds/[guildId]/join-message'>['params']>>();
+  const { guildId }: { guildId: string } = useParams();
   const bindUpdateSettingAction = updateSettingAction.bind(null, guildId);
 
   const form = useForm({
@@ -166,7 +165,6 @@ export function SettingForm({
                         <ControlledSwitch />
                       </ControlledField>
                       <FieldSeparator />
-
                       <ControlledField
                         control={form.control}
                         name='messageComponents'
