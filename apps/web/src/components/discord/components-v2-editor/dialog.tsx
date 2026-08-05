@@ -11,18 +11,11 @@ import {
   SaveIcon,
   TypeIcon,
 } from 'lucide-react';
-import {
-  type ComponentProps,
-  PropsWithChildren,
-  ReactNode,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import { type ComponentProps, useContext, useEffect, useMemo, useState } from 'react';
 import { FormProvider, useFieldArray, useForm, Watch } from 'react-hook-form';
 import z from 'zod';
 import { FormDevTool } from '@/components/form';
+import { ControlledFieldError, ControlledFieldProvider } from '@/components/rhf/field';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -96,8 +89,11 @@ export function ComponentsV2EditorDialog({
         <DialogTrigger render={children} />
         <DialogContent className='flex flex-col max-h-[97vh] h-full sm:max-w-[98vw]'>
           <FormDevTool />
-          <DialogHeader>
+          <DialogHeader className='flex flex-col md:flex-row md:items-center'>
             <DialogTitle>メッセージを編集</DialogTitle>
+            <ControlledFieldProvider control={form.control} name='components'>
+              <ControlledFieldError />
+            </ControlledFieldProvider>
           </DialogHeader>
           <Tabs
             className='md:hidden'
