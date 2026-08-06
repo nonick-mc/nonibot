@@ -1,6 +1,6 @@
 import type { Placeholder } from './type';
 
-export const JoinMessagePlaceholders = [
+export const joinMessagePlaceholders = [
   { key: 'serverName', description: 'サーバー名' },
   { key: 'memberCount', description: 'サーバーの参加人数' },
   { key: 'user', description: '入室したユーザーのメンション' },

@@ -1,5 +1,5 @@
 import { leaveMessageSetting } from '@repo/database';
-import { LeaveMessagePlaceholders } from '@repo/placeholders';
+import { leaveMessagePlaceholders } from '@repo/placeholders';
 import { ComponentType } from 'discord-api-types/v10';
 import { createInsertSchema } from 'drizzle-zod';
 import z from 'zod';
@@ -11,7 +11,7 @@ export const formSchema = createInsertSchema(leaveMessageSetting, {
   enabled: (schema) => schema.default(false),
   channel: (schema) => schema.regex(SnowflakeRegex, '無効なIDです').nullable().default(null),
   ignoreBot: (schema) => schema.default(false),
-  messageComponents: createMessageUserComponentsSchema(LeaveMessagePlaceholders).default([
+  messageComponents: createMessageUserComponentsSchema(leaveMessagePlaceholders).default([
     {
       type: ComponentType.TextDisplay,
       content: '**{{userName}}** さんがサーバーを退室しました👋',

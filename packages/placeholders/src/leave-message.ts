@@ -1,6 +1,6 @@
 import type { Placeholder } from './type';
 
-export const LeaveMessagePlaceholders = [
+export const leaveMessagePlaceholders = [
   { key: 'serverName', description: 'サーバー名' },
   { key: 'memberCount', description: 'サーバーの参加人数' },
   { key: 'user', description: '退室したユーザーのメンション' },

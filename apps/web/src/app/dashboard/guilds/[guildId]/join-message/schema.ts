@@ -1,5 +1,5 @@
 import { joinMessageSetting } from '@repo/database';
-import { JoinMessagePlaceholders } from '@repo/placeholders';
+import { joinMessagePlaceholders } from '@repo/placeholders';
 import { ComponentType } from 'discord-api-types/v10';
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
@@ -12,7 +12,7 @@ export const formSchema = createInsertSchema(joinMessageSetting, {
   channel: (schema) => schema.regex(SnowflakeRegex, '無効なIDです。').nullable().default(null),
   sendTrigger: (schema) => schema.default('joined'),
   ignoreBot: (schema) => schema.default(false),
-  messageComponents: createMessageUserComponentsSchema(JoinMessagePlaceholders).default([
+  messageComponents: createMessageUserComponentsSchema(joinMessagePlaceholders).default([
     {
       type: ComponentType.Container,
       components: [
@@ -29,7 +29,7 @@ export const formSchema = createInsertSchema(joinMessageSetting, {
     },
   ]),
   dmEnabled: (schema) => schema.default(false),
-  dmMessageComponents: createMessageUserComponentsSchema(JoinMessagePlaceholders).default([
+  dmMessageComponents: createMessageUserComponentsSchema(joinMessagePlaceholders).default([
     {
       type: ComponentType.Container,
       components: [

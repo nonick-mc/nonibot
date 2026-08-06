@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { LeaveMessagePlaceholders } from '@repo/placeholders';
+import { leaveMessagePlaceholders } from '@repo/placeholders';
 import { Links } from '@repo/shared';
 import {
   type APIGuildChannel,
@@ -65,7 +65,7 @@ export function SettingForm({ channels, defaultValues, roles, emojis }: FormProp
             roles: roles?.filter((role) => role.id !== guildId),
             channels,
             emojis,
-            placeholders: LeaveMessagePlaceholders,
+            placeholders: leaveMessagePlaceholders,
           }}
         >
           <Card className='bg-card/50'>

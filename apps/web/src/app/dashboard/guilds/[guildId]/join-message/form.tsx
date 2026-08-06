@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { JoinMessagePlaceholders } from '@repo/placeholders';
+import { joinMessagePlaceholders } from '@repo/placeholders';
 import { Links } from '@repo/shared';
 import { type APIGuildChannel, ChannelType, type GuildChannelType } from 'discord-api-types/v10';
 import { PencilIcon } from 'lucide-react';
@@ -70,7 +70,7 @@ export function SettingForm({
             roles: roles?.filter((role) => role.id !== guildId),
             channels,
             emojis,
-            placeholders: JoinMessagePlaceholders,
+            placeholders: joinMessagePlaceholders,
           }}
         >
           <Card className='bg-card/50'>
