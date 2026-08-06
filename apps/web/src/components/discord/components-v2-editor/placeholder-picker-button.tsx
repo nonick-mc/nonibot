@@ -2,6 +2,7 @@
 
 import { BracesIcon, LinkIcon } from 'lucide-react';
 import { type RefObject, useContext, useState } from 'react';
+import { Badge } from '@/components/reui/badge';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -58,16 +59,23 @@ export function PlaceholderPickerButton({ inputRef, urlOnly, mode }: Placeholder
         </TooltipTrigger>
         <TooltipContent>プレースホルダー</TooltipContent>
       </Tooltip>
-      <DropdownMenuContent align='end' className='max-w-md w-full'>
+      <DropdownMenuContent align='end' className='min-w-64'>
         <DropdownMenuGroup>
-          {items.map(({ key, description, isUrl }) => (
+          {items.map(({ key, description, isUrl, deprecated }) => (
             <DropdownMenuItem key={key} onClick={() => handleSelect(`{{${key}}}`)}>
               <Item size='xs'>
                 <ItemMedia className='self-center! text-muted-foreground'>
                   {isUrl ? <LinkIcon /> : <BracesIcon />}
                 </ItemMedia>
                 <ItemContent>
-                  <ItemTitle className='font-mono'>{key}</ItemTitle>
+                  <ItemTitle className='inline-flex font-mono gap-2'>
+                    {key}
+                    {deprecated && (
+                      <Badge size='sm' variant='warning-light' className='text-warning-foreground!'>
+                        非推奨
+                      </Badge>
+                    )}
+                  </ItemTitle>
                   <ItemDescription className='text-xs'>{description}</ItemDescription>
                 </ItemContent>
               </Item>
