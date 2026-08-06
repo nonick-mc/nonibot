@@ -33,7 +33,12 @@ export function useTextInputInsert(inputRef: TextInputRef, mode: TextInputInsert
     setOpen(false);
   }
 
-  return { open, setOpen, handleSelect };
+  function handleOpenChangeComplete(isOpen: boolean) {
+    if (isOpen) return;
+    inputRef.current?.focus();
+  }
+
+  return { open, setOpen, handleSelect, handleOpenChangeComplete };
 }
 
 type PlaceholderPickerButtonProps = {
@@ -44,13 +49,20 @@ type PlaceholderPickerButtonProps = {
 
 export function PlaceholderPickerButton({ inputRef, urlOnly, mode }: PlaceholderPickerButtonProps) {
   const { placeholders } = useContext(DiscordMessageContext);
-  const { open, setOpen, handleSelect } = useTextInputInsert(inputRef, mode);
+  const { open, setOpen, handleSelect, handleOpenChangeComplete } = useTextInputInsert(
+    inputRef,
+    mode,
+  );
   const items = urlOnly ? placeholders?.filter((p) => p.isUrl) : placeholders;
 
   if (!items?.length) return null;
 
   return (
-    <DropdownMenu open={open} onOpenChange={setOpen}>
+    <DropdownMenu
+      open={open}
+      onOpenChange={setOpen}
+      onOpenChangeComplete={handleOpenChangeComplete}
+    >
       <Tooltip>
         <TooltipTrigger
           render={<DropdownMenuTrigger render={<InputGroupButton size='icon-xs' />} />}

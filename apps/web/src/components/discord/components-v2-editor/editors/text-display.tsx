@@ -57,12 +57,16 @@ type TextareaInsertComponentProps = {
 
 function RoleMentionInsertButton({ textareaRef }: TextareaInsertComponentProps) {
   const { roles } = useContext(DiscordMessageContext);
-  const { open, setOpen, handleSelect } = useTextInputInsert(textareaRef);
+  const { open, setOpen, handleSelect, handleOpenChangeComplete } = useTextInputInsert(textareaRef);
 
   if (!roles) return null;
 
   return (
-    <DropdownMenu open={open} onOpenChange={setOpen}>
+    <DropdownMenu
+      open={open}
+      onOpenChange={setOpen}
+      onOpenChangeComplete={handleOpenChangeComplete}
+    >
       <Tooltip>
         <TooltipTrigger
           render={<DropdownMenuTrigger render={<InputGroupButton size='icon-xs' />} />}
@@ -114,7 +118,7 @@ function RoleMentionInsertButton({ textareaRef }: TextareaInsertComponentProps) 
 
 function ChannelMentionInsertButton({ textareaRef }: TextareaInsertComponentProps) {
   const { channels } = useContext(DiscordMessageContext);
-  const { open, setOpen, handleSelect } = useTextInputInsert(textareaRef);
+  const { open, setOpen, handleSelect, handleOpenChangeComplete } = useTextInputInsert(textareaRef);
 
   const { categories, groupedChannels, uncategorized } = useMemo(
     () => groupChannelsByCategory(channels ?? []),
@@ -124,7 +128,11 @@ function ChannelMentionInsertButton({ textareaRef }: TextareaInsertComponentProp
   if (!channels) return null;
 
   return (
-    <DropdownMenu open={open} onOpenChange={setOpen}>
+    <DropdownMenu
+      open={open}
+      onOpenChange={setOpen}
+      onOpenChangeComplete={handleOpenChangeComplete}
+    >
       <Tooltip>
         <TooltipTrigger
           render={<DropdownMenuTrigger render={<InputGroupButton size='icon-xs' />} />}
