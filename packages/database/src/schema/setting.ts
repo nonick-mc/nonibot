@@ -21,13 +21,13 @@ export const joinMessageSetting = settingSchema.table('join_message', {
   sendTrigger: sendTriggerEnum('send_trigger').notNull(),
   ignoreBot: boolean('ignore_bot').notNull(),
   messageComponents: jsonb('message_components')
-    .$type<APIMessageTopLevelComponent>()
     .array()
+    .$type<APIMessageTopLevelComponent[]>()
     .notNull(),
   dmEnabled: boolean('dm_enabled').notNull(),
   dmMessageComponents: jsonb('dm_message_components')
-    .$type<APIMessageTopLevelComponent>()
     .array()
+    .$type<APIMessageTopLevelComponent[]>()
     .notNull(),
   ...timestamps,
 });
@@ -40,8 +40,8 @@ export const leaveMessageSetting = settingSchema.table('leave_message', {
   channel: text('channel'),
   ignoreBot: boolean('ignore_bot').notNull(),
   messageComponents: jsonb('message_components')
-    .$type<APIMessageTopLevelComponent>()
     .array()
+    .$type<APIMessageTopLevelComponent[]>()
     .notNull(),
   ...timestamps,
 });
