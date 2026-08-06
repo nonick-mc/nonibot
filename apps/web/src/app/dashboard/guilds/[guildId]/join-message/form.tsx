@@ -2,6 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { JoinMessagePlaceholders } from '@repo/placeholders';
+import { Links } from '@repo/shared';
 import { type APIGuildChannel, ChannelType, type GuildChannelType } from 'discord-api-types/v10';
 import { PencilIcon } from 'lucide-react';
 import Link from 'next/link';
@@ -27,7 +28,6 @@ import { ControlledSwitch } from '@/components/rhf/switch';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FieldContent, FieldDescription, FieldGroup, FieldSeparator } from '@/components/ui/field';
-import { Links } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 import { updateSettingAction } from './action';
 import { formSchema } from './schema';

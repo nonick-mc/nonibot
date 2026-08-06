@@ -1,4 +1,5 @@
 import { guild as guildTable } from '@repo/database';
+import { Links } from '@repo/shared';
 import { stripIndents } from 'common-tags';
 import {
   ActionRowBuilder,
@@ -19,7 +20,6 @@ import {
 } from 'discord.js';
 import { execute, Signal } from 'sunar';
 import { getAppEmoji, Success } from '@/src/constants/emoji';
-import { Link } from '@/src/constants/link';
 import { db } from '@/src/lib/db';
 
 export const signal = new Signal(Events.GuildCreate);
@@ -59,8 +59,8 @@ execute(signal, async (guild) => {
           new TextDisplayBuilder().setContent(
             stripIndents`
             ${guild.client.user.username}を導入していただきありがとうございます。
-            搭載されている一部機能を使用するためには、${hyperlink('ダッシュボード', `${Link.dashboard}/guilds/${guild.id}`)}から設定を行う必要があります。
-            それぞれの機能の詳細については、${hyperlink('ドキュメント', Link.docs)}を閲覧してください。
+            搭載されている一部機能を使用するためには、${hyperlink('ダッシュボード', `${Links.Dashboard}/guilds/${guild.id}`)}から設定を行う必要があります。
+            それぞれの機能の詳細については、${hyperlink('ドキュメント', Links.Docs)}を閲覧してください。
           `,
           ),
         )
@@ -71,7 +71,7 @@ execute(signal, async (guild) => {
           new ActionRowBuilder<ButtonBuilder>().setComponents(
             new ButtonBuilder()
               .setLabel('サポートサーバーに参加する')
-              .setURL(Link.discord)
+              .setURL(Links.SupportServer)
               .setStyle(ButtonStyle.Link),
           ),
         ),

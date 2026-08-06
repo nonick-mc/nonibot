@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Links } from '@repo/shared';
 import { APIEmoji, ComponentType, type RESTGetAPIGuildEmojisResult } from 'discord-api-types/v10';
 import {
   BoxIcon,
@@ -32,7 +33,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Links } from '@/lib/constants';
 import {
   createMessageUserComponentsSchema,
   type MessageUserComponentsSchema,

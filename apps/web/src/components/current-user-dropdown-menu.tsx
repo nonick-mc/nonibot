@@ -1,5 +1,6 @@
 'use client';
 
+import { Links } from '@repo/shared';
 import {
   BookOpenIcon,
   HouseIcon,
@@ -24,7 +25,6 @@ import {
   DropdownMenuSubTrigger,
 } from '@/components/ui/dropdown-menu';
 import { authClient } from '@/lib/auth-client';
-import { Links } from '@/lib/constants';
 import { CurrentUserAvatar } from './current-user-avatar';
 
 export function CurrentUserDropdownMenu() {
