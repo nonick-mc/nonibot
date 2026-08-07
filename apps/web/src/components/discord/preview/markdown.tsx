@@ -40,18 +40,6 @@ export function BlockQuote({ children }: PropsWithChildren) {
   );
 }
 
-type HeadingProps = {
-  level: 1 | 2 | 3;
-};
-
-export function Heading({ level, children }: PropsWithChildren<HeadingProps>) {
-  const Tag = `h${level}` as 'h1' | 'h2' | 'h3';
-  const sizeClass = ({ 1: 'text-xl', 2: 'text-lg', 3: 'text-md' } as const)[level];
-  return (
-    <Tag className={cn('not-first:mt-4 mb-2 font-bold leading-tight', sizeClass)}>{children}</Tag>
-  );
-}
-
 export function Subtext({ children }: PropsWithChildren) {
   return (
     <small className='text-[0.85em] text-muted-foreground'>
@@ -219,11 +207,8 @@ function renderNode(node: ASTNode, key: number, placeholders: Placeholder | unde
     case 'blockQuote':
       return <BlockQuote key={key}>{nested}</BlockQuote>;
     case 'heading': {
-      return (
-        <Heading key={key} level={node.level}>
-          {nested}
-        </Heading>
-      );
+      const Tag = `h${node.level as 1 | 2 | 3}` as 'h1' | 'h2' | 'h3';
+      return <Tag key={key}>{nested}</Tag>;
     }
     case 'emoticon':
     case 'escape':
@@ -326,7 +311,18 @@ export function DiscordMarkdown({ content }: { content: string }) {
   const { placeholders } = useContext(DiscordMessageContext);
   if (!content) return null;
   return (
-    <span className='whitespace-pre-wrap wrap-break-words leading-tight'>
+    <span
+      className={cn(
+        'whitespace-pre-wrap wrap-break-words leading-tight text-[14px]',
+        // h1~h3
+        '[&_:where(h1,h2,h3)]:font-extrabold [&_:where(h1,h2,h3)]:leading-tight',
+        '[&_h1]:text-[24px] [&_h2]:text-[20px] [&_h3]:text-[16px]',
+        'not-in-[.discord-container]:[&_:where(h1,h2,h3)]:my-2',
+        'not-in-[.discord-container]:[&_:where(h1,h2,h3):not(:first-child)]:mt-4',
+        'in-[.discord-container]:[&_:where(h1,h2,h3):not(:first-child)]:mt-4',
+        'in-[.discord-container]:[&_:where(h1,h2,h3):not(:last-child)]:mb-2',
+      )}
+    >
       {renderNodes(
         customParser(content, { inline: true, extended: true, _list: true }),
         placeholders,
