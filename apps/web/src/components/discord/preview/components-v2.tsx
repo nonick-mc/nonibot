@@ -130,7 +130,7 @@ export function Container({ component }: ComponentProps<ComponentType.Container>
             }}
           />
         )}
-        <div className={cn('flex flex-col gap-2 p-3', hasAccent && 'pl-4')}>
+        <div className='flex flex-col gap-2 p-4'>
           {component.components.map((child, i) => (
             // biome-ignore lint/suspicious/noArrayIndexKey: There are no usable elements other than the index
             <ComponentV2 key={i} component={child as PreviewComponent} />
