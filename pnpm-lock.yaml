@@ -56,6 +56,9 @@ importers:
       '@repo/database':
         specifier: workspace:*
         version: link:../../packages/database
+      '@repo/placeholders':
+        specifier: workspace:*
+        version: link:../../packages/placeholders
       '@repo/shared':
         specifier: workspace:*
         version: link:../../packages/shared

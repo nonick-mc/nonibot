@@ -11,6 +11,7 @@
   "type": "module",
   "dependencies": {
     "@repo/database": "workspace:*",
+    "@repo/placeholders": "workspace:*",
     "@repo/shared": "workspace:*",
     "common-tags": "^1.8.2",
     "discord.js": "^14.26.4",
