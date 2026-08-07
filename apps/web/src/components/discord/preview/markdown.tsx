@@ -168,7 +168,7 @@ function renderNode(node: ASTNode, key: number, placeholders: Placeholder | unde
   switch (node.type) {
     // Markdown
     case 'text':
-      return node.content as string;
+      return <span key={key}>{node.content as string}</span>;
     case 'strong':
       return <strong key={key}>{nested}</strong>;
     case 'em':
@@ -212,7 +212,7 @@ function renderNode(node: ASTNode, key: number, placeholders: Placeholder | unde
     }
     case 'emoticon':
     case 'escape':
-      return typeof content === 'string' ? content : null;
+      return typeof content === 'string' ? <span key={key}>{content}</span> : null;
     case 'subtext':
       return <Subtext key={key}>{nested}</Subtext>;
     case 'br':
@@ -282,7 +282,7 @@ function renderNode(node: ASTNode, key: number, placeholders: Placeholder | unde
     default:
       if (Array.isArray(content))
         return <span key={key}>{renderNodes(content, placeholders)}</span>;
-      if (typeof content === 'string') return content;
+      if (typeof content === 'string') return <span key={key}>{content}</span>;
       return null;
   }
 }
@@ -293,12 +293,13 @@ function renderNodes(nodes: ASTNode[], placeholders: Placeholder | undefined): R
   // 連結するtextノードを結合
   while (i < nodes.length) {
     if (nodes[i].type === 'text') {
+      const start = i;
       let text = '';
       while (i < nodes.length && nodes[i].type === 'text') {
         text += nodes[i].content as string;
         i++;
       }
-      result.push(text);
+      result.push(<span key={start}>{text}</span>);
     } else {
       result.push(renderNode(nodes[i], i, placeholders));
       i++;
