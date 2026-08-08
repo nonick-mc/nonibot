@@ -46,7 +46,7 @@ export function BlockQuote({ children }: PropsWithChildren) {
 
 export function Subtext({ children }: PropsWithChildren) {
   return (
-    <small className='text-[14px] text-muted-foreground'>
+    <small className='text-[14px] in-[.discord-container]:text-[12px] leading-4.75 in-[.discord-container]:leading-4 text-muted-foreground'>
       {children}
       <br />
     </small>
@@ -90,7 +90,7 @@ export function Emoji({ id, name, animated }: { id: string; name: string; animat
 }
 
 export function PlainText({ children }: PropsWithChildren) {
-  return <span className='inline-block align-bottom'>{children}</span>;
+  return <span className='inline-block [text-decoration-line:inherit]'>{children}</span>;
 }
 
 export function Twemoji({ name }: { name: string }) {
