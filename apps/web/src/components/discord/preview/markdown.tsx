@@ -15,7 +15,13 @@ import { ChannelMention, GuildNavigationMention, Mention, RoleMention } from './
 // Component
 export function InlineCode({ children }: PropsWithChildren) {
   return (
-    <code className='inline-block ring-1 ring-inset ring-border rounded px-0.5 font-mono bg-[#f2f3f5] text-[#080a0c] dark:bg-[#1e1f22] dark:text-[#dbdee1]'>
+    <code
+      className={cn(
+        'inline-block ring-1 ring-inset ring-border rounded px-0.75 font-mono ',
+        'bg-[#f2f3f5] text-[#080a0c] dark:bg-[#1e1f22] dark:text-[#dbdee1]',
+        'text-[13.6px] in-[.discord-container]:text-[11.9px] in-[.discord-container]:leading-4.5',
+      )}
+    >
       {children}
     </code>
   );
