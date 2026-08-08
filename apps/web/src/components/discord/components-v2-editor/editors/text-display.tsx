@@ -36,7 +36,7 @@ export function TextDisplayEditor() {
       <ControlledField control={control} name={`${basePath}.content`}>
         <InputGroup className='max-h-96'>
           <ControlledInputGroupTextarea ref={textareaRef} placeholder='テキストを入力' />
-          <InputGroupAddon align='block-end' className='pt-0 flex items-center justify-end'>
+          <InputGroupAddon align='block-end' className='flex items-center justify-end'>
             <div className='flex items-center gap-0.5'>
               <PlaceholderPickerButton inputRef={textareaRef} />
               <ChannelMentionInsertButton textareaRef={textareaRef} />
