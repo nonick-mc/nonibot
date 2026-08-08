@@ -115,7 +115,7 @@ export function ComponentsV2EditorDialog({
             <ComponentsV2Editor
               className={cn(
                 'flex-1 overflow-y-auto p-0.5 scroll-fade-y no-scrollbar',
-                activeTab === 'preview' && 'hidden md:block',
+                activeTab === 'preview' && 'max-md:hidden',
               )}
               name='components'
               fields={fields}
@@ -125,7 +125,7 @@ export function ComponentsV2EditorDialog({
             <div
               className={cn(
                 'flex-1 flex flex-col max-sm:p-4 p-6 bg-discord-background border rounded-xl',
-                activeTab === 'editor' && 'hidden md:flex',
+                activeTab === 'editor' && 'max-md:hidden',
               )}
             >
               <Watch

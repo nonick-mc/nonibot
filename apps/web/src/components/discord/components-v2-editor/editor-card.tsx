@@ -4,7 +4,7 @@ import { GripVerticalIcon, type LucideIcon, Trash2Icon } from 'lucide-react';
 import type { PropsWithChildren, ReactNode } from 'react';
 import { SortableItemHandle } from '../../reui/sortable';
 import { Button } from '../../ui/button';
-import { Card, CardContent, CardHeader } from '../../ui/card';
+import { Card } from '../../ui/card';
 import { useComponentEditorContext } from './context';
 
 type EditorCardProps = {
