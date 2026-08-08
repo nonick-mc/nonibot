@@ -111,21 +111,80 @@ const HeadingSizeClass = {
   3: 'text-[16px] leading-[21.5px]',
 } as const;
 
+// https://docs.discord.com/developers/reference#message-formatting-timestamp-styles
+const RelaviteTimeFormatter = new Intl.RelativeTimeFormat('ja-JP', { numeric: 'auto' });
+const RelativeTimeDivisions: [Intl.RelativeTimeFormatUnit, number][] = [
+  ['year', 60 * 60 * 24 * 365],
+  ['month', 60 * 60 * 24 * 30],
+  ['week', 60 * 60 * 24 * 7],
+  ['day', 60 * 60 * 24],
+  ['hour', 60 * 60],
+  ['minute', 60],
+];
+
+function formatRelativeTime(date: Date) {
+  const diffSeconds = Math.round((date.getTime() - Date.now()) / 1000);
+  const division = RelativeTimeDivisions.find(([, seconds]) => Math.abs(diffSeconds) >= seconds);
+  if (!division) return RelaviteTimeFormatter.format(diffSeconds, 'second');
+  const [unit, secondsInUnit] = division;
+  return RelaviteTimeFormatter.format(Math.round(diffSeconds / secondsInUnit), unit);
+}
+
+function formatDiscordTimestamp(date: Date, format: string | undefined) {
+  switch (format) {
+    case 't':
+      return date.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
+    case 'T':
+      return date.toLocaleTimeString('ja-JP', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      });
+    case 'd':
+      return date.toLocaleDateString('ja-JP', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      });
+    case 'D':
+      return date.toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' });
+    case 'F':
+      return date.toLocaleString('ja-JP', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        weekday: 'long',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+    case 'R':
+      return formatRelativeTime(date);
+    default:
+      return date.toLocaleString('ja-JP', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+  }
+}
+
 // AST Parser
 type ASTNode = ReturnType<typeof parse>[number];
 const atLineStart = (_: string, state: any) =>
   (state.prevCapture as string[] | null) === null ||
   (state.prevCapture as string[])[0].endsWith('\n');
 
-const LIST_LOOKBEHIND_R = /(?:^|\n)( *)$/;
-const PLACEHOLDER_R = /^\{\{\s*(\w+)\s*\}\}/;
-const LIST_BULLET_PAT = '(?:[*+-]|\\d+\\.)';
-const CUSTOM_LIST_R = new RegExp(
+const ListLookbehindR = /(?:^|\n)( *)$/;
+const PlaceholderR = /^\{\{\s*(\w+)\s*\}\}/;
+const ListBulletPat = '(?:[*+-]|\\d+\\.)';
+const CustomListR = new RegExp(
   '^( *)(' +
-    LIST_BULLET_PAT +
+    ListBulletPat +
     ') [^\\n]*' + // 最初のアイテム行
     '(?:\\n[ \\t]*' +
-    LIST_BULLET_PAT +
+    ListBulletPat +
     ' [^\\n]*)*' + // 後続のリスト行（ネストを含む）
     '(?:\\n{2,}|\\n|$)', // 終端（空白行 or 改行 or 末尾）
 );
@@ -137,9 +196,9 @@ const newRules: ParserRules = {
     ...SimpleMarkdown.defaultRules.list,
     match: (source: string, state) => {
       const prevCaptureStr = (state.prevCapture as string[] | null)?.[0] ?? '';
-      const startCapture = LIST_LOOKBEHIND_R.exec(prevCaptureStr);
+      const startCapture = ListLookbehindR.exec(prevCaptureStr);
       if (!startCapture || !(state._list || !state.inline)) return null;
-      return CUSTOM_LIST_R.exec(startCapture[1] + source);
+      return CustomListR.exec(startCapture[1] + source);
     },
     // LIST_R が消費した末尾の \n\n をノードに記録し、renderNode で <br> として復元する
     parse: (capture, parse, state) => {
@@ -165,7 +224,7 @@ const newRules: ParserRules = {
   },
   placeholder: {
     order: SimpleMarkdown.defaultRules.strong.order,
-    match: (source: string) => PLACEHOLDER_R.exec(source),
+    match: (source: string) => PlaceholderR.exec(source),
     parse: (capture) => ({ key: capture[1] }),
   },
 };
@@ -273,11 +332,11 @@ function renderNode(node: ASTNode, key: number, placeholders: Placeholder | unde
       return <Mention key={key}>/{node.name as string}</Mention>;
     case 'guildNavigation':
       return <GuildNavigationMention key={key} variant={node.navigation} />;
-    case 'time': {
-      const ts = new Date((node.timestamp as number) * 1000);
+    case 'timestamp': {
+      const date = new Date(Number(node.timestamp) * 1000);
       return (
-        <span key={key} className='rounded px-1 bg-[#4f5660]/10 dark:bg-[#b5bac1]/10'>
-          {ts.toLocaleString('ja-JP')}
+        <span key={key} className='inline-block rounded px-0.5 bg-discord-spoiler/30'>
+          {formatDiscordTimestamp(date, node.format as string | undefined)}
         </span>
       );
     }
