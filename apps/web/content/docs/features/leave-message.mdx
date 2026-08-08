@@ -1,0 +1,35 @@
+---
+title: 退室メッセージ
+icon: LogOut
+---
+
+import { Badge } from '@/components/reui/badge'
+
+サーバーからユーザーが退室した際、チャンネルにメッセージを送信します。
+![メッセージ](https://cdn.nonick.net/nonibot/leave-message/preview.png)
+
+---
+
+## カスタマイズ
+
+### メッセージの送信先
+
+メッセージを送信する**テキストチャンネル**を変更することができます。
+
+### Botの除外
+
+有効にすると、Botがサーバーから退室した際にメッセージを送信しないようになります。
+
+### メッセージの内容
+
+メッセージのほぼ全ての項目をカスタマイズすることができます。  
+退室したユーザーやサーバーの名前など、動的な値は**プレースホルダー**を使用して埋め込むことができます。  
+
+プレースホルダー | 説明 | 例
+--- | --- | ---
+`{{serverName}}` | サーバーの名前 | NoNICK SERVER
+`{{memberCount}}` | サーバーに参加しているメンバーの人数  | 2600
+`{{user}}` | 退室したユーザーのメンション | @nonick_mc
+`{{userName}}` | 退室したユーザーのユーザー名 | nonick_mc
+`{{userAvatar}}` | 退室したユーザーのアバターURL | https/cdn.discordapp.com/avatars/...
+`{{userTag}}` <Badge variant="warning-outline">非推奨</Badge> | 退室したユーザーのユーザー名とタグ(#0000)<br/>タグが存在しない場合はユーザー名のみを表示します。 | nonick-mc#1017
