@@ -4,11 +4,9 @@ import type { Placeholder } from '@repo/placeholders';
 import { CDNRoutes, ImageFormat, RouteBases } from 'discord-api-types/v10';
 import { type parse, rules, SimpleMarkdown } from 'discord-markdown-parser';
 import type { ParserRules } from 'discord-markdown-parser/dist/simple-markdown';
-import { BracesIcon } from 'lucide-react';
 import type { PropsWithChildren } from 'react';
 import { Fragment, type ReactNode, useContext, useState } from 'react';
 import twemoji from 'twemoji';
-import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { DiscordMessageContext } from '../message-context';
@@ -17,7 +15,7 @@ import { ChannelMention, GuildNavigationMention, Mention, RoleMention } from './
 // Component
 export function InlineCode({ children }: PropsWithChildren) {
   return (
-    <code className='border rounded px-0.5 font-mono text-[0.9em] bg-[#f2f3f5] text-[#080a0c] dark:bg-[#1e1f22] dark:text-[#dbdee1]'>
+    <code className='inline-block ring-1 ring-inset ring-border rounded px-0.5 font-mono bg-[#f2f3f5] text-[#080a0c] dark:bg-[#1e1f22] dark:text-[#dbdee1]'>
       {children}
     </code>
   );
@@ -42,7 +40,7 @@ export function BlockQuote({ children }: PropsWithChildren) {
 
 export function Subtext({ children }: PropsWithChildren) {
   return (
-    <small className='text-[0.85em] text-muted-foreground'>
+    <small className='text-[14px] text-muted-foreground'>
       {children}
       <br />
     </small>
@@ -80,9 +78,13 @@ export function Emoji({ id, name, animated }: { id: string; name: string; animat
     <img
       src={`${RouteBases.cdn}/${CDNRoutes.emoji(id, animated ? ImageFormat.GIF : ImageFormat.WebP)}`}
       alt={`:${name}:`}
-      className='inline-block h-[1.5em] w-[1.5em] align-text-bottom'
+      className='inline-block h-[1.375em] w-[1.375em] align-text-bottom'
     />
   );
+}
+
+export function PlainText({ children }: PropsWithChildren) {
+  return <span className='inline-block align-bottom'>{children}</span>;
 }
 
 export function Twemoji({ name }: { name: string }) {
@@ -95,9 +97,14 @@ export function Twemoji({ name }: { name: string }) {
   );
 }
 
+const HeadingSizeClass = {
+  1: 'text-[24px] leading-8',
+  2: 'text-[20px] leading-6.75',
+  3: 'text-[16px] leading-[21.5px]',
+} as const;
+
 // AST Parser
 type ASTNode = ReturnType<typeof parse>[number];
-
 const atLineStart = (_: string, state: any) =>
   (state.prevCapture as string[] | null) === null ||
   (state.prevCapture as string[])[0].endsWith('\n');
@@ -168,7 +175,7 @@ function renderNode(node: ASTNode, key: number, placeholders: Placeholder | unde
   switch (node.type) {
     // Markdown
     case 'text':
-      return <span key={key}>{node.content as string}</span>;
+      return <PlainText key={key}>{node.content as string}</PlainText>;
     case 'strong':
       return <strong key={key}>{nested}</strong>;
     case 'em':
@@ -207,12 +214,26 @@ function renderNode(node: ASTNode, key: number, placeholders: Placeholder | unde
     case 'blockQuote':
       return <BlockQuote key={key}>{nested}</BlockQuote>;
     case 'heading': {
-      const Tag = `h${node.level as 1 | 2 | 3}` as 'h1' | 'h2' | 'h3';
-      return <Tag key={key}>{nested}</Tag>;
+      const level = node.level as 1 | 2 | 3;
+      const Tag = `h${level}` as 'h1' | 'h2' | 'h3';
+      return (
+        <Tag
+          key={key}
+          className={cn(
+            'font-extrabold',
+            HeadingSizeClass[level],
+            'not-in-[.discord-container]:my-2',
+            'in-[.discord-container]:not-first:mt-4',
+            'in-[.discord-container]:not-last:mb-2',
+          )}
+        >
+          {nested}
+        </Tag>
+      );
     }
     case 'emoticon':
     case 'escape':
-      return typeof content === 'string' ? <span key={key}>{content}</span> : null;
+      return typeof content === 'string' ? <PlainText key={key}>{content}</PlainText> : null;
     case 'subtext':
       return <Subtext key={key}>{nested}</Subtext>;
     case 'br':
@@ -269,7 +290,7 @@ function renderNode(node: ASTNode, key: number, placeholders: Placeholder | unde
         <Tooltip key={key}>
           <TooltipTrigger
             render={
-              <span className='inline-flex items-center align-bottom cursor-pointer rounded-sm px-0.5 font-mono border border-primary [&_svg]:mt-0.5 [&_svg]:size-[1em]' />
+              <span className='inline-block cursor-pointer rounded px-0.5 font-mono ring-1 ring-inset ring-primary' />
             }
           >
             {placeholderKey}
@@ -282,7 +303,7 @@ function renderNode(node: ASTNode, key: number, placeholders: Placeholder | unde
     default:
       if (Array.isArray(content))
         return <span key={key}>{renderNodes(content, placeholders)}</span>;
-      if (typeof content === 'string') return <span key={key}>{content}</span>;
+      if (typeof content === 'string') return <PlainText key={key}>{content}</PlainText>;
       return null;
   }
 }
@@ -299,7 +320,7 @@ function renderNodes(nodes: ASTNode[], placeholders: Placeholder | undefined): R
         text += nodes[i].content as string;
         i++;
       }
-      result.push(<span key={start}>{text}</span>);
+      result.push(<PlainText key={start}>{text}</PlainText>);
     } else {
       result.push(renderNode(nodes[i], i, placeholders));
       i++;
@@ -314,14 +335,7 @@ export function DiscordMarkdown({ content }: { content: string }) {
   return (
     <span
       className={cn(
-        'whitespace-pre-wrap wrap-break-words leading-tight text-[14px]',
-        // h1~h3
-        '[&_:where(h1,h2,h3)]:font-extrabold [&_:where(h1,h2,h3)]:leading-tight',
-        '[&_h1]:text-[24px] [&_h2]:text-[20px] [&_h3]:text-[16px]',
-        'not-in-[.discord-container]:[&_:where(h1,h2,h3)]:my-2',
-        'not-in-[.discord-container]:[&_:where(h1,h2,h3):not(:first-child)]:mt-4',
-        'in-[.discord-container]:[&_:where(h1,h2,h3):not(:first-child)]:mt-4',
-        'in-[.discord-container]:[&_:where(h1,h2,h3):not(:last-child)]:mb-2',
+        'whitespace-pre-wrap wrap-break-words text-[16px] in-[.discord-container]:text-[14px] leading-[21.5px] in-[.discord-container]:leading-4.75 align-bottom',
       )}
     >
       {renderNodes(

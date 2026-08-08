@@ -164,6 +164,10 @@
   @apply px-6 mx-auto;
 }
 
+@utility discord-container {
+  --discord-container: 1;
+}
+
 #nd-nav nav {
   @apply px-6;
 }

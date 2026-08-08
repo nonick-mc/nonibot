@@ -17,7 +17,7 @@ export function Mention({ color, textGradient, children }: MentionProps) {
       <span
         style={{ '--mention-color': color } as CSSProperties}
         className={cn(
-          'inline-flex items-center align-bottom gap-0.5 cursor-pointer rounded px-0.5 transition-colors',
+          'inline-flex items-center gap-0.5 cursor-pointer rounded px-0.5 transition-colors',
           '[&_svg]:mt-0.5 [&_svg]:size-[1em]',
           'bg-(--mention-color)/10 hover:bg-(--mention-color)/30',
           !textGradient && 'text-(--mention-color)',
