@@ -56,9 +56,11 @@ export function Subtext({ children }: PropsWithChildren) {
 export function SpoilerText({ children }: { children: ReactNode }) {
   const [revealed, setRevealed] = useState(false);
   return (
+    // biome-ignore lint/a11y/noStaticElementInteractions: spoiler
+    // biome-ignore lint/a11y/useKeyWithClickEvents: spoiler
     <span
       className={cn(
-        'cursor-pointer rounded px-0 transition-all break-words box-decoration-clone',
+        'cursor-pointer rounded px-0 transition-all wrap-break-word box-decoration-clone',
         revealed
           ? 'bg-discord-spoiler/10'
           : 'bg-discord-spoiler hover:brightness-90 dark:hover:brightness-120 select-none',
@@ -210,6 +212,7 @@ function renderNode(node: ASTNode, key: number, placeholders: Placeholder | unde
         <Fragment key={key}>
           <Tag className={cn('my-1 pl-5', ordered ? 'list-decimal' : 'list-disc')}>
             {items.map((item, i) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
               <li key={i}>{renderNodes(item, placeholders)}</li>
             ))}
           </Tag>
