@@ -129,6 +129,7 @@ export function SettingForm({
                             <Button
                               className='px-0 h-fit'
                               variant='link'
+                              nativeButton={false}
                               render={
                                 <Link href='https://support.discord.com/hc/ja/articles/1500000466882' />
                               }

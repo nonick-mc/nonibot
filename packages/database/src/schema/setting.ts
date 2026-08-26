@@ -1,5 +1,6 @@
 ﻿import type {
   APIMessageTopLevelComponent,
+  APISelectMenuOption,
   RESTPostAPIChannelMessageJSONBody,
 } from 'discord-api-types/v10';
 import { boolean, integer, jsonb, pgEnum, pgSchema, text } from 'drizzle-orm/pg-core';
@@ -50,12 +51,17 @@ export const leaveMessageSetting = settingSchema.table('leave_message', {
 // #region Report
 export const reportSetting = settingSchema.table('report', {
   guildId,
-  channel: text('channel').notNull(),
+  enabled: boolean('enabled').notNull(),
+  channel: text('channel'),
   forumCompletedTag: text('forum_completed_tag'),
   forumIgnoredTag: text('forum_ignored_tag'),
+  categories: jsonb('categories')
+    .array()
+    .$type<{ label: string; emoji: string | null }[]>()
+    .notNull(),
+  allowOtherCategory: boolean('allow_other_category').notNull(),
   includeModerator: boolean('include_moderator').notNull(),
   showModerateLog: boolean('show_moderate_log').notNull(),
-  enableMention: boolean('enable_mention').notNull(),
   mentionRoles: text('mention_roles').array().notNull(),
   ...timestamps,
 });
