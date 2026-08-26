@@ -5,7 +5,7 @@ import { Switch } from '../ui/switch';
 import { useControlledField } from './field';
 
 export function ControlledSwitch(props: ComponentProps<typeof Switch>) {
-  const { field, fieldState } = useControlledField();
+  const { field, fieldState, isSubmitting } = useControlledField();
   return (
     <Switch
       id={field.name}
@@ -13,7 +13,7 @@ export function ControlledSwitch(props: ComponentProps<typeof Switch>) {
       checked={field.value}
       onCheckedChange={field.onChange}
       aria-invalid={fieldState.invalid}
-      disabled={field.disabled}
+      disabled={field.disabled || isSubmitting}
       {...props}
     />
   );

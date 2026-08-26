@@ -5,12 +5,13 @@ import { Textarea } from '../ui/textarea';
 import { useControlledField } from './field';
 
 export function ControlledTextarea(props: ComponentProps<typeof Textarea>) {
-  const { field, fieldState } = useControlledField();
+  const { field, fieldState, isSubmitting } = useControlledField();
   return (
     <Textarea
       {...field}
       id={field.name}
       aria-invalid={fieldState.invalid}
+      disabled={field.disabled || isSubmitting}
       {...props}
     />
   );

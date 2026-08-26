@@ -9,12 +9,13 @@ export function ControlledInputGroupInput({
   ref,
   ...props
 }: ComponentProps<typeof InputGroupInput>) {
-  const { field, fieldState } = useControlledField();
+  const { field, fieldState, isSubmitting } = useControlledField();
   return (
     <InputGroupInput
       {...field}
       id={field.name}
       aria-invalid={fieldState.invalid}
+      disabled={field.disabled || isSubmitting}
       {...props}
       ref={mergeRefs(field.ref, ref)}
     />
@@ -25,12 +26,13 @@ export function ControlledInputGroupTextarea({
   ref,
   ...props
 }: ComponentProps<typeof InputGroupTextarea>) {
-  const { field, fieldState } = useControlledField();
+  const { field, fieldState, isSubmitting } = useControlledField();
   return (
     <InputGroupTextarea
       {...field}
       id={field.name}
       aria-invalid={fieldState.invalid}
+      disabled={field.disabled || isSubmitting}
       {...props}
       ref={mergeRefs(field.ref, ref)}
     />

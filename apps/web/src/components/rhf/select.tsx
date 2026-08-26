@@ -6,13 +6,13 @@ import { useControlledField } from './field';
 export function ControlledSelect<Value, Multiple extends boolean | undefined = false>(
   props: SelectPrimitive.Root.Props<Value, Multiple>,
 ) {
-  const { field } = useControlledField();
+  const { field, isSubmitting } = useControlledField();
   return (
     <Select<Value, Multiple>
       name={field.name}
       value={field.value}
       onValueChange={field.onChange}
-      disabled={field.disabled}
+      disabled={field.disabled || isSubmitting}
       {...props}
     />
   );

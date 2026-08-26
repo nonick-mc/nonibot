@@ -7,10 +7,13 @@ import {
   type Path,
   type UseControllerReturn,
   useController,
+  useFormState,
 } from 'react-hook-form';
 import { Field, FieldError, FieldLabel } from '../ui/field';
 
-type ControlledFieldContextValue = UseControllerReturn<FieldValues>;
+type ControlledFieldContextValue = UseControllerReturn<FieldValues> & {
+  isSubmitting: boolean;
+};
 
 export const ControlledFieldContext = createContext<ControlledFieldContextValue | null>(null);
 
@@ -33,8 +36,11 @@ export const ControlledField = <T extends FieldValues>({
   ...props
 }: ControlledFieldProps<T>) => {
   const controller = useController({ name, control, disabled });
+  const { isSubmitting } = useFormState({ control });
   return (
-    <ControlledFieldContext.Provider value={controller as ControlledFieldContextValue}>
+    <ControlledFieldContext.Provider
+      value={{ ...controller, isSubmitting } as ControlledFieldContextValue}
+    >
       <Field
         data-invalid={controller.fieldState.invalid}
         data-disabled={controller.field.disabled}
@@ -58,8 +64,11 @@ export const ControlledFieldProvider = <T extends FieldValues>({
   children,
 }: ControlledFieldProviderProps<T>) => {
   const controller = useController({ name, control, disabled });
+  const { isSubmitting } = useFormState({ control });
   return (
-    <ControlledFieldContext.Provider value={controller as ControlledFieldContextValue}>
+    <ControlledFieldContext.Provider
+      value={{ ...controller, isSubmitting } as ControlledFieldContextValue}
+    >
       {children}
     </ControlledFieldContext.Provider>
   );
