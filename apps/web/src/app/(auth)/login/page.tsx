@@ -1,3 +1,4 @@
+import { SiDiscord } from '@icons-pack/react-simple-icons';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Suspense } from 'react';
@@ -27,7 +28,16 @@ export default function Page() {
           <CardDescription>Discordアカウントを使用して続行</CardDescription>
         </CardHeader>
         <CardContent className='flex flex-col gap-3'>
-          <Suspense>
+          <Suspense
+            fallback={
+              <Button size='lg' disabled>
+                <div className='pt-0.5'>
+                  <SiDiscord />
+                </div>
+                お待ちください...
+              </Button>
+            }
+          >
             <LoginButton />
           </Suspense>
           <Button
