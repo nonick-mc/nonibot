@@ -45,6 +45,7 @@ import {
   FieldGroup,
   FieldSeparator,
 } from '@/components/ui/field';
+import { cn } from '@/lib/utils';
 import { updateSettingAction } from './action';
 import { formSchema } from './schema';
 
@@ -229,6 +230,7 @@ export function SettingForm({ channels, roles, defaultValues }: FormProps) {
                                   key={field.id}
                                   value={field.id!}
                                   className='flex items-center gap-2'
+                                  disabled={!enabled}
                                 >
                                   <SortableItemHandle>
                                     <GripVerticalIcon className='size-4 text-muted-foreground' />
@@ -254,7 +256,9 @@ export function SettingForm({ channels, roles, defaultValues }: FormProps) {
                               ))}
                             </Sortable>
                           ) : (
-                            <Empty className='border border-dashed'>
+                            <Empty
+                              className={cn('border border-dashed', { 'opacity-50': !enabled })}
+                            >
                               <EmptyHeader>
                                 <EmptyMedia variant='icon'>
                                   <WrenchIcon />
