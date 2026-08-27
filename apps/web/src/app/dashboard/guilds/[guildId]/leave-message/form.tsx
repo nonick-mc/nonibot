@@ -21,7 +21,9 @@ import {
 } from '@/components/discord/message-context';
 import { DiscordMessage } from '@/components/discord/preview/message';
 import { FormChangePublisher, FormDevTool } from '@/components/form';
+import { ControlledButton } from '@/components/rhf/button';
 import { ControlledChannelSelect } from '@/components/rhf/channel-select';
+import { ControlledComponentsV2EditorDialog } from '@/components/rhf/components-v2-editor-dialog';
 import {
   ControlledField,
   ControlledFieldError,
@@ -156,16 +158,17 @@ export function SettingForm({ channels, defaultValues, roles, emojis }: FormProp
                           チャンネルに送信されるメッセージをカスタマイズします。
                         </FieldDescription>
                       </FieldContent>
-                      <div
-                        className={cn('sm:flex-1 flex flex-col gap-2', {
-                          'opacity-50': !enabled,
-                        })}
-                      >
+                      <div className='sm:flex-1 flex flex-col gap-2'>
                         <Watch
                           control={form.control}
                           name='messageComponents'
                           render={(messageComponents) => (
-                            <div className='max-sm:p-4 p-6 bg-discord-background border rounded-lg max-h-100 overflow-y-auto scroll-fade-y no-scrollbar'>
+                            <div
+                              className={cn(
+                                'max-sm:p-4 p-6 bg-discord-background border rounded-lg max-h-100 overflow-y-auto scroll-fade-y no-scrollbar',
+                                { 'opacity-50': !enabled },
+                              )}
+                            >
                               <DiscordMessage
                                 components={messageComponents ?? []}
                                 username='nonibot'
@@ -176,21 +179,12 @@ export function SettingForm({ channels, defaultValues, roles, emojis }: FormProp
                             </div>
                           )}
                         />
-                        <Controller
-                          control={form.control}
-                          name='messageComponents'
-                          render={({ field }) => (
-                            <ComponentsV2EditorDialog
-                              onSubmit={field.onChange}
-                              defaultValues={field.value ?? []}
-                            >
-                              <Button variant='outline' className='w-full' disabled={!enabled}>
-                                <PencilIcon />
-                                メッセージを編集
-                              </Button>
-                            </ComponentsV2EditorDialog>
-                          )}
-                        />
+                        <ControlledComponentsV2EditorDialog>
+                          <ControlledButton variant='outline' className='w-full'>
+                            <PencilIcon />
+                            メッセージを編集
+                          </ControlledButton>
+                        </ControlledComponentsV2EditorDialog>
                       </div>
                     </ControlledField>
                   )}
