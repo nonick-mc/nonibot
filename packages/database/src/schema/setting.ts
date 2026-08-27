@@ -1,8 +1,4 @@
-﻿import type {
-  APIMessageTopLevelComponent,
-  APISelectMenuOption,
-  RESTPostAPIChannelMessageJSONBody,
-} from 'discord-api-types/v10';
+﻿import type { APIMessageTopLevelComponent } from 'discord-api-types/v10';
 import { boolean, integer, jsonb, pgEnum, pgSchema, text } from 'drizzle-orm/pg-core';
 import { timestamps } from '../utils';
 import { guild } from './guild';
@@ -59,7 +55,6 @@ export const reportSetting = settingSchema.table('report', {
     .array()
     .$type<{ label: string; emoji: string | null }[]>()
     .notNull(),
-  allowOtherCategory: boolean('allow_other_category').notNull(),
   includeModerator: boolean('include_moderator').notNull(),
   showModerateLog: boolean('show_moderate_log').notNull(),
   mentionRoles: text('mention_roles').array().notNull(),

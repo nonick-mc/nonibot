@@ -1,5 +1,5 @@
 {
-  "id": "1a10b003-f596-4737-b76f-ea99ade7d70b",
+  "id": "69458ced-9778-438f-b807-2440d0b86135",
   "prevId": "550c64f0-c23b-4143-b878-14ff526c4a3f",
   "version": "7",
   "dialect": "postgresql",
@@ -1420,12 +1420,6 @@
         "categories": {
           "name": "categories",
           "type": "jsonb[]",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "allow_other_category": {
-          "name": "allow_other_category",
-          "type": "boolean",
           "primaryKey": false,
           "notNull": true
         },
