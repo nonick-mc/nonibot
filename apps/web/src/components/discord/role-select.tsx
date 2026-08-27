@@ -2,6 +2,7 @@
 
 import type { APIRole } from 'discord-api-types/v10';
 import { useMemo } from 'react';
+import { cn } from '@/lib/utils';
 import {
   Combobox,
   ComboboxChip,
@@ -67,7 +68,10 @@ function RoleSelectMultiple({
       itemToStringValue={(item) => item.id}
       disabled={disabled}
     >
-      <ComboboxChips ref={anchor} className='sm:min-w-xs sm:max-w-xs px-3'>
+      <ComboboxChips
+        ref={anchor}
+        className={cn('sm:min-w-xs sm:max-w-xs px-3', { 'opacity-50': disabled })}
+      >
         {selectedRoles.map((role) => (
           <ComboboxChip key={role.id} aria-label={role.name}>
             <RoleColor colors={role.colors} />
@@ -96,7 +100,14 @@ function RoleSelectMultiple({
   );
 }
 
-function RoleSelectSingle({ items, value, onChange, name, disabled, invalid }: RoleSelectSingleProps) {
+function RoleSelectSingle({
+  items,
+  value,
+  onChange,
+  name,
+  disabled,
+  invalid,
+}: RoleSelectSingleProps) {
   const selectedRole = useMemo(
     () => items.find((role) => role.id === value) ?? null,
     [items, value],
