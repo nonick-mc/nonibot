@@ -41,6 +41,7 @@ import {
   type ReactNode,
   useCallback,
   useContext,
+  useId,
   useLayoutEffect,
   useMemo,
   useState,
@@ -109,8 +110,11 @@ function Sortable<T>({
   onDragEnd,
   modifiers,
   children,
+  id,
   ...props
 }: SortableRootProps<T>) {
+  const generatedId = useId();
+  const dndContextId = id ?? generatedId;
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
   const [mounted, setMounted] = useState(false);
 
@@ -210,6 +214,7 @@ function Sortable<T>({
   return (
     <SortableInternalContext.Provider value={contextValue}>
       <DndContext
+        id={dndContextId}
         sensors={sensors}
         modifiers={modifiers}
         measuring={{
@@ -225,7 +230,7 @@ function Sortable<T>({
           {useRender({
             defaultTagName: 'div',
             render,
-            props: mergeProps<'div'>(defaultProps, props),
+            props: mergeProps<'div'>(defaultProps, { id, ...props }),
           })}
         </SortableContext>
         {mounted &&
@@ -369,4 +374,3 @@ function SortableOverlay({ children, className, ...props }: SortableOverlayProps
 }
 
 export { IsOverlayContext, Sortable, SortableItem, SortableItemHandle, SortableOverlay };
-
