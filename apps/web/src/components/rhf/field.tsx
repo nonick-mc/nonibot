@@ -35,17 +35,19 @@ export const ControlledField = <T extends FieldValues>({
   disabled,
   ...props
 }: ControlledFieldProps<T>) => {
-  const controller = useController({ name, control, disabled });
+  const controller = useController({ name, control });
   const { isSubmitting } = useFormState({ control });
   return (
     <ControlledFieldContext.Provider
-      value={{ ...controller, isSubmitting } as ControlledFieldContextValue}
+      value={
+        {
+          ...controller,
+          field: { ...controller.field, disabled },
+          isSubmitting,
+        } as ControlledFieldContextValue
+      }
     >
-      <Field
-        data-invalid={controller.fieldState.invalid}
-        data-disabled={controller.field.disabled}
-        {...props}
-      />
+      <Field data-invalid={controller.fieldState.invalid} data-disabled={disabled} {...props} />
     </ControlledFieldContext.Provider>
   );
 };
@@ -63,11 +65,17 @@ export const ControlledFieldProvider = <T extends FieldValues>({
   disabled,
   children,
 }: ControlledFieldProviderProps<T>) => {
-  const controller = useController({ name, control, disabled });
+  const controller = useController({ name, control });
   const { isSubmitting } = useFormState({ control });
   return (
     <ControlledFieldContext.Provider
-      value={{ ...controller, isSubmitting } as ControlledFieldContextValue}
+      value={
+        {
+          ...controller,
+          field: { ...controller.field, disabled },
+          isSubmitting,
+        } as ControlledFieldContextValue
+      }
     >
       {children}
     </ControlledFieldContext.Provider>
