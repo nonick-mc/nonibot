@@ -1,7 +1,7 @@
 import { client } from '..';
 
-type PrefixedMap<T extends Record<string, string>, P extends string> = {
-  readonly [K in keyof T]: `${P}_${T[K]}`;
+type PrefixedMap<P extends string, T extends readonly string[]> = {
+  readonly [K in T[number]]: `${P}_${Lowercase<K>}`;
 };
 
 type EmojiName =
@@ -9,33 +9,25 @@ type EmojiName =
   | (typeof Destructive)[keyof typeof Destructive]
   | (typeof Default)[keyof typeof Default];
 
-function createEmojiMap<T extends Record<string, string>, P extends string>(
+function createEmojiMap<P extends string, T extends readonly string[]>(
   prefix: P,
-  input: T,
-): PrefixedMap<T, P> {
+  keys: T,
+): PrefixedMap<P, T> {
   const result = {} as any;
-  for (const key in input) {
-    result[key] = `${prefix}_${input[key]}`;
+  for (const key of keys) {
+    result[key] = `${prefix}_${key.toLowerCase()}`;
   }
   return result;
 }
 
 // #22c55e
-export const Success = createEmojiMap('success', {
-  circleCheck: 'circlecheck',
-} as const);
+export const Success = createEmojiMap('success', ['circleCheck'] as const);
 
 // #ef4444
-export const Destructive = createEmojiMap('destructive', {
-  shieldAlert: 'shieldalert',
-  cicleAlert: 'cicleAlert',
-} as const);
+export const Destructive = createEmojiMap('destructive', ['shieldAlert', 'circleAlert'] as const);
 
 // #ffffff
-export const Default = createEmojiMap('default', {
-  arrowLeft: 'arrowleft',
-  arrowRight: 'arrowright',
-} as const);
+export const Default = createEmojiMap('default', ['arrowLeft', 'arrowRight'] as const);
 
 export function getAppEmoji(name: EmojiName) {
   return client.application?.emojis.cache.find((emoji) => emoji.name === name) ?? '❌️';
