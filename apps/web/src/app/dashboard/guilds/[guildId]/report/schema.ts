@@ -14,6 +14,12 @@ export const formSchema = createInsertSchema(reportSetting, {
     schema.regex(SnowflakeRegex, '無効なIDです').nullable().default(null),
   includeModerator: (schema) => schema.default(false),
   showModerateLog: (schema) => schema.default(true),
+  ignoreRoles: () =>
+    z
+      .array(z.string().regex(SnowflakeRegex, '無効なIDです'))
+      .max(10, 'ロールは最大10個まで設定できます。')
+      .refine((v) => new Set(v).size === v.length, '重複した値が含まれています。')
+      .default([]),
   mentionRoles: () =>
     z
       .array(z.string().regex(SnowflakeRegex, '無効なIDです'))

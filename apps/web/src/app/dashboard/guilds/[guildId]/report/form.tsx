@@ -8,7 +8,13 @@ import {
   ChannelType,
   type GuildChannelType,
 } from 'discord-api-types/v10';
-import { GripVerticalIcon, PlusIcon, Trash2Icon, WrenchIcon } from 'lucide-react';
+import {
+  GripVerticalIcon,
+  PlusIcon,
+  Trash2Icon,
+  TriangleAlertIcon,
+  WrenchIcon,
+} from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useEffect } from 'react';
 import {
@@ -22,6 +28,7 @@ import {
 import { toast } from 'sonner';
 import type z from 'zod';
 import { FormChangePublisher, FormDevTool } from '@/components/form';
+import { Alert, AlertDescription, AlertTitle } from '@/components/reui/alert';
 import { Badge } from '@/components/reui/badge';
 import { Sortable, SortableItem, SortableItemHandle } from '@/components/reui/sortable';
 import { ControlledChannelSelect } from '@/components/rhf/channel-select';
@@ -134,6 +141,13 @@ export function SettingForm({ channels, roles, defaultValues }: FormProps) {
                 name='enabled'
                 render={(enabled) => (
                   <>
+                    <Alert variant='warning'>
+                      <TriangleAlertIcon />
+                      <AlertTitle>「モデレーターも通報の対象にする」設定は削除されます</AlertTitle>
+                      <AlertDescription>
+                        この設定は将来のバージョンで「通報の対象外にするロール」設定に統一されます。
+                      </AlertDescription>
+                    </Alert>
                     <ControlledField
                       control={form.control}
                       name='includeModerator'
@@ -168,6 +182,24 @@ export function SettingForm({ channels, roles, defaultValues }: FormProps) {
                     <FieldSeparator />
                     <ControlledField
                       control={form.control}
+                      name='ignoreRoles'
+                      orientation='responsive'
+                      disabled={!enabled}
+                    >
+                      <FieldContent>
+                        <ControlledFieldLabel>
+                          通報の対象外にするロール<Badge>New</Badge>
+                        </ControlledFieldLabel>
+                        <FieldDescription>
+                          通報の対象外にするロールを最大10個まで選択できます。管理者権限を持つメンバーは、この設定に関わらず常に対象外になります。
+                        </FieldDescription>
+                        <ControlledFieldError />
+                      </FieldContent>
+                      <ControlledRoleSelect items={roles} multiple />
+                    </ControlledField>
+                    <FieldSeparator />
+                    <ControlledField
+                      control={form.control}
                       name='mentionRoles'
                       orientation='responsive'
                       disabled={!enabled}
@@ -175,7 +207,7 @@ export function SettingForm({ channels, roles, defaultValues }: FormProps) {
                       <FieldContent>
                         <ControlledFieldLabel>メンションするロール</ControlledFieldLabel>
                         <FieldDescription>
-                          通報が送られた際、ここで選択したロールがメンションされます。
+                          通報が送られた際にメンションするロールを最大10個まで選択できます。
                         </FieldDescription>
                         <ControlledFieldError />
                       </FieldContent>
