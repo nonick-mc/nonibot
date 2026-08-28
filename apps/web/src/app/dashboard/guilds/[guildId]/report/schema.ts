@@ -34,8 +34,6 @@ export const formSchema = createInsertSchema(reportSetting, {
           .string()
           .min(1, '1文字以上100文字以下である必要があります。')
           .max(100, '1文字以上100文字以下である必要があります。'),
-        // 絵文字はv6アップデート後に追加で実装
-        emoji: z.literal(null),
       }),
     )
     .min(2, 'カテゴリの数は2個以上である必要があります。')

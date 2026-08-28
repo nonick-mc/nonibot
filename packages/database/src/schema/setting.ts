@@ -53,7 +53,7 @@ export const reportSetting = settingSchema.table('report', {
   forumIgnoredTag: text('forum_ignored_tag'),
   categories: jsonb('categories')
     .array()
-    .$type<{ label: string; emoji: string | null }[]>()
+    .$type<{ label: string }[]>()
     .notNull(),
   includeModerator: boolean('include_moderator').notNull(),
   ignoreRoles: text('ignore_roles').array().notNull(),

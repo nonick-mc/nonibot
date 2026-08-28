@@ -302,9 +302,7 @@ export function SettingForm({ channels, roles, defaultValues }: FormProps) {
                           <Button
                             className='w-full text-foreground!'
                             variant='outline'
-                            onClick={() =>
-                              append({ id: crypto.randomUUID(), label: '', emoji: null })
-                            }
+                            onClick={() => append({ id: crypto.randomUUID(), label: '' })}
                             disabled={fields.length >= 10 || !enabled}
                           >
                             <PlusIcon />
