@@ -273,7 +273,7 @@ export function SettingForm({ channels, roles, defaultValues }: FormProps) {
                             onClick={() =>
                               append({ id: crypto.randomUUID(), label: '', emoji: null })
                             }
-                            disabled={fields.length >= 25 || !enabled}
+                            disabled={fields.length >= 10 || !enabled}
                           >
                             <PlusIcon />
                             カテゴリを追加

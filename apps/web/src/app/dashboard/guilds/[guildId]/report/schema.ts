@@ -32,7 +32,8 @@ export const formSchema = createInsertSchema(reportSetting, {
         emoji: z.literal(null),
       }),
     )
-    .max(25, 'カテゴリの数は25個以下である必要があります。')
+    .min(2, 'カテゴリの数は2個以上である必要があります。')
+    .max(10, 'カテゴリの数は10個以下である必要があります。')
     .default([]),
 })
   .omit({ guildId: true, createdAt: true, updatedAt: true })
