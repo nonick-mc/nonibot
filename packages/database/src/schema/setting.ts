@@ -56,6 +56,7 @@ export const reportSetting = settingSchema.table('report', {
     .$type<{ label: string; emoji: string | null }[]>()
     .notNull(),
   includeModerator: boolean('include_moderator').notNull(),
+  ignoreRoles: text('ignore_roles').array().notNull(),
   showModerateLog: boolean('show_moderate_log').notNull(),
   mentionRoles: text('mention_roles').array().notNull(),
   ...timestamps,
