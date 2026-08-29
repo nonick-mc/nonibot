@@ -44,7 +44,13 @@ import { ControlledRoleSelect } from '@/components/rhf/role-select';
 import { ControlledSwitch } from '@/components/rhf/switch';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/components/ui/empty';
 import {
   Field,
   FieldContent,
@@ -237,7 +243,7 @@ export function SettingForm({ channels, roles, defaultValues }: FormProps) {
                           <Badge>New</Badge>
                         </ControlledFieldLabel>
                         <FieldDescription>
-                          通報時に選択できるカテゴリを設定します。何も設定されていない場合、選択メニューは表示されません。
+                          通報時に選択できるカテゴリを設定します。カテゴリが設定されていない場合、代わりに通報理由を記入する入力欄が表示されます。
                         </FieldDescription>
                         <ControlledFieldError />
                       </ControlledFieldProvider>
