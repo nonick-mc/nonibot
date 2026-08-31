@@ -29,6 +29,10 @@ export const Destructive = createEmojiMap('destructive', [
   'shieldAlert',
   'circleAlert',
   'flag',
+  'trash2',
+  'clock',
+  'ban',
+  'logOut',
 ] as const);
 // #a1a1aa
 export const Default = createEmojiMap('default', [
@@ -37,11 +41,17 @@ export const Default = createEmojiMap('default', [
   'hash',
   'userRound',
   'calendarClock',
+  'squarePen',
 ] as const);
 // #f39c0b
 export const Warning = createEmojiMap('warning', ['circleAlert'] as const);
 // #3b82f6
-export const Primary = createEmojiMap('primary', ['userRound', 'messageSquareText'] as const);
+export const Primary = createEmojiMap('primary', [
+  'userRound',
+  'messageSquareText',
+  'clock',
+  'circleOff',
+] as const);
 
 export function getAppEmoji(name: EmojiName) {
   return client.application?.emojis.cache.find((emoji) => emoji.name === name) ?? '❌️';
