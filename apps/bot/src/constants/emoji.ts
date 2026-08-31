@@ -7,7 +7,9 @@ type PrefixedMap<P extends string, T extends readonly string[]> = {
 type EmojiName =
   | (typeof Success)[keyof typeof Success]
   | (typeof Destructive)[keyof typeof Destructive]
-  | (typeof Default)[keyof typeof Default];
+  | (typeof Default)[keyof typeof Default]
+  | (typeof Warning)[keyof typeof Warning]
+  | (typeof Primary)[keyof typeof Primary];
 
 function createEmojiMap<P extends string, T extends readonly string[]>(
   prefix: P,
@@ -22,12 +24,24 @@ function createEmojiMap<P extends string, T extends readonly string[]>(
 
 // #22c55e
 export const Success = createEmojiMap('success', ['circleCheck'] as const);
-
 // #ef4444
-export const Destructive = createEmojiMap('destructive', ['shieldAlert', 'circleAlert'] as const);
-
-// #ffffff
-export const Default = createEmojiMap('default', ['arrowLeft', 'arrowRight'] as const);
+export const Destructive = createEmojiMap('destructive', [
+  'shieldAlert',
+  'circleAlert',
+  'flag',
+] as const);
+// #a1a1aa
+export const Default = createEmojiMap('default', [
+  'arrowLeft',
+  'arrowRight',
+  'hash',
+  'userRound',
+  'calendarClock',
+] as const);
+// #f39c0b
+export const Warning = createEmojiMap('warning', ['circleAlert'] as const);
+// #3b82f6
+export const Primary = createEmojiMap('primary', ['userRound', 'messageSquareText'] as const);
 
 export function getAppEmoji(name: EmojiName) {
   return client.application?.emojis.cache.find((emoji) => emoji.name === name) ?? '❌️';
