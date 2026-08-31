@@ -12,9 +12,6 @@ execute(signal, async (oldMember, newMember) => {
   });
   if (!setting) return;
 
-  console.log(oldMember.pending);
-  console.log(newMember.pending);
-
   if (!newMember.guild.features.includes(GuildFeature.MemberVerificationGateEnabled)) return;
   if (oldMember.pending && !newMember.pending) {
     await sendToChannel(setting, newMember);
