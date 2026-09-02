@@ -5,6 +5,12 @@ import { countTotalComponents } from './utils';
 
 export const SnowflakeRegex = /^\d{17,19}$/;
 
+export const snowflakeIdSchema = z.string().regex(SnowflakeRegex, '無効なIDです').nullable();
+
+export const snowflakeArraySchema = z
+  .array(z.string().regex(SnowflakeRegex, '無効なIDです'))
+  .refine((v) => new Set(v).size === v.length, '重複した値が含まれています。');
+
 function escapeRegExp(value: string) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
