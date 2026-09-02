@@ -340,7 +340,7 @@ function CategoriesField({
               className='w-full text-foreground!'
               variant='outline'
               onClick={() => append({ id: crypto.randomUUID(), label: '' })}
-              disabled={fields.length >= 10 || !enabled}
+              disabled={fields.length >= 10 || disabled}
             >
               <PlusIcon />
               カテゴリを追加
