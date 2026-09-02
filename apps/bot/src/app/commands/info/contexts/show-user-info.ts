@@ -6,7 +6,7 @@ import {
   PermissionFlagsBits,
 } from 'discord.js';
 import { ContextMenu, execute } from 'sunar';
-import { getMemberInfoContainers, getUserInfoContainer } from '@/src/modules/user-info';
+import { getMemberInfoContainers, getUserInfoContainer } from '@/src/app/shared/user-info';
 
 const context = new ContextMenu({
   name: 'このユーザーの情報',

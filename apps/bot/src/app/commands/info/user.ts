@@ -5,7 +5,7 @@ import {
   PermissionFlagsBits,
 } from 'discord.js';
 import { execute, SlashSubcommand } from 'sunar';
-import { getMemberInfoContainers, getUserInfoContainer } from '@/src/modules/user-info';
+import { getMemberInfoContainers, getUserInfoContainer } from '@/src/app/shared/user-info';
 
 export const slashSubCommand = new SlashSubcommand('info', {
   name: 'user',
