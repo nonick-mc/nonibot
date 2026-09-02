@@ -1,4 +1,5 @@
 import {
+  ChannelType,
   Colors,
   ComponentType,
   ContainerBuilder,
@@ -8,6 +9,7 @@ import {
 } from 'discord.js';
 import { execute, Modal } from 'sunar';
 import { Destructive, getAppEmoji } from '@/src/constants/emoji';
+import { db } from '@/src/lib/db';
 import { deleteReport, findReportByThreadId } from '../notify-report-thread';
 
 export const modal = new Modal({ id: 'report:send-ignore-reason' });
@@ -52,5 +54,15 @@ execute(modal, async (interaction) => {
     allowedMentions: { parse: [] },
   });
 
-  await thread.edit({ archived: true, locked: true });
+  let appliedTags: string[] | undefined;
+  if (thread.parent?.type === ChannelType.GuildForum) {
+    const setting = await db.query.reportSetting.findFirst({
+      where: (s, { eq }) => eq(s.guildId, interaction.guildId),
+    });
+    if (setting?.ignoredForumTag && !thread.appliedTags.includes(setting.ignoredForumTag)) {
+      appliedTags = [...thread.appliedTags, setting.ignoredForumTag];
+    }
+  }
+
+  await thread.edit({ archived: true, locked: true, appliedTags });
 });

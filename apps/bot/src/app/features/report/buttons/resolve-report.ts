@@ -1,4 +1,5 @@
 import {
+  ChannelType,
   Colors,
   ComponentType,
   ContainerBuilder,
@@ -7,6 +8,7 @@ import {
 } from 'discord.js';
 import { Button, execute } from 'sunar';
 import { getAppEmoji, Success } from '@/src/constants/emoji';
+import { db } from '@/src/lib/db';
 import { deleteReport, findReportByThreadId } from '../notify-report-thread';
 
 export const button = new Button({ id: 'report:resolve' });
@@ -48,5 +50,15 @@ execute(button, async (interaction) => {
     allowedMentions: { parse: [] },
   });
 
-  await thread.edit({ archived: true, locked: true });
+  let appliedTags: string[] | undefined;
+  if (thread.parent?.type === ChannelType.GuildForum) {
+    const setting = await db.query.reportSetting.findFirst({
+      where: (s, { eq }) => eq(s.guildId, interaction.guildId),
+    });
+    if (setting?.resolvedForumTag && !thread.appliedTags.includes(setting.resolvedForumTag)) {
+      appliedTags = [...thread.appliedTags, setting.resolvedForumTag];
+    }
+  }
+
+  await thread.edit({ archived: true, locked: true, appliedTags });
 });

@@ -360,8 +360,8 @@ function ForumTagSettingFields({ channels }: { channels: APIGuildChannel<GuildCh
   // biome-ignore lint/correctness/useExhaustiveDependencies: チャンネルが変更された際にタグの選択を解除 (初回レンダリングでタグの選択が解除されないように、isDirtyがtrueの場合のみ有効)
   useEffect(() => {
     if (form.formState.isDirty) {
-      form.setValue('forumCompletedTag', null);
-      form.setValue('forumIgnoredTag', null);
+      form.setValue('resolvedForumTag', null);
+      form.setValue('ignoredForumTag', null);
     }
   }, [channelId]);
 
@@ -375,7 +375,7 @@ function ForumTagSettingFields({ channels }: { channels: APIGuildChannel<GuildCh
       <FieldSeparator />
       <ControlledField
         control={form.control}
-        name='forumCompletedTag'
+        name='resolvedForumTag'
         orientation='responsive'
         align='center'
         disabled={!enabled}
@@ -389,7 +389,7 @@ function ForumTagSettingFields({ channels }: { channels: APIGuildChannel<GuildCh
       <FieldSeparator />
       <ControlledField
         control={form.control}
-        name='forumIgnoredTag'
+        name='ignoredForumTag'
         orientation='responsive'
         align='center'
         disabled={!enabled}

@@ -22,9 +22,9 @@ const categoriesSchema = z
 export const formSchema = createInsertSchema(reportSetting, {
   enabled: (schema) => schema.default(false),
   channel: (schema) => schema.regex(SnowflakeRegex, '無効なIDです').nullable().default(null),
-  forumCompletedTag: (schema) =>
+  resolvedForumTag: (schema) =>
     schema.regex(SnowflakeRegex, '無効なIDです').nullable().default(null),
-  forumIgnoredTag: (schema) =>
+  ignoredForumTag: (schema) =>
     schema.regex(SnowflakeRegex, '無効なIDです').nullable().default(null),
   includeModerator: (schema) => schema.default(false),
   showModerateLog: (schema) => schema.default(true),

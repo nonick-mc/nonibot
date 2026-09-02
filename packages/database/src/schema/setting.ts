@@ -49,8 +49,8 @@ export const reportSetting = settingSchema.table('report', {
   guildId,
   enabled: boolean('enabled').notNull(),
   channel: text('channel'),
-  forumCompletedTag: text('forum_completed_tag'),
-  forumIgnoredTag: text('forum_ignored_tag'),
+  resolvedForumTag: text('resolved_forum_tag'),
+  ignoredForumTag: text('ignored_forum_tag'),
   messageCategories: jsonb('message_categories')
     .array()
     .$type<{ label: string }[]>()
