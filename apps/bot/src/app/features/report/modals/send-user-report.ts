@@ -41,6 +41,9 @@ execute(modal, async (interaction) => {
   const reason = setting?.userCategories.length
     ? interaction.fields.getRadioGroup('reason')
     : interaction.fields.getTextInputValue('reason');
+  const comment = setting?.userCategories.length
+    ? interaction.fields.getTextInputValue('comment')
+    : null;
 
   if (!setting?.enabled) {
     return interaction.editReply({
@@ -79,6 +82,9 @@ execute(modal, async (interaction) => {
                   unorderedList([
                     `${getAppEmoji(Primary.userRound)} 報告者: ${interaction.user} ${inlineCode(interaction.user.username)}`,
                     `${getAppEmoji(Primary.messageSquareText)} 理由: ${reason?.split('\n').join(' ')}`,
+                    ...(comment
+                      ? [`${getAppEmoji(Primary.messageSquareText)} コメント: ${comment.split('\n').join(' ')}`]
+                      : []),
                   ]),
                 ),
               ),
@@ -145,6 +151,9 @@ execute(modal, async (interaction) => {
         unorderedList([
           `${getAppEmoji(Primary.userRound)} 報告者: ${interaction.user} ${inlineCode(interaction.user.username)}`,
           `${getAppEmoji(Primary.messageSquareText)} 理由: ${reason?.split('\n').join(' ')}`,
+          ...(comment
+            ? [`${getAppEmoji(Primary.messageSquareText)} コメント: ${comment.split('\n').join(' ')}`]
+            : []),
         ]),
       ),
     ),

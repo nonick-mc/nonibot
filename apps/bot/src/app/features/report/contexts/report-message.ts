@@ -77,6 +77,16 @@ execute(context, async (interaction) => {
           )
           .setRequired(true),
       ),
+      new LabelBuilder()
+        .setLabel('コメント')
+        .setTextInputComponent(
+          new TextInputBuilder()
+            .setCustomId('comment')
+            .setStyle(TextInputStyle.Paragraph)
+            .setMaxLength(500)
+            .setPlaceholder('補足があれば入力してください (任意)')
+            .setRequired(false),
+        ),
     );
   } else {
     modal.addLabelComponents(
