@@ -1,6 +1,5 @@
 import { report } from '@repo/database';
 import { SnowflakeRegex } from '@repo/shared';
-import { oneLineTrim } from 'common-tags';
 import {
   ActionRowBuilder,
   ButtonBuilder,
@@ -11,8 +10,6 @@ import {
   type ForumThreadChannel,
   HeadingLevel,
   heading,
-  hyperlink,
-  type InteractionEditReplyOptions,
   inlineCode,
   type MessageCreateOptions,
   MessageFlags,
@@ -31,6 +28,7 @@ import { execute, Modal } from 'sunar';
 import { Default, Destructive, getAppEmoji, Primary } from '@/src/constants/emoji';
 import { db } from '@/src/lib/db';
 import { errorMessage, successMessage } from '@/src/lib/format';
+import { addReporterToReport, deleteReport, findReportsByMessage } from '../notify-report-thread';
 
 export const modal = new Modal({
   id: new RegExp(`^report:send-message-report_${SnowflakeRegex.source.slice(1, -1)}$`),
@@ -65,6 +63,51 @@ execute(modal, async (interaction) => {
         '通報しようとしているメッセージは削除されたか、Botがアクセスできませんでした。',
       ),
     });
+  }
+
+  const [existingReport] = await findReportsByMessage(
+    interaction.guildId,
+    targetMessage.channelId,
+    targetMessage.id,
+  );
+
+  if (existingReport) {
+    const existingThread = await interaction.guild.channels
+      .fetch(existingReport.threadId)
+      .catch(() => null);
+
+    if (existingThread?.isThread()) {
+      if (!existingReport.reporterIds.includes(interaction.user.id)) {
+        await existingThread
+          .send({
+            components: [
+              new ContainerBuilder().addTextDisplayComponents(
+                new TextDisplayBuilder().setContent(
+                  heading(`${getAppEmoji(Destructive.flag)} 重複した通報`, HeadingLevel.Three),
+                ),
+                new TextDisplayBuilder().setContent(
+                  unorderedList([
+                    `${getAppEmoji(Primary.userRound)} 報告者: ${interaction.user} ${inlineCode(interaction.user.username)}`,
+                    `${getAppEmoji(Primary.messageSquareText)} 理由: ${reason}`,
+                  ]),
+                ),
+              ),
+            ],
+            flags: [MessageFlags.IsComponentsV2],
+            allowedMentions: { parse: [] },
+          })
+          .catch(() => null);
+
+        await addReporterToReport(existingReport.id, interaction.user.id);
+      }
+
+      return interaction.editReply({
+        content: successMessage(`通報を送信しました。${bold('ご協力ありがとうございます！')}`),
+      });
+    }
+
+    // 通報先のスレッドが見つからない場合は不整合なレコードとして削除
+    await deleteReport(existingReport.id);
   }
 
   const channel = await interaction.guild.channels
@@ -188,6 +231,7 @@ execute(modal, async (interaction) => {
         targetUserId: targetMessage.author.id,
         targetChannelId: targetMessage.channelId,
         targetMessageId: targetMessage.id,
+        reporterIds: [interaction.user.id],
       });
     }
 

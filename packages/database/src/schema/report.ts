@@ -12,5 +12,6 @@ export const report = pgTable('report', {
   targetUserId: text('target_user_id').notNull(),
   targetChannelId: text('target_channel_id').notNull(),
   targetMessageId: text('target_message_id').notNull(),
+  reporterIds: text('reporter_ids').array().notNull().default([]),
   createdAt: timestamps.createdAt,
 });

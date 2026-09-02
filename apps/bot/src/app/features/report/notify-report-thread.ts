@@ -1,6 +1,6 @@
 import { report } from '@repo/database';
 import { type ContainerBuilder, type Guild, MessageFlags } from 'discord.js';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { db } from '@/src/lib/db';
 
 export function findReportsByMessage(
@@ -32,6 +32,13 @@ export function findReportByThreadId(threadId: string) {
 
 export async function deleteReport(id: string) {
   await db.delete(report).where(eq(report.id, id));
+}
+
+export async function addReporterToReport(id: string, userId: string) {
+  await db
+    .update(report)
+    .set({ reporterIds: sql`array_append(${report.reporterIds}, ${userId})` })
+    .where(eq(report.id, id));
 }
 
 export async function sendReportLog(

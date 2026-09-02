@@ -183,6 +183,13 @@
       "when": 1787882054451,
       "tag": "0025_yielding_iceman",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1788182330735,
+      "tag": "0026_aberrant_bug",
+      "breakpoints": true
     }
   ]
 }
