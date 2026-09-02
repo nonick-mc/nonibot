@@ -16,8 +16,8 @@ import { db } from '@/src/lib/db';
 import { errorMessage } from '@/src/lib/format';
 
 export const context = new ContextMenu({
-  name: 'メッセージを通報',
-  type: ApplicationCommandType.Message,
+  name: 'ユーザーを通報',
+  type: ApplicationCommandType.User,
   integrationTypes: [ApplicationIntegrationType.GuildInstall],
   contexts: [InteractionContextType.Guild],
 });
@@ -25,9 +25,8 @@ export const context = new ContextMenu({
 execute(context, async (interaction) => {
   if (!interaction.inCachedGuild()) return;
 
-  const targetMessage = interaction.targetMessage;
-  const targetMember = interaction.targetMessage.member;
-  const targetUser = interaction.targetMessage.author;
+  const targetMember = interaction.targetMember;
+  const targetUser = interaction.targetUser;
 
   const setting = await db.query.reportSetting.findFirst({
     where: (setting, { eq }) => eq(setting.guildId, interaction.guildId),
@@ -48,8 +47,7 @@ execute(context, async (interaction) => {
   }
 
   if (
-    targetUser.system || // システムメッセージ
-    targetUser.id === interaction.client.user.id || // Bot自身のメッセージ
+    targetUser.bot || // Botアカウント
     targetMember?.roles.cache.hasAny(...setting.ignoreRoles) || // 対象外ロールを所持している
     targetMember?.permissions.has(PermissionFlagsBits.Administrator) || // 管理者権限を所持している
     (!setting.includeModerator &&
@@ -62,16 +60,16 @@ execute(context, async (interaction) => {
   }
 
   const modal = new ModalBuilder()
-    .setCustomId(`report:send-message-report_${targetMessage.id}`)
-    .setTitle('メッセージを通報');
+    .setCustomId(`report:send-user-report_${targetUser.id}`)
+    .setTitle('ユーザーを通報');
 
-  if (setting.messageCategories.length) {
+  if (setting.userCategories.length) {
     modal.addLabelComponents(
       new LabelBuilder().setLabel('通報理由').setRadioGroupComponent(
         new RadioGroupBuilder()
           .setCustomId('reason')
           .setOptions(
-            setting.messageCategories.map((category) =>
+            setting.userCategories.map((category) =>
               new RadioGroupOptionBuilder().setLabel(category.label).setValue(category.label),
             ),
           )

@@ -57,9 +57,13 @@ export function FormChangePublisher() {
   );
 }
 
-export function FormDevTool() {
+function FormDevToolInner() {
   const form = useFormContext();
   if (process.env.NODE_ENV !== 'development') return null;
 
   return <DevTool control={form.control} placement='top-left' />;
 }
+
+export const FormDevTool = dynamic(() => Promise.resolve({ default: FormDevToolInner }), {
+  ssr: false,
+});

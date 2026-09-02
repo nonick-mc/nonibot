@@ -235,89 +235,21 @@ export function SettingForm({ channels, roles, defaultValues }: FormProps) {
                 control={form.control}
                 name='enabled'
                 render={(enabled) => (
-                  <Field orientation='responsive' data-disabled={!enabled}>
-                    <FieldContent>
-                      <ControlledFieldProvider control={form.control} name='categories'>
-                        <ControlledFieldLabel>
-                          通報カテゴリ
-                          <Badge>New</Badge>
-                        </ControlledFieldLabel>
-                        <FieldDescription>
-                          通報時に選択できるカテゴリを設定します。カテゴリが設定されていない場合、代わりに通報理由を記入する入力欄が表示されます。
-                        </FieldDescription>
-                        <ControlledFieldError />
-                      </ControlledFieldProvider>
-                    </FieldContent>
-                    <FieldArray
-                      control={form.control}
-                      name='categories'
-                      keyName='fieldId'
-                      render={({ fields, move, append, remove }) => (
-                        <div className='flex-1 flex flex-col gap-3'>
-                          {fields.length ? (
-                            <Sortable
-                              className='flex flex-col gap-2'
-                              value={fields.map((field) => ({ id: field.id! }))}
-                              onValueChange={() => {}}
-                              getItemValue={(item) => item.id}
-                              onMove={({ activeIndex, overIndex }) => move(activeIndex, overIndex)}
-                              strategy='vertical'
-                            >
-                              {fields.map((field, index) => (
-                                <SortableItem
-                                  key={field.id}
-                                  value={field.id!}
-                                  className='flex items-center gap-2'
-                                  disabled={!enabled}
-                                >
-                                  <SortableItemHandle>
-                                    <GripVerticalIcon className='size-4 text-muted-foreground' />
-                                  </SortableItemHandle>
-                                  <ControlledField
-                                    control={form.control}
-                                    name={`categories.${index}.label`}
-                                    className='gap-1'
-                                    disabled={!enabled}
-                                  >
-                                    <ControlledInput placeholder='カテゴリ名' />
-                                    <ControlledFieldError />
-                                  </ControlledField>
-                                  <Button
-                                    onClick={() => remove(index)}
-                                    size='icon-sm'
-                                    variant='ghost'
-                                    disabled={!enabled}
-                                  >
-                                    <Trash2Icon className='text-destructive' />
-                                  </Button>
-                                </SortableItem>
-                              ))}
-                            </Sortable>
-                          ) : (
-                            <Empty
-                              className={cn('border border-dashed', { 'opacity-50': !enabled })}
-                            >
-                              <EmptyHeader>
-                                <EmptyMedia variant='icon'>
-                                  <WrenchIcon />
-                                </EmptyMedia>
-                                <EmptyTitle>カテゴリが未設定です</EmptyTitle>
-                              </EmptyHeader>
-                            </Empty>
-                          )}
-                          <Button
-                            className='w-full text-foreground!'
-                            variant='outline'
-                            onClick={() => append({ id: crypto.randomUUID(), label: '' })}
-                            disabled={fields.length >= 10 || !enabled}
-                          >
-                            <PlusIcon />
-                            カテゴリを追加
-                          </Button>
-                        </div>
-                      )}
+                  <>
+                    <CategoriesField
+                      name='messageCategories'
+                      label='通報カテゴリ（メッセージ）'
+                      description='メッセージの通報時に選択できるカテゴリを設定します。カテゴリが設定されていない場合、代わりに通報理由を記入する入力欄が表示されます。'
+                      disabled={!enabled}
                     />
-                  </Field>
+                    <FieldSeparator />
+                    <CategoriesField
+                      name='userCategories'
+                      label='通報カテゴリ（ユーザー）'
+                      description='ユーザーの通報時に選択できるカテゴリを設定します。カテゴリが設定されていない場合、代わりに通報理由を記入する入力欄が表示されます。'
+                      disabled={!enabled}
+                    />
+                  </>
                 )}
               />
             </FieldGroup>
@@ -327,6 +259,102 @@ export function SettingForm({ channels, roles, defaultValues }: FormProps) {
         <FormChangePublisher />
       </form>
     </FormProvider>
+  );
+}
+
+function CategoriesField({
+  name,
+  label,
+  description,
+  disabled,
+}: {
+  name: 'messageCategories' | 'userCategories';
+  label: string;
+  description: string;
+  disabled?: boolean;
+}) {
+  const form = useFormContext<z.infer<typeof formSchema>>();
+
+  return (
+    <Field orientation='responsive' data-disabled={disabled}>
+      <FieldContent>
+        <ControlledFieldProvider control={form.control} name={name}>
+          <ControlledFieldLabel>
+            {label}
+            <Badge>New</Badge>
+          </ControlledFieldLabel>
+          <FieldDescription>{description}</FieldDescription>
+          <ControlledFieldError />
+        </ControlledFieldProvider>
+      </FieldContent>
+      <FieldArray
+        control={form.control}
+        name={name}
+        keyName='fieldId'
+        render={({ fields, move, append, remove }) => (
+          <div className='flex-1 flex flex-col gap-3'>
+            {fields.length ? (
+              <Sortable
+                className='flex flex-col gap-2'
+                value={fields.map((field) => ({ id: field.id! }))}
+                onValueChange={() => {}}
+                getItemValue={(item) => item.id}
+                onMove={({ activeIndex, overIndex }) => move(activeIndex, overIndex)}
+                strategy='vertical'
+              >
+                {fields.map((field, index) => (
+                  <SortableItem
+                    key={field.id}
+                    value={field.id!}
+                    className='flex items-center gap-2'
+                    disabled={disabled}
+                  >
+                    <SortableItemHandle>
+                      <GripVerticalIcon className='size-4 text-muted-foreground' />
+                    </SortableItemHandle>
+                    <ControlledField
+                      control={form.control}
+                      name={`${name}.${index}.label`}
+                      className='gap-1'
+                      disabled={disabled}
+                    >
+                      <ControlledInput placeholder='カテゴリ名' />
+                      <ControlledFieldError />
+                    </ControlledField>
+                    <Button
+                      onClick={() => remove(index)}
+                      size='icon-sm'
+                      variant='ghost'
+                      disabled={disabled}
+                    >
+                      <Trash2Icon className='text-destructive' />
+                    </Button>
+                  </SortableItem>
+                ))}
+              </Sortable>
+            ) : (
+              <Empty className={cn('border border-dashed', { 'opacity-50': disabled })}>
+                <EmptyHeader>
+                  <EmptyMedia variant='icon'>
+                    <WrenchIcon />
+                  </EmptyMedia>
+                  <EmptyTitle>カテゴリが未設定です</EmptyTitle>
+                </EmptyHeader>
+              </Empty>
+            )}
+            <Button
+              className='w-full text-foreground!'
+              variant='outline'
+              onClick={() => append({ id: crypto.randomUUID(), label: '' })}
+              disabled={fields.length >= 10 || !enabled}
+            >
+              <PlusIcon />
+              カテゴリを追加
+            </Button>
+          </div>
+        )}
+      />
+    </Field>
   );
 }
 

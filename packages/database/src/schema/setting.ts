@@ -51,7 +51,11 @@ export const reportSetting = settingSchema.table('report', {
   channel: text('channel'),
   forumCompletedTag: text('forum_completed_tag'),
   forumIgnoredTag: text('forum_ignored_tag'),
-  categories: jsonb('categories')
+  messageCategories: jsonb('message_categories')
+    .array()
+    .$type<{ label: string }[]>()
+    .notNull(),
+  userCategories: jsonb('user_categories')
     .array()
     .$type<{ label: string }[]>()
     .notNull(),

@@ -16,22 +16,18 @@ import {
   PermissionFlagsBits,
   type PublicThreadChannel,
   roleMention,
-  SectionBuilder,
-  subtext,
   TextDisplayBuilder,
-  ThumbnailBuilder,
-  TimestampStyles,
-  time,
   unorderedList,
 } from 'discord.js';
 import { execute, Modal } from 'sunar';
-import { Default, Destructive, getAppEmoji, Primary } from '@/src/constants/emoji';
+import { getMemberInfoContainers, getUserInfoContainer } from '@/src/app/shared/user-info';
+import { Destructive, getAppEmoji, Primary } from '@/src/constants/emoji';
 import { db } from '@/src/lib/db';
 import { errorMessage, successMessage } from '@/src/lib/format';
-import { addReporterToReport, deleteReport, findReportsByMessage } from '../notify-report-thread';
+import { addReporterToReport, deleteReport, findUserReport } from '../notify-report-thread';
 
 export const modal = new Modal({
-  id: new RegExp(`^report:send-message-report_${SnowflakeRegex.source.slice(1, -1)}$`),
+  id: new RegExp(`^report:send-user-report_${SnowflakeRegex.source.slice(1, -1)}$`),
 });
 
 execute(modal, async (interaction) => {
@@ -42,7 +38,7 @@ execute(modal, async (interaction) => {
     where: (setting, { eq }) => eq(setting.guildId, interaction.guildId),
   });
 
-  const reason = setting?.messageCategories.length
+  const reason = setting?.userCategories.length
     ? interaction.fields.getRadioGroup('reason')
     : interaction.fields.getTextInputValue('reason');
 
@@ -52,24 +48,18 @@ execute(modal, async (interaction) => {
     });
   }
 
-  const targetMessageId = interaction.customId.replace('report:send-message-report_', '');
-  const targetMessage = await interaction.channel?.messages
-    .fetch(targetMessageId)
-    .catch(() => null);
+  const targetUserId = interaction.customId.replace('report:send-user-report_', '');
+  const targetMember = await interaction.guild.members.fetch(targetUserId).catch(() => null);
+  const targetUser =
+    targetMember?.user ?? (await interaction.client.users.fetch(targetUserId).catch(() => null));
 
-  if (!targetMessage) {
+  if (!targetUser) {
     return interaction.editReply({
-      content: errorMessage(
-        '通報しようとしているメッセージは削除されたか、Botがアクセスできませんでした。',
-      ),
+      content: errorMessage('通報しようとしているユーザーが見つかりませんでした。'),
     });
   }
 
-  const [existingReport] = await findReportsByMessage(
-    interaction.guildId,
-    targetMessage.channelId,
-    targetMessage.id,
-  );
+  const existingReport = await findUserReport(interaction.guildId, targetUser.id);
 
   if (existingReport) {
     const existingThread = await interaction.guild.channels
@@ -149,7 +139,7 @@ execute(modal, async (interaction) => {
   components.push(
     new ContainerBuilder().addTextDisplayComponents(
       new TextDisplayBuilder().setContent(
-        heading(`${getAppEmoji(Destructive.flag)} メッセージの通報`, HeadingLevel.Three),
+        heading(`${getAppEmoji(Destructive.flag)} ユーザーの通報`, HeadingLevel.Three),
       ),
       new TextDisplayBuilder().setContent(
         unorderedList([
@@ -158,28 +148,9 @@ execute(modal, async (interaction) => {
         ]),
       ),
     ),
-    new ContainerBuilder()
-      .addSectionComponents(
-        new SectionBuilder()
-          .addTextDisplayComponents(
-            new TextDisplayBuilder().setContent(
-              [
-                heading('メッセージの情報', HeadingLevel.Three),
-                unorderedList([
-                  `${getAppEmoji(Default.userRound)} 送信者: ${targetMessage.author} ${inlineCode(targetMessage.author.username)}`,
-                  `${getAppEmoji(Default.hash)} 送信先: ${targetMessage.channel} ${inlineCode(targetMessage.channel.name)}`,
-                  `${getAppEmoji(Default.calendarClock)} 送信時刻: ${time(targetMessage.createdAt, TimestampStyles.LongDateShortTime)}`,
-                ]),
-              ].join('\n'),
-            ),
-          )
-          .setThumbnailAccessory(
-            new ThumbnailBuilder().setURL(targetMessage.author.displayAvatarURL()),
-          ),
-      )
-      .addTextDisplayComponents(
-        new TextDisplayBuilder().setContent(subtext('メッセージの内容はスレッドで確認できます。')),
-      ),
+    ...(targetMember
+      ? getMemberInfoContainers(targetMember, true)
+      : [getUserInfoContainer(targetUser)]),
     new ActionRowBuilder<ButtonBuilder>().setComponents(
       new ButtonBuilder()
         .setCustomId('report:resolve')
@@ -189,10 +160,6 @@ execute(modal, async (interaction) => {
         .setCustomId('report:ignore')
         .setLabel('対応なし')
         .setStyle(ButtonStyle.Danger),
-      new ButtonBuilder()
-        .setLabel('メッセージに移動')
-        .setURL(targetMessage.url)
-        .setStyle(ButtonStyle.Link),
     ),
   );
 
@@ -209,28 +176,24 @@ execute(modal, async (interaction) => {
       case ChannelType.GuildText:
         createdThread = await channel.send(messageOption).then((msg) =>
           msg.startThread({
-            name: `${targetMessage.author.username} (ユーザーID: ${targetMessage.author.id}) への通報`,
+            name: `${targetUser.username} (ユーザーID: ${targetUser.id}) への通報`,
           }),
         );
         break;
       case ChannelType.GuildForum:
         createdThread = await channel.threads.create({
-          name: `${targetMessage.author.username} [${targetMessage.author.id}] への通報`,
+          name: `${targetUser.username} [${targetUser.id}] への通報`,
           message: messageOption,
         });
         break;
     }
-
-    await createdThread?.send({ forward: { message: targetMessage } });
 
     if (createdThread) {
       await db.insert(report).values({
         guildId: interaction.guildId,
         channelId: channel.id,
         threadId: createdThread.id,
-        targetUserId: targetMessage.author.id,
-        targetChannelId: targetMessage.channelId,
-        targetMessageId: targetMessage.id,
+        targetUserId: targetUser.id,
         reporterIds: [interaction.user.id],
       });
     }

@@ -10,8 +10,8 @@ export const report = pgTable('report', {
   channelId: text('channel_id').notNull(),
   threadId: text('thread_id').notNull(),
   targetUserId: text('target_user_id').notNull(),
-  targetChannelId: text('target_channel_id').notNull(),
-  targetMessageId: text('target_message_id').notNull(),
+  targetChannelId: text('target_channel_id'),
+  targetMessageId: text('target_message_id'),
   reporterIds: text('reporter_ids').array().notNull().default([]),
   createdAt: timestamps.createdAt,
 });

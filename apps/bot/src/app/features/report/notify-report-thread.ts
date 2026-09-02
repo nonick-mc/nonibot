@@ -24,6 +24,13 @@ export function findReportsByUser(guildId: string, targetUserId: string) {
   });
 }
 
+export function findUserReport(guildId: string, targetUserId: string) {
+  return db.query.report.findFirst({
+    where: (r, { eq, and, isNull }) =>
+      and(eq(r.guildId, guildId), eq(r.targetUserId, targetUserId), isNull(r.targetMessageId)),
+  });
+}
+
 export function findReportByThreadId(threadId: string) {
   return db.query.report.findFirst({
     where: (r, { eq }) => eq(r.threadId, threadId),

@@ -15,8 +15,9 @@ export const updateSettingAction = guildActionClient
     });
 
     // categories.idはhydrationエラー対策のためDBには保存しない
-    const categories = parsedInput.categories.map(({ id: _id, ...rest }) => rest);
-    const values = { ...parsedInput, categories };
+    const messageCategories = parsedInput.messageCategories.map(({ id: _id, ...rest }) => rest);
+    const userCategories = parsedInput.userCategories.map(({ id: _id, ...rest }) => rest);
+    const values = { ...parsedInput, messageCategories, userCategories };
 
     const [after] = await db
       .insert(reportSetting)
