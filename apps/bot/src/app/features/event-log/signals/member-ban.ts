@@ -52,8 +52,8 @@ execute(signal, async (auditLogEntry, guild) => {
                 ),
                 new TextDisplayBuilder().setContent(
                   unorderedList([
-                    userField(Default.userRound, '対象者', resolvedExecutor),
-                    userField(Primary.userRoundPen, '実行者', resolvedTarget),
+                    userField(Default.userRound, '対象者', resolvedTarget),
+                    userField(Primary.userRoundPen, '実行者', resolvedExecutor),
                   ]),
                 ),
               ),
@@ -73,8 +73,8 @@ execute(signal, async (auditLogEntry, guild) => {
                 ),
                 new TextDisplayBuilder().setContent(
                   unorderedList([
-                    userField(Default.userRound, '対象者', resolvedExecutor),
-                    userField(Primary.userRoundPen, '実行者', resolvedTarget),
+                    userField(Default.userRound, '対象者', resolvedTarget),
+                    userField(Primary.userRoundPen, '実行者', resolvedExecutor),
                     reasonField(Primary.messageSquareText, '理由', reason),
                   ]),
                 ),
