@@ -1,4 +1,5 @@
 import { type ContainerBuilder, type Guild, MessageFlags } from 'discord.js';
+import { sendViaWebhook } from '@/src/lib/webhook';
 
 type LogSetting = { enabled: boolean; channel: string | null; ignoreRoles: string[] } | undefined;
 
@@ -15,10 +16,9 @@ export async function sendEventLog(
     if (executor?.roles.cache.hasAny(...setting.ignoreRoles)) return;
   }
 
-  const channel = await guild.channels.fetch(setting.channel).catch(() => null);
-  if (!channel?.isTextBased()) return;
-
-  await channel
-    .send({ components, flags: MessageFlags.IsComponentsV2, allowedMentions: { parse: [] } })
-    .catch(() => null);
+  await sendViaWebhook(guild, setting.channel, {
+    components,
+    flags: MessageFlags.IsComponentsV2,
+    allowedMentions: { parse: [] },
+  });
 }
