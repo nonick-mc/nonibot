@@ -10,7 +10,6 @@ import {
   type ForumThreadChannel,
   HeadingLevel,
   heading,
-  inlineCode,
   type MessageCreateOptions,
   MessageFlags,
   PermissionFlagsBits,
@@ -23,7 +22,7 @@ import { execute, Modal } from 'sunar';
 import { getMemberInfoContainers, getUserInfoContainer } from '@/src/app/shared/user-info';
 import { Destructive, getAppEmoji, Primary } from '@/src/constants/emoji';
 import { db } from '@/src/lib/db';
-import { errorMessage, successMessage } from '@/src/lib/format';
+import { baseField, errorMessage, successMessage, userField } from '@/src/lib/format';
 import { addReporterToReport, deleteReport, findUserReport } from '../notify-report-thread';
 
 export const modal = new Modal({
@@ -80,11 +79,9 @@ execute(modal, async (interaction) => {
                 ),
                 new TextDisplayBuilder().setContent(
                   unorderedList([
-                    `${getAppEmoji(Primary.userRoundPen)} 報告者: ${interaction.user} ${inlineCode(interaction.user.username)}`,
-                    `${getAppEmoji(Primary.messageSquareText)} 理由: ${reason?.split('\n').join(' ')}`,
-                    ...(comment
-                      ? [`${getAppEmoji(Primary.messageSquareText)} コメント: ${comment.split('\n').join(' ')}`]
-                      : []),
+                    userField(Primary.userRoundPen, '報告者', interaction.user),
+                    baseField(Primary.messageSquareText, '理由', `${reason}`),
+                    ...(comment ? [baseField(Primary.messageSquareText, 'コメント', comment)] : []),
                   ]),
                 ),
               ),
@@ -149,11 +146,9 @@ execute(modal, async (interaction) => {
       ),
       new TextDisplayBuilder().setContent(
         unorderedList([
-          `${getAppEmoji(Primary.userRoundPen)} 報告者: ${interaction.user} ${inlineCode(interaction.user.username)}`,
-          `${getAppEmoji(Primary.messageSquareText)} 理由: ${reason?.split('\n').join(' ')}`,
-          ...(comment
-            ? [`${getAppEmoji(Primary.messageSquareText)} コメント: ${comment.split('\n').join(' ')}`]
-            : []),
+          userField(Primary.userRoundPen, '報告者', interaction.user),
+          baseField(Primary.messageSquareText, '理由', `${reason}`),
+          ...(comment ? [baseField(Primary.messageSquareText, 'コメント', comment)] : []),
         ]),
       ),
     ),

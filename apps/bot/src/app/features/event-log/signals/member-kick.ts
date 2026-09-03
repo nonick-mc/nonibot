@@ -6,7 +6,6 @@ import {
   type GuildAuditLogsEntry,
   HeadingLevel,
   heading,
-  inlineCode,
   SectionBuilder,
   TextDisplayBuilder,
   ThumbnailBuilder,
@@ -15,6 +14,7 @@ import {
 import { execute, Signal } from 'sunar';
 import { Default, Destructive, getAppEmoji, Primary } from '@/src/constants/emoji';
 import { db } from '@/src/lib/db';
+import { reasonField, userField } from '@/src/lib/format';
 import { sendEventLog } from '../send-log';
 
 export const signal = new Signal(Events.GuildAuditLogEntryCreate);
@@ -45,9 +45,9 @@ execute(signal, async (auditLogEntry, guild) => {
             ),
             new TextDisplayBuilder().setContent(
               unorderedList([
-                `${getAppEmoji(Default.userRound)} 対象者: ${resolvedExecutor} ${inlineCode(resolvedExecutor.username)}`,
-                `${getAppEmoji(Primary.userRoundPen)} 実行者: ${resolvedTarget} ${inlineCode(resolvedTarget.username)}`,
-                `${getAppEmoji(Primary.messageSquareText)} 理由: ${reason ?? inlineCode('理由が入力されていません')}`,
+                userField(Default.userRound, '対象者', resolvedExecutor),
+                userField(Primary.userRoundPen, '実行者', resolvedTarget),
+                reasonField(Primary.messageSquareText, '理由', reason),
               ]),
             ),
           ),

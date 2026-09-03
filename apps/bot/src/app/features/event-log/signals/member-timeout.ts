@@ -6,17 +6,15 @@ import {
   type GuildAuditLogsEntry,
   HeadingLevel,
   heading,
-  inlineCode,
   SectionBuilder,
   TextDisplayBuilder,
   ThumbnailBuilder,
-  TimestampStyles,
-  time,
   unorderedList,
 } from 'discord.js';
 import { execute, Signal } from 'sunar';
 import { Default, Destructive, getAppEmoji, Primary } from '@/src/constants/emoji';
 import { db } from '@/src/lib/db';
+import { reasonField, timeField, userField } from '@/src/lib/format';
 import { sendEventLog } from '../send-log';
 
 export const signal = new Signal(Events.GuildAuditLogEntryCreate);
@@ -55,8 +53,8 @@ execute(signal, async (auditLogEntry, guild) => {
                 ),
                 new TextDisplayBuilder().setContent(
                   unorderedList([
-                    `${getAppEmoji(Default.userRound)} 対象者: ${resolvedExecutor} ${inlineCode(resolvedExecutor.username)}`,
-                    `${getAppEmoji(Primary.userRoundPen)} 実行者: ${resolvedTarget} ${inlineCode(resolvedTarget.username)}`,
+                    userField(Default.userRound, '対象者', resolvedExecutor),
+                    userField(Primary.userRoundPen, '実行者', resolvedTarget),
                   ]),
                 ),
               ),
@@ -76,10 +74,10 @@ execute(signal, async (auditLogEntry, guild) => {
                 ),
                 new TextDisplayBuilder().setContent(
                   unorderedList([
-                    `${getAppEmoji(Default.userRound)} 対象者: ${resolvedExecutor} ${inlineCode(resolvedExecutor.username)}`,
-                    `${getAppEmoji(Default.calendarClock)} 解除される時間: ${time(new Date(newValue), TimestampStyles.LongDateShortTime)} (${time(new Date(newValue), TimestampStyles.RelativeTime)})`,
-                    `${getAppEmoji(Primary.userRoundPen)} 実行者: ${resolvedTarget} ${inlineCode(resolvedTarget.username)}`,
-                    `${getAppEmoji(Primary.messageSquareText)} 理由: ${reason ?? inlineCode('理由が入力されていません')}`,
+                    userField(Default.userRound, '対象者', resolvedExecutor),
+                    timeField(Default.calendarClock, '解除される時間', newValue, true),
+                    userField(Primary.userRoundPen, '実行者', resolvedTarget),
+                    reasonField(Primary.messageSquareText, '理由', reason),
                   ]),
                 ),
               ),

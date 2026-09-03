@@ -10,7 +10,6 @@ import {
   type ForumThreadChannel,
   HeadingLevel,
   heading,
-  inlineCode,
   type MessageCreateOptions,
   MessageFlags,
   PermissionFlagsBits,
@@ -20,14 +19,19 @@ import {
   subtext,
   TextDisplayBuilder,
   ThumbnailBuilder,
-  TimestampStyles,
-  time,
   unorderedList,
 } from 'discord.js';
 import { execute, Modal } from 'sunar';
 import { Default, Destructive, getAppEmoji, Primary } from '@/src/constants/emoji';
 import { db } from '@/src/lib/db';
-import { errorMessage, successMessage } from '@/src/lib/format';
+import {
+  baseField,
+  channelField,
+  errorMessage,
+  successMessage,
+  timeField,
+  userField,
+} from '@/src/lib/format';
 import { addReporterToReport, deleteReport, findReportsByMessage } from '../notify-report-thread';
 
 export const modal = new Modal({
@@ -90,11 +94,9 @@ execute(modal, async (interaction) => {
                 ),
                 new TextDisplayBuilder().setContent(
                   unorderedList([
-                    `${getAppEmoji(Primary.userRoundPen)} 報告者: ${interaction.user} ${inlineCode(interaction.user.username)}`,
-                    `${getAppEmoji(Primary.messageSquareText)} 理由: ${reason?.split('\n').join(' ')}`,
-                    ...(comment
-                      ? [`${getAppEmoji(Primary.messageSquareText)} コメント: ${comment.split('\n').join(' ')}`]
-                      : []),
+                    userField(Primary.userRoundPen, '報告者', interaction.user),
+                    baseField(Primary.messageSquareText, '理由', `${reason}`),
+                    ...(comment ? [baseField(Primary.messageSquareText, 'コメント', comment)] : []),
                   ]),
                 ),
               ),
@@ -159,11 +161,9 @@ execute(modal, async (interaction) => {
       ),
       new TextDisplayBuilder().setContent(
         unorderedList([
-          `${getAppEmoji(Primary.userRoundPen)} 報告者: ${interaction.user} ${inlineCode(interaction.user.username)}`,
-          `${getAppEmoji(Primary.messageSquareText)} 理由: ${reason?.split('\n').join(' ')}`,
-          ...(comment
-            ? [`${getAppEmoji(Primary.messageSquareText)} コメント: ${comment.split('\n').join(' ')}`]
-            : []),
+          userField(Primary.userRoundPen, '報告者', interaction.user),
+          baseField(Primary.messageSquareText, '理由', `${reason}`),
+          ...(comment ? [baseField(Primary.messageSquareText, 'コメント', comment)] : []),
         ]),
       ),
     ),
@@ -175,9 +175,9 @@ execute(modal, async (interaction) => {
               [
                 heading('メッセージの情報', HeadingLevel.Three),
                 unorderedList([
-                  `${getAppEmoji(Default.userRound)} 送信者: ${targetMessage.author} ${inlineCode(targetMessage.author.username)}`,
-                  `${getAppEmoji(Default.hash)} 送信先: ${targetMessage.channel} ${inlineCode(targetMessage.channel.name)}`,
-                  `${getAppEmoji(Default.calendarClock)} 送信時刻: ${time(targetMessage.createdAt, TimestampStyles.LongDateShortTime)}`,
+                  userField(Default.userRound, '送信者', targetMessage.author),
+                  channelField(Default.hash, '送信先', targetMessage.channel),
+                  timeField(Default.calendarClock, '送信時刻', targetMessage.createdAt),
                 ]),
               ].join('\n'),
             ),

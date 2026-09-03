@@ -4,7 +4,7 @@ type PrefixedMap<P extends string, T extends readonly string[]> = {
   readonly [K in T[number]]: `${P}_${Lowercase<K>}`;
 };
 
-type EmojiName =
+export type EmojiName =
   | (typeof Success)[keyof typeof Success]
   | (typeof Destructive)[keyof typeof Destructive]
   | (typeof Default)[keyof typeof Default]
