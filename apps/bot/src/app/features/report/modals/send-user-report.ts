@@ -80,7 +80,7 @@ execute(modal, async (interaction) => {
                 ),
                 new TextDisplayBuilder().setContent(
                   unorderedList([
-                    `${getAppEmoji(Primary.userRound)} 報告者: ${interaction.user} ${inlineCode(interaction.user.username)}`,
+                    `${getAppEmoji(Primary.userRoundPen)} 報告者: ${interaction.user} ${inlineCode(interaction.user.username)}`,
                     `${getAppEmoji(Primary.messageSquareText)} 理由: ${reason?.split('\n').join(' ')}`,
                     ...(comment
                       ? [`${getAppEmoji(Primary.messageSquareText)} コメント: ${comment.split('\n').join(' ')}`]
@@ -149,7 +149,7 @@ execute(modal, async (interaction) => {
       ),
       new TextDisplayBuilder().setContent(
         unorderedList([
-          `${getAppEmoji(Primary.userRound)} 報告者: ${interaction.user} ${inlineCode(interaction.user.username)}`,
+          `${getAppEmoji(Primary.userRoundPen)} 報告者: ${interaction.user} ${inlineCode(interaction.user.username)}`,
           `${getAppEmoji(Primary.messageSquareText)} 理由: ${reason?.split('\n').join(' ')}`,
           ...(comment
             ? [`${getAppEmoji(Primary.messageSquareText)} コメント: ${comment.split('\n').join(' ')}`]

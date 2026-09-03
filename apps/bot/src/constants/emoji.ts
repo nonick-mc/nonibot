@@ -47,7 +47,7 @@ export const Default = createEmojiMap('default', [
 export const Warning = createEmojiMap('warning', ['circleAlert'] as const);
 // #3b82f6
 export const Primary = createEmojiMap('primary', [
-  'userRound',
+  'userRoundPen',
   'messageSquareText',
   'clock',
   'circleOff',
