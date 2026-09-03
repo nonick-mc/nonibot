@@ -80,32 +80,6 @@ export const SidebarNavigationItems: SidebarGroupItem<string>[] = [
         title: 'イベントログ',
         url: (guildId) => `/dashboard/guilds/${guildId}/event-log`,
         icon: ClipboardListIcon,
-        subitems: [
-          {
-            title: 'タイムアウト',
-            key: 'timeout',
-          },
-          {
-            title: 'キック',
-            key: 'kick',
-          },
-          {
-            title: 'BAN',
-            key: 'ban',
-          },
-          {
-            title: 'ボイスチャット',
-            key: 'voice',
-          },
-          {
-            title: 'メッセージ削除',
-            key: 'message-delete',
-          },
-          {
-            title: 'メッセージ編集',
-            key: 'message-edit',
-          },
-        ],
       },
       {
         key: 'message-expand',

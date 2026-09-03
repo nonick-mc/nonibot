@@ -72,6 +72,7 @@ const baseLogSetting = {
   guildId,
   enabled: boolean('enabled').notNull(),
   channel: text('channel'),
+  ignoreRoles: text('ignore_roles').array().notNull(),
   ...timestamps,
 };
 
