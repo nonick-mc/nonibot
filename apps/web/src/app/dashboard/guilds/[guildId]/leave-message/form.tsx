@@ -110,6 +110,7 @@ export function SettingForm({ channels, defaultValues, roles, emojis }: FormProp
                         <ControlledChannelSelect
                           items={channels}
                           includeTypes={[ChannelType.GuildText]}
+                          className='sm:min-w-xs'
                         />
                       </ControlledField>
                       <FieldSeparator />

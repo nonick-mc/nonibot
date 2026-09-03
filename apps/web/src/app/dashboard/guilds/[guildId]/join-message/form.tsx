@@ -113,6 +113,7 @@ export function SettingForm({
                         <ControlledChannelSelect
                           items={channels}
                           includeTypes={[ChannelType.GuildText]}
+                          className='sm:min-w-xs'
                         />
                       </ControlledField>
                       <FieldSeparator />

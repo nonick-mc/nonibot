@@ -122,6 +122,7 @@ export function SettingForm({ channels, roles, defaultValues }: FormProps) {
                     <ControlledChannelSelect
                       items={channels}
                       includeTypes={[ChannelType.GuildText, ChannelType.GuildForum]}
+                      className='sm:min-w-xs'
                     />
                   </ControlledField>
                 )}
@@ -195,7 +196,11 @@ export function SettingForm({ channels, roles, defaultValues }: FormProps) {
                         </FieldDescription>
                         <ControlledFieldError />
                       </FieldContent>
-                      <ControlledRoleSelect items={roles} multiple />
+                      <ControlledRoleSelect
+                        items={roles}
+                        multiple
+                        className='sm:min-w-sm sm:max-w-sm'
+                      />
                     </ControlledField>
                     <FieldSeparator />
                     <ControlledField
@@ -211,7 +216,11 @@ export function SettingForm({ channels, roles, defaultValues }: FormProps) {
                         </FieldDescription>
                         <ControlledFieldError />
                       </FieldContent>
-                      <ControlledRoleSelect items={roles} multiple />
+                      <ControlledRoleSelect
+                        items={roles}
+                        multiple
+                        className='sm:min-w-sm sm:max-w-sm'
+                      />
                     </ControlledField>
                   </>
                 )}

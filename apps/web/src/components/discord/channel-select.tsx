@@ -33,6 +33,7 @@ type ChannelSelectProps = {
   invalid?: boolean;
   includeTypes?: ChannelType[];
   excludeTypes?: ChannelType[];
+  className?: string;
 };
 
 export function ChannelSelect({
@@ -44,6 +45,7 @@ export function ChannelSelect({
   invalid,
   includeTypes,
   excludeTypes,
+  className,
 }: ChannelSelectProps) {
   const selectedChannel = useMemo(
     () => items.find((ch) => ch.id === value) ?? null,
@@ -85,7 +87,7 @@ export function ChannelSelect({
     >
       <div ref={anchor} className='w-fit'>
         <ComboboxInput
-          className='sm:min-w-xs'
+          className={className}
           placeholder='チャンネルを選択'
           name={name}
           disabled={disabled}

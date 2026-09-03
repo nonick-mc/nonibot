@@ -23,6 +23,7 @@ type RoleSelectCommonProps = {
   name?: string;
   disabled?: boolean;
   invalid?: boolean;
+  className?: string;
 };
 
 type RoleSelectMultipleProps = RoleSelectCommonProps & {
@@ -51,6 +52,7 @@ function RoleSelectMultiple({
   name,
   disabled,
   invalid,
+  className,
 }: RoleSelectMultipleProps) {
   const selectedRoles = useMemo(
     () => items.filter((role) => value?.includes(role.id)),
@@ -68,10 +70,7 @@ function RoleSelectMultiple({
       itemToStringValue={(item) => item.id}
       disabled={disabled}
     >
-      <ComboboxChips
-        ref={anchor}
-        className={cn('sm:min-w-xs sm:max-w-xs px-3', { 'opacity-50': disabled })}
-      >
+      <ComboboxChips ref={anchor} className={cn('px-3', { 'opacity-50': disabled }, className)}>
         {selectedRoles.map((role) => (
           <ComboboxChip key={role.id} aria-label={role.name}>
             <RoleColor colors={role.colors} />
@@ -107,6 +106,7 @@ function RoleSelectSingle({
   name,
   disabled,
   invalid,
+  className,
 }: RoleSelectSingleProps) {
   const selectedRole = useMemo(
     () => items.find((role) => role.id === value) ?? null,
@@ -125,7 +125,7 @@ function RoleSelectSingle({
     >
       <div ref={anchor} className='w-fit'>
         <ComboboxInput
-          className='sm:min-w-xs'
+          className={className}
           placeholder='ロールを選択'
           name={name}
           disabled={disabled}
