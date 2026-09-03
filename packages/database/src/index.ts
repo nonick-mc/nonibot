@@ -4,3 +4,4 @@ export * from './schema/guild';
 export * from './schema/report';
 export * from './schema/rule';
 export * from './schema/setting';
+export * from './schema/webhook';
