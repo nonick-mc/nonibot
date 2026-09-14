@@ -1,4 +1,4 @@
-![banner](./.github/assets/banner.png)
+<img width="1500" height="500" alt="nonibot-twitter-header" src="https://github.com/user-attachments/assets/20ee3721-b3af-4918-9a34-9f1efe8b6a91" />
 
 # nonibot
 Discordサーバーの運営をサポートする多機能BOTです。  
