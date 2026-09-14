@@ -30,12 +30,15 @@ export const auth = betterAuth({
       clientSecret: process.env.DISCORD_CLIENT_SECRET as string,
       scope: ['guilds'],
       prompt: 'consent',
+      disableDefaultScope: true,
       overrideUserInfoOnSignIn: true,
       mapProfileToUser: (profile) => {
         return {
           name: profile.username,
           globalName: profile.global_name,
           discordUserId: profile.id,
+          email: `${profile.id}@discord.local`,
+          emailVerified: false,
         };
       },
     },
