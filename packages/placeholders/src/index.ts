@@ -1,3 +1,4 @@
+export * from './auto-thread';
 export * from './join-message';
 export * from './leave-message';
 export * from './render';
