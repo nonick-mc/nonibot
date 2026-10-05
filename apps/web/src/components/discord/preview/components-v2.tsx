@@ -118,7 +118,7 @@ export function Container({ component }: ComponentProps<ComponentType.Container>
   const hasAccent = accentColor != null;
 
   return (
-    <div className='relative overflow-hidden rounded-lg border bg-discord-card'>
+    <div className='relative w-fit max-w-full overflow-hidden rounded-lg border bg-discord-card'>
       <div
         className={cn('relative', component.spoiler && 'blur-xl pointer-events-none select-none')}
       >
