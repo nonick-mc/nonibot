@@ -1825,7 +1825,8 @@
       "values": [
         "open",
         "archived",
-        "locked"
+        "locked",
+        "archived_locked"
       ]
     },
     "public.captcha_type": {

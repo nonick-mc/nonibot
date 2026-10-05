@@ -1,4 +1,4 @@
-CREATE TYPE "public"."thread_state" AS ENUM('open', 'archived', 'locked');--> statement-breakpoint
+CREATE TYPE "public"."thread_state" AS ENUM('open', 'archived', 'locked', 'archived_locked');--> statement-breakpoint
 ALTER TABLE "public_rule"."auto_create_thread" ADD COLUMN "initial_thread_state" "thread_state" DEFAULT 'open' NOT NULL;
 --> statement-breakpoint
 -- プレースホルダー記法を旧版(!+[])から現行版({{}})の仕様へ移行

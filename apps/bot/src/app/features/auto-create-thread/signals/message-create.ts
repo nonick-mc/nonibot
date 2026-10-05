@@ -35,8 +35,10 @@ execute(signal, async (message) => {
   if (thread && rule.initialThreadState !== 'open') {
     await thread
       .edit({
-        archived: rule.initialThreadState === 'archived',
-        locked: rule.initialThreadState === 'locked',
+        archived:
+          rule.initialThreadState === 'archived' || rule.initialThreadState === 'archived_locked',
+        locked:
+          rule.initialThreadState === 'locked' || rule.initialThreadState === 'archived_locked',
       })
       .catch((e) => console.error(e));
   }

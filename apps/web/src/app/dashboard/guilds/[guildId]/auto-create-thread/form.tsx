@@ -88,19 +88,12 @@ export function RuleFormFields({ control, roles, disabled }: RuleFormFieldsProps
                 </ControlledSelect>
               </ControlledField>
               <FieldSeparator />
-              <ControlledField
-                control={control}
-                name='initialThreadState'
-                orientation='horizontal'
-                disabled={disabled}
-              >
+              <ControlledField control={control} name='initialThreadState' disabled={disabled}>
                 <FieldContent>
                   <ControlledFieldLabel>
                     作成したスレッドの初期状態<Badge>New</Badge>
                   </ControlledFieldLabel>
-                  <FieldDescription>
-                    スレッドを作成した直後に、選択した状態に変更します。
-                  </FieldDescription>
+                  <FieldDescription>作成するスレッドの初期状態を変更します。</FieldDescription>
                   <ControlledFieldError />
                 </FieldContent>
                 <ControlledSelect>

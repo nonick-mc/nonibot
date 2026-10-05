@@ -13,4 +13,5 @@ export const ThreadStateOptions = [
   { label: 'オープン', value: 'open' },
   { label: 'アーカイブ', value: 'archived' },
   { label: 'ロック', value: 'locked' },
+  { label: 'アーカイブ&ロック', value: 'archived_locked' },
 ] as const;

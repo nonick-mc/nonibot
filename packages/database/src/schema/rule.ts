@@ -8,7 +8,12 @@ const guildId = text('guild_id')
   .notNull()
   .references(() => guild.id, { onDelete: 'cascade' });
 
-export const threadStateEnum = pgEnum('thread_state', ['open', 'archived', 'locked']);
+export const threadStateEnum = pgEnum('thread_state', [
+  'open',
+  'archived',
+  'locked',
+  'archived_locked',
+]);
 
 export const autoCreateThreadRule = ruleSchema.table(
   'auto_create_thread',
