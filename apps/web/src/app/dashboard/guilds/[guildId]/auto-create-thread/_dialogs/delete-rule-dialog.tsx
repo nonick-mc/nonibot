@@ -3,6 +3,7 @@
 import type { autoCreateThreadRule } from '@repo/database';
 import type { InferSelectModel } from 'drizzle-orm';
 import { Trash2Icon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import {
@@ -29,6 +30,7 @@ export function DeleteRuleDialog({ targetChannelName, rule }: DeleteRuleDialogPr
   const bindDeleteRuleAction = deleteRuleAction.bind(null, rule.guildId, rule.channelId);
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const router = useRouter();
 
   async function handleAction() {
     setIsLoading(true);
@@ -37,7 +39,7 @@ export function DeleteRuleDialog({ targetChannelName, rule }: DeleteRuleDialogPr
     if (res.serverError || res.validationErrors) {
       return toast.error('チャンネルの削除に失敗しました。');
     }
-    setOpen(false);
+    router.push(`/dashboard/guilds/${rule.guildId}/auto-create-thread`);
     toast.success('チャンネルを削除しました。');
   }
 
@@ -45,8 +47,9 @@ export function DeleteRuleDialog({ targetChannelName, rule }: DeleteRuleDialogPr
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger
         render={
-          <Button variant='outline' size='icon'>
-            <Trash2Icon className='text-destructive' />
+          <Button className='w-fit' variant='destructive'>
+            <Trash2Icon />
+            設定を削除
           </Button>
         }
       />

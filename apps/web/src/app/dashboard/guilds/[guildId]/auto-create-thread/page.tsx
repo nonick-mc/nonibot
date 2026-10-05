@@ -3,8 +3,8 @@ import { Header } from '@/components/header';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { verifyDashboardAccessPermission } from '@/lib/dal';
 import { db } from '@/lib/db';
-import { getChannels, getRoles } from '@/lib/discord/api';
-import { sortChannels, sortRoles } from '@/lib/discord/utils';
+import { getChannels } from '@/lib/discord/api';
+import { sortChannels } from '@/lib/discord/utils';
 import { CreateRuleDialog } from './_dialogs/create-rule-dialog';
 import { RulesMaxSize } from './constants';
 import { RuleList } from './rule-list';
@@ -19,9 +19,8 @@ export default async function Page({
   const { guildId } = await params;
   await verifyDashboardAccessPermission(guildId);
 
-  const [channels, roles, rules] = await Promise.all([
+  const [channels, rules] = await Promise.all([
     getChannels(guildId, { revalidate: 30 }),
-    getRoles(guildId, { revalidate: 30 }),
     db.query.autoCreateThreadRule.findMany({
       where: (rule, { eq }) => eq(rule.guildId, guildId),
       orderBy: (rule, { asc }) => asc(rule.createdAt),
@@ -29,7 +28,6 @@ export default async function Page({
   ]);
 
   const sortedChannels = sortChannels(channels);
-  const sortedRoles = sortRoles(roles);
 
   return (
     <>
@@ -37,7 +35,7 @@ export default async function Page({
         title='自動スレッド作成'
         description='指定したチャンネルにメッセージが投稿された際、自動でスレッドを作成します。'
       />
-      <Card>
+      <Card className='bg-card/50'>
         <CardHeader className='flex flex-col sm:flex-row sm:items-center justify-between gap-4'>
           <div className='w-full flex flex-col gap-1.5'>
             <CardTitle>チャンネル一覧</CardTitle>
@@ -46,10 +44,10 @@ export default async function Page({
               個）
             </CardDescription>
           </div>
-          <CreateRuleDialog channels={sortedChannels} roles={sortedRoles} rules={rules} />
+          <CreateRuleDialog channels={sortedChannels} rules={rules} />
         </CardHeader>
         <CardContent>
-          <RuleList channels={sortedChannels} roles={sortedRoles} rules={rules} />
+          <RuleList channels={sortedChannels} rules={rules} />
         </CardContent>
       </Card>
     </>

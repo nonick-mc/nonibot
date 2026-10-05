@@ -2,18 +2,12 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { autoCreateThreadRule } from '@repo/database';
-import {
-  type APIGuildChannel,
-  type APIRole,
-  ChannelType,
-  type GuildChannelType,
-  ThreadAutoArchiveDuration,
-} from 'discord-api-types/v10';
+import { type APIGuildChannel, ChannelType, type GuildChannelType } from 'discord-api-types/v10';
 import type { InferSelectModel } from 'drizzle-orm';
-import { CheckIcon, PlusIcon } from 'lucide-react';
-import { useParams } from 'next/navigation';
+import { AlignRightIcon, ArrowRight, ArrowRightIcon, CheckIcon, PlusIcon } from 'lucide-react';
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, useForm, Watch } from 'react-hook-form';
 import { toast } from 'sonner';
 import type { z } from 'zod';
 import { FormDevTool } from '@/components/form';
@@ -24,7 +18,6 @@ import {
   ControlledFieldLabel,
 } from '@/components/rhf/field';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -34,21 +27,20 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { FieldGroup } from '@/components/ui/field';
+import { FieldContent, FieldDescription, FieldGroup } from '@/components/ui/field';
 import { Spinner } from '@/components/ui/spinner';
 import { createRuleAction } from '../action';
 import { RulesMaxSize } from '../constants';
-import { RuleFormFields } from '../form';
 import { createRuleFormSchema } from '../schema';
 
 type CreateRuleDialogProps = {
   channels: APIGuildChannel<GuildChannelType>[];
-  roles: APIRole[];
   rules: InferSelectModel<typeof autoCreateThreadRule>[];
 };
 
-export function CreateRuleDialog({ channels, roles, rules }: CreateRuleDialogProps) {
+export function CreateRuleDialog({ channels, rules }: CreateRuleDialogProps) {
   const { guildId } = useParams<{ guildId: string }>();
+  const router = useRouter();
   const bindCreateRuleAction = createRuleAction.bind(null, guildId);
   const [open, onOpenChange] = useState(false);
 
@@ -56,11 +48,6 @@ export function CreateRuleDialog({ channels, roles, rules }: CreateRuleDialogPro
     resolver: zodResolver(createRuleFormSchema),
     defaultValues: {
       channelId: '',
-      threadName: '{{userDisplayName}}のスレッド',
-      autoArchiveDuration: ThreadAutoArchiveDuration.OneHour,
-      initialThreadState: 'open',
-      ignoreBot: true,
-      ignoreRoles: [],
     },
   });
 
@@ -71,8 +58,7 @@ export function CreateRuleDialog({ channels, roles, rules }: CreateRuleDialogPro
         'チャンネルの追加中に問題が発生しました。時間をおいて再度お試しください。',
       );
     }
-    onOpenChange(false);
-    toast.success('チャンネルを追加しました。');
+    router.push(`/dashboard/guilds/${guildId}/auto-create-thread/${values.channelId}`);
   }
 
   useEffect(() => {
@@ -91,36 +77,28 @@ export function CreateRuleDialog({ channels, roles, rules }: CreateRuleDialogPro
           </Button>
         }
       />
-      <DialogContent className='max-h-[90vh] overflow-y-scroll scroll-fade-y no-scrollbar'>
+      <DialogContent>
         <FormProvider {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <DialogHeader>
               <DialogTitle>チャンネルを追加</DialogTitle>
-              <DialogDescription>
-                自動スレッド作成を適用するチャンネルを追加します。
-              </DialogDescription>
             </DialogHeader>
-            <div className='py-8 flex flex-col gap-6'>
-              <Card>
-                <CardContent>
-                  <FieldGroup>
-                    <ControlledField control={form.control} name='channelId'>
-                      <ControlledFieldLabel>スレッドを作成するチャンネル</ControlledFieldLabel>
-                      <ControlledChannelSelect
-                        items={channels}
-                        includeTypes={[ChannelType.GuildText]}
-                        disabledItemFilter={(channel) =>
-                          rules.some((rule) => rule.channelId === channel.id)
-                        }
-                      />
-                      <ControlledFieldError />
-                    </ControlledField>
-                  </FieldGroup>
-                </CardContent>
-              </Card>
-              {/* biome-ignore lint/suspicious/noExplicitAny: 作成/更新フォームで型の異なるControlを共有するため */}
-              <RuleFormFields control={form.control as any} roles={roles} />
-            </div>
+            <FieldGroup className='py-8'>
+              <ControlledField control={form.control} name='channelId'>
+                <FieldContent>
+                  <ControlledFieldLabel>スレッドを作成するチャンネル</ControlledFieldLabel>
+                  <FieldDescription>テキストチャンネルである必要があります。</FieldDescription>
+                  <ControlledFieldError />
+                </FieldContent>
+                <ControlledChannelSelect
+                  items={channels}
+                  includeTypes={[ChannelType.GuildText]}
+                  disabledItemFilter={(channel) =>
+                    rules.some((rule) => rule.channelId === channel.id)
+                  }
+                />
+              </ControlledField>
+            </FieldGroup>
             <DialogFooter>
               <Button
                 type='button'
@@ -130,10 +108,16 @@ export function CreateRuleDialog({ channels, roles, rules }: CreateRuleDialogPro
               >
                 キャンセル
               </Button>
-              <Button type='submit' disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting ? <Spinner /> : <CheckIcon />}
-                作成
-              </Button>
+              <Watch
+                control={form.control}
+                name='channelId'
+                render={(value) => (
+                  <Button type='submit' disabled={form.formState.isSubmitting || !value.length}>
+                    {form.formState.isSubmitting ? <Spinner /> : <ArrowRightIcon />}
+                    次へ
+                  </Button>
+                )}
+              />
             </DialogFooter>
           </form>
           <FormDevTool />

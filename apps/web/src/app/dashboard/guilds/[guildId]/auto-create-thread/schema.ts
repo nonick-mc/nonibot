@@ -14,5 +14,5 @@ const ruleSchema = createInsertSchema(autoCreateThreadRule, {
   ignoreRoles: () => snowflakeArraySchema.max(20, 'ロールは最大20個まで設定できます。'),
 }).omit({ guildId: true, createdAt: true, updatedAt: true });
 
-export const createRuleFormSchema = ruleSchema.omit({ enabled: true });
+export const createRuleFormSchema = ruleSchema.pick({ channelId: true });
 export const updateRuleFormSchema = ruleSchema.omit({ channelId: true });

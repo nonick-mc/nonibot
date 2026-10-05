@@ -1,6 +1,7 @@
 'use server';
 
 import { auditLog, autoCreateThreadRule } from '@repo/database';
+import { ThreadAutoArchiveDuration } from 'discord-api-types/v10';
 import { and, eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { type ZodString, z } from 'zod';
@@ -23,7 +24,16 @@ export const createRuleAction = guildActionClient
 
     const [newRule] = await db
       .insert(autoCreateThreadRule)
-      .values({ guildId, ...parsedInput })
+      .values({
+        guildId,
+        channelId: parsedInput.channelId,
+        enabled: false,
+        threadName: '{{userDisplayName}}のスレッド',
+        autoArchiveDuration: ThreadAutoArchiveDuration.OneHour,
+        initialThreadState: 'open',
+        ignoreBot: true,
+        ignoreRoles: [],
+      })
       .returning();
 
     await db.insert(auditLog).values({
@@ -34,7 +44,7 @@ export const createRuleAction = guildActionClient
       after: newRule,
     });
 
-    revalidatePath(`/dashboard/guilds/${guildId}/auto-create-thread`);
+    revalidatePath(`/dashboard/guilds/${guildId}/auto-create-thread`, 'layout');
   });
 
 export const updateRuleAction = guildActionClient
@@ -68,7 +78,7 @@ export const updateRuleAction = guildActionClient
       after: afterRule,
     });
 
-    revalidatePath(`/dashboard/guilds/${guildId}/auto-create-thread`);
+    revalidatePath(`/dashboard/guilds/${guildId}/auto-create-thread`, 'layout');
   });
 
 export const deleteRuleAction = guildActionClient
@@ -98,5 +108,5 @@ export const deleteRuleAction = guildActionClient
       before: beforeRule,
     });
 
-    revalidatePath(`/dashboard/guilds/${guildId}/auto-create-thread`);
+    revalidatePath(`/dashboard/guilds/${guildId}/auto-create-thread`, 'layout');
   });
