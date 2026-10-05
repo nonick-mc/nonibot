@@ -1,5 +1,5 @@
 import { renderPlaceholders } from '@repo/placeholders';
-import { Events } from 'discord.js';
+import { Events, MessageFlags } from 'discord.js';
 import { execute, Signal } from 'sunar';
 import { db } from '@/src/lib/db';
 import { getAutoThreadPlaceholderParams } from '@/src/lib/placeholder';
@@ -19,7 +19,8 @@ execute(signal, async (message) => {
   if (rule.ignoreRoles.length > 0 && message.member?.roles.cache.hasAny(...rule.ignoreRoles))
     return;
 
-  const threadName = renderPlaceholders(rule.threadName, getAutoThreadPlaceholderParams(message));
+  const placeholderParams = getAutoThreadPlaceholderParams(message);
+  const threadName = renderPlaceholders(rule.threadName, placeholderParams);
 
   const thread = await message
     .startThread({
@@ -31,6 +32,16 @@ execute(signal, async (message) => {
       console.error(e);
       return null;
     });
+
+  // アーカイブ済みのスレッドに送信すると再オープンされるため、状態を変更する前に送信する
+  if (thread && rule.messageEnabled && rule.messageComponents.length) {
+    await thread
+      .send({
+        components: renderPlaceholders(rule.messageComponents, placeholderParams),
+        flags: MessageFlags.IsComponentsV2,
+      })
+      .catch((e) => console.error(e));
+  }
 
   if (thread && rule.initialThreadState !== 'open') {
     await thread

@@ -3,18 +3,24 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { autoCreateThreadRule } from '@repo/database';
 import { autoThreadPlaceholders } from '@repo/placeholders';
-import type { APIRole } from 'discord-api-types/v10';
+import { Links } from '@repo/shared';
+import type { APIGuildChannel, APIRole, GuildChannelType } from 'discord-api-types/v10';
 import type { InferSelectModel } from 'drizzle-orm';
-import { Triangle, TriangleAlertIcon } from 'lucide-react';
+import { PencilIcon } from 'lucide-react';
 import { useRef } from 'react';
-import { FormProvider, useForm, useWatch } from 'react-hook-form';
+import { FormProvider, useForm, useWatch, Watch } from 'react-hook-form';
 import { toast } from 'sonner';
 import type { z } from 'zod';
 import { PlaceholderPickerButton } from '@/components/discord/components-v2-editor/placeholder-picker-button';
-import { DiscordMessageContext } from '@/components/discord/message-context';
+import {
+  DiscordMessageContext,
+  type DiscordMessageContextValue,
+} from '@/components/discord/message-context';
+import { DiscordMessage } from '@/components/discord/preview/message';
 import { FormChangePublisher, FormDevTool } from '@/components/form';
-import { Alert, AlertDescription, AlertTitle } from '@/components/reui/alert';
 import { Badge } from '@/components/reui/badge';
+import { ControlledButton } from '@/components/rhf/button';
+import { ControlledComponentsV2EditorDialog } from '@/components/rhf/components-v2-editor-dialog';
 import {
   ControlledField,
   ControlledFieldError,
@@ -28,6 +34,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FieldContent, FieldDescription, FieldGroup, FieldSeparator } from '@/components/ui/field';
 import { InputGroup, InputGroupAddon } from '@/components/ui/input-group';
 import { SelectContent, SelectGroup, SelectItem, SelectValue } from '@/components/ui/select';
+import { cn } from '@/lib/utils';
 import { DeleteRuleDialog } from '../_dialogs/delete-rule-dialog';
 import { updateRuleAction } from '../action';
 import { ArchiveDurationOptions, ThreadStateOptions } from '../constants';
@@ -36,29 +43,35 @@ import { updateRuleFormSchema } from '../schema';
 type SettingFormProps = {
   targetChannelName: string;
   roles: APIRole[];
+  channels: APIGuildChannel<GuildChannelType>[];
+  emojis: DiscordMessageContextValue['emojis'];
   rule: InferSelectModel<typeof autoCreateThreadRule>;
+  defaultValues?: z.infer<typeof updateRuleFormSchema>;
   disabled?: boolean;
 };
 
-export function SettingForm({ targetChannelName, roles, rule, disabled }: SettingFormProps) {
+export function SettingForm({
+  targetChannelName,
+  roles,
+  channels,
+  emojis,
+  rule,
+  defaultValues,
+  disabled,
+}: SettingFormProps) {
   const bindUpdateRuleAction = updateRuleAction.bind(null, rule.guildId, rule.channelId);
   const threadNameRef = useRef<HTMLInputElement>(null);
 
   const form = useForm({
     resolver: zodResolver(updateRuleFormSchema),
-    defaultValues: {
-      enabled: rule.enabled,
-      threadName: rule.threadName,
-      autoArchiveDuration: rule.autoArchiveDuration,
-      initialThreadState: rule.initialThreadState,
-      ignoreBot: rule.ignoreBot,
-      ignoreRoles: rule.ignoreRoles,
-    },
+    defaultValues,
   });
   const { control } = form;
 
   const enabled = useWatch({ control, name: 'enabled' });
   const fieldsDisabled = disabled || !enabled;
+  const messageEnabled = useWatch({ control, name: 'messageEnabled' });
+  const messageDisabled = fieldsDisabled || !messageEnabled;
 
   async function onSubmit(values: z.infer<typeof updateRuleFormSchema>) {
     const res = await bindUpdateRuleAction(values);
@@ -89,7 +102,14 @@ export function SettingForm({ targetChannelName, roles, rule, disabled }: Settin
             </FieldGroup>
           </CardContent>
         </Card>
-        <DiscordMessageContext.Provider value={{ placeholders: autoThreadPlaceholders }}>
+        <DiscordMessageContext.Provider
+          value={{
+            roles: roles.filter((role) => role.id !== rule.guildId),
+            channels,
+            emojis,
+            placeholders: autoThreadPlaceholders,
+          }}
+        >
           <Card className='bg-card/50'>
             <CardHeader>
               <CardTitle>スレッド設定</CardTitle>
@@ -115,7 +135,7 @@ export function SettingForm({ targetChannelName, roles, rule, disabled }: Settin
                       placeholder='スレッドの名前を入力'
                     />
                     <InputGroupAddon align='inline-end'>
-                      <PlaceholderPickerButton inputRef={threadNameRef} />
+                      <PlaceholderPickerButton inputRef={threadNameRef} types={['text', 'url']} />
                     </InputGroupAddon>
                   </InputGroup>
                 </ControlledField>
@@ -184,6 +204,71 @@ export function SettingForm({ targetChannelName, roles, rule, disabled }: Settin
                       </SelectGroup>
                     </SelectContent>
                   </ControlledSelect>
+                </ControlledField>
+              </FieldGroup>
+            </CardContent>
+          </Card>
+          <Card className='bg-card/50'>
+            <CardHeader>
+              <CardTitle>メッセージ設定</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <FieldGroup>
+                <ControlledField
+                  control={control}
+                  name='messageEnabled'
+                  orientation='horizontal'
+                  disabled={fieldsDisabled}
+                >
+                  <FieldContent>
+                    <ControlledFieldLabel>
+                      スレッド作成後にメッセージを送信する
+                    </ControlledFieldLabel>
+                    <ControlledFieldError />
+                  </FieldContent>
+                  <ControlledSwitch />
+                </ControlledField>
+                <FieldSeparator />
+                <ControlledField
+                  control={control}
+                  name='messageComponents'
+                  orientation='responsive'
+                  disabled={messageDisabled}
+                >
+                  <FieldContent>
+                    <ControlledFieldLabel>メッセージ</ControlledFieldLabel>
+                    <FieldDescription>
+                      スレッドに送信されるメッセージをカスタマイズします。
+                    </FieldDescription>
+                  </FieldContent>
+                  <div className='sm:flex-1 flex flex-col gap-2'>
+                    <Watch
+                      control={control}
+                      name='messageComponents'
+                      render={(messageComponents) => (
+                        <div
+                          className={cn(
+                            'max-sm:p-4 p-6 bg-discord-background border rounded-lg max-h-100 overflow-y-auto scroll-fade-y no-scrollbar',
+                            { 'opacity-50': messageDisabled },
+                          )}
+                        >
+                          <DiscordMessage
+                            components={messageComponents ?? []}
+                            username='nonibot'
+                            avatarUrl={Links.AvatarUrl}
+                            showAppTag
+                            verified
+                          />
+                        </div>
+                      )}
+                    />
+                    <ControlledComponentsV2EditorDialog>
+                      <ControlledButton variant='outline' className='w-full'>
+                        <PencilIcon />
+                        メッセージを編集
+                      </ControlledButton>
+                    </ControlledComponentsV2EditorDialog>
+                  </div>
                 </ControlledField>
               </FieldGroup>
             </CardContent>

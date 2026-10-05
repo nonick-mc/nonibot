@@ -7,8 +7,9 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/reui/alert';
 import { Button } from '@/components/ui/button';
 import { verifyDashboardAccessPermission } from '@/lib/dal';
 import { db } from '@/lib/db';
-import { getChannels, getRoles } from '@/lib/discord/api';
-import { sortRoles } from '@/lib/discord/utils';
+import { getChannels, getGuildEmojis, getRoles } from '@/lib/discord/api';
+import { sortChannels, sortRoles } from '@/lib/discord/utils';
+import { updateRuleFormSchema } from '../schema';
 import { SettingForm } from './form';
 
 export const metadata: Metadata = {
@@ -21,9 +22,10 @@ export default async function Page({
   const { guildId, channelId } = await params;
   await verifyDashboardAccessPermission(guildId);
 
-  const [channels, roles, rule] = await Promise.all([
+  const [channels, roles, emojis, rule] = await Promise.all([
     getChannels(guildId, { revalidate: 30 }),
     getRoles(guildId, { revalidate: 30 }),
+    getGuildEmojis(guildId, { revalidate: 30 }),
     db.query.autoCreateThreadRule.findFirst({
       where: (rule, { eq, and }) => and(eq(rule.guildId, guildId), eq(rule.channelId, channelId)),
     }),
@@ -60,7 +62,15 @@ export default async function Page({
       <SettingForm
         targetChannelName={targetChannelName}
         roles={sortRoles(roles)}
+        channels={sortChannels(channels)}
+        emojis={emojis}
         rule={rule}
+        defaultValues={
+          updateRuleFormSchema.safeParse({
+            ...rule,
+            messageComponents: rule.messageComponents.length ? rule.messageComponents : undefined,
+          }).data
+        }
         disabled={!targetChannel}
       />
     </>

@@ -41,11 +41,13 @@ export function getAutoThreadPlaceholderParams(
   const time = `${pad(createdAt.getHours())}:${pad(createdAt.getMinutes())}`;
 
   return {
+    user: `${author}`,
     userName: author.username,
     userGlobalName: author.globalName ?? author.username,
     userDisplayName: member?.displayName ?? author.globalName ?? author.username,
     createdAt: `${date} ${time}`,
     createdAtDate: date,
     createdAtTime: time,
+    userAvatar: author.displayAvatarURL(),
   };
 }
