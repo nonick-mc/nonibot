@@ -117,7 +117,7 @@ function MediaGalleryItemUrlField({ control, basePath, itemIndex }: MediaGallery
         </InputGroupAddon>
         <InputGroupAddon align='inline-end'>
           <div className='flex items-center gap-0.5'>
-            <PlaceholderPickerButton inputRef={urlRef} urlOnly mode='replace' />
+            <PlaceholderPickerButton inputRef={urlRef} types={['url']} mode='replace' />
             <Tooltip>
               <Controller
                 control={control}

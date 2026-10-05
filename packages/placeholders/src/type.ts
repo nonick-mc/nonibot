@@ -1,7 +1,9 @@
+export type PlaceholderType = 'text' | 'mention' | 'url';
+
 export type Placeholder<K extends string = string> = readonly {
   key: K;
   description: string;
-  isUrl?: boolean;
+  type: PlaceholderType;
   deprecated?: boolean;
 }[];
 

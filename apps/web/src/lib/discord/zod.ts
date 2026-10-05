@@ -16,7 +16,7 @@ function escapeRegExp(value: string) {
 }
 
 function createUrlOrPlaceholderSchema(placeholders?: Placeholder) {
-  const urlPlaceholderKeys = placeholders?.filter((p) => p.isUrl).map((p) => p.key) ?? [];
+  const urlPlaceholderKeys = placeholders?.filter((p) => p.type === 'url').map((p) => p.key) ?? [];
   const placeholderRegex = urlPlaceholderKeys.length
     ? new RegExp(`^\\{\\{\\s*(?:${urlPlaceholderKeys.map(escapeRegExp).join('|')})\\s*\\}\\}$`)
     : null;

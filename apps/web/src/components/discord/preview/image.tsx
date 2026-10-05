@@ -13,7 +13,7 @@ const PlaceHolderRegex = /^\{\{\s*(\w+)\s*\}\}$/;
 export function resolveUrlPlaceholder(src: string, placeholders: Placeholder | undefined) {
   const key = PlaceHolderRegex.exec(src)?.[1];
   const placeholder = key ? placeholders?.find((v) => v.key === key) : undefined;
-  return placeholder?.isUrl ? placeholder : undefined;
+  return placeholder?.type === 'url' ? placeholder : undefined;
 }
 
 type DiscordImageProps = {

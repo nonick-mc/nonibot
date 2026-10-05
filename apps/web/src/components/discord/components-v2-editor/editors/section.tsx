@@ -61,7 +61,11 @@ export function SectionEditor() {
                 <LinkIcon />
               </InputGroupAddon>
               <InputGroupAddon className='gap-0.5' align='inline-end'>
-                <PlaceholderPickerButton inputRef={thumbnailUrlRef} urlOnly mode='replace' />
+                <PlaceholderPickerButton
+                  inputRef={thumbnailUrlRef}
+                  types={['url']}
+                  mode='replace'
+                />
                 <Tooltip>
                   <Controller
                     control={form.control}
