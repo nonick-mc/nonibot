@@ -7,6 +7,7 @@ import { Navbar } from './navbar';
 export default async function Layout({
   params,
   children,
+  breadcrumb,
 }: LayoutProps<'/dashboard/guilds/[guildId]'>) {
   const { guildId } = await params;
   await verifyDashboardAccessPermission(guildId);
@@ -18,7 +19,7 @@ export default async function Layout({
     <SidebarProvider defaultOpen={defaultOpen}>
       <AppSidebar guildId={guildId} />
       <SidebarInset>
-        <Navbar />
+        <Navbar breadcrumb={breadcrumb} />
         <div className='p-6 flex flex-col gap-6'>{children}</div>
       </SidebarInset>
     </SidebarProvider>
