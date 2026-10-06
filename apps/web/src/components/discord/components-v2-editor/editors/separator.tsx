@@ -70,7 +70,7 @@ export function SeparatorEditor() {
                 orientation='horizontal'
               >
                 <FieldContent>
-                  <ControlledFieldLabel>区切り線を表示する</ControlledFieldLabel>
+                  <ControlledFieldLabel>線を表示する</ControlledFieldLabel>
                   <ControlledFieldError />
                 </FieldContent>
                 <ControlledSwitch />
