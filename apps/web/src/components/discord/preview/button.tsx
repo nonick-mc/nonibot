@@ -38,13 +38,17 @@ export function DiscordButton({
       size='sm'
       variant={buttonStyle === ButtonStyle.Secondary ? 'outline' : 'default'}
       className={cn(
-        'max-w-full rounded-lg py-0.75 px-2.75 [&_img]:size-4.5! [&_img]:shrink-0',
+        'max-w-full rounded-lg py-0.75 px-2.75 [&_img]:size-4.5!',
         ButtonStyleClass[buttonStyle],
         className,
       )}
       {...props}
     >
-      {emoji && <DiscordButtonEmoji {...emoji} />}
+      {emoji && (
+        <span className='flex shrink-0'>
+          <DiscordButtonEmoji {...emoji} />
+        </span>
+      )}
       {label && <span className='truncate text-sm'>{label}</span>}
     </Button>
   );
