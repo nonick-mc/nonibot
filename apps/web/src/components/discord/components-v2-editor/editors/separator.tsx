@@ -1,7 +1,7 @@
 'use client';
 
 import { SeparatorSpacingSize } from 'discord-api-types/v10';
-import { MinusIcon, SettingsIcon } from 'lucide-react';
+import { MinusIcon, PaletteIcon } from 'lucide-react';
 import { useFormContext } from 'react-hook-form';
 import {
   ControlledField,
@@ -22,15 +22,13 @@ export function SeparatorEditor() {
   const { control } = useFormContext();
   const { basePath } = useComponentEditorContext();
 
-  // Popoverに区切り線の設定を移動する
-
   return (
     <EditorCard
       withSortableItemHandle
       headerActions={
         <Popover>
           <PopoverTrigger render={<Button variant='ghost' size='icon-sm' />}>
-            <SettingsIcon />
+            <PaletteIcon />
           </PopoverTrigger>
           <PopoverContent>
             <FieldGroup className='gap-5'>
@@ -86,5 +84,5 @@ export function SeparatorEditor() {
     />
   );
 
-  return <EditorCard icon={MinusIcon} title='区切り線'></EditorCard>;
+  return <EditorCard icon={MinusIcon} title='区切り線' />;
 }

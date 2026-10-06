@@ -8,8 +8,8 @@ import {
   ImagesIcon,
   LayoutListIcon,
   MinusIcon,
+  PaletteIcon,
   PlusIcon,
-  SettingsIcon,
   TypeIcon,
   XIcon,
 } from 'lucide-react';
@@ -146,7 +146,7 @@ export function ContainerEditor() {
       headerActions={
         <Popover>
           <PopoverTrigger render={<Button variant='ghost' size='icon-sm' />}>
-            <SettingsIcon />
+            <PaletteIcon />
           </PopoverTrigger>
           <PopoverContent>
             <FieldGroup className='gap-5'>
