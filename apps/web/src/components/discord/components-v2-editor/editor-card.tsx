@@ -11,6 +11,7 @@ type EditorCardProps = {
   icon: LucideIcon;
   title: string;
   headerActions?: ReactNode;
+  withSortableItemHandle?: boolean;
 };
 
 export function EditorCard({
@@ -18,14 +19,17 @@ export function EditorCard({
   title,
   children,
   headerActions,
+  withSortableItemHandle,
 }: PropsWithChildren<EditorCardProps>) {
   const { onRemove } = useComponentEditorContext();
 
   return (
     <div className='flex gap-1 w-full'>
-      <SortableItemHandle
-        render={<GripVerticalIcon className='size-4 text-muted-foreground my-2' />}
-      />
+      {withSortableItemHandle && (
+        <SortableItemHandle
+          render={<GripVerticalIcon className='size-4 text-muted-foreground my-2' />}
+        />
+      )}
       <Card className='flex-1 pt-0 pb-0 gap-0 bg-background/60'>
         <div className='flex items-center gap-3 px-4 py-2'>
           <div className='flex-1 flex items-center gap-2'>

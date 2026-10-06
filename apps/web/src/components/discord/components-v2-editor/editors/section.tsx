@@ -41,7 +41,7 @@ export function SectionEditor() {
   });
 
   return (
-    <EditorCard icon={LayoutListIcon} title='セクション'>
+    <EditorCard withSortableItemHandle icon={LayoutListIcon} title='セクション'>
       <div className='flex flex-col gap-4'>
         <FieldGroup className='gap-5'>
           <ControlledField

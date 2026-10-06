@@ -42,7 +42,7 @@ export function MediaGalleryEditor() {
   });
 
   return (
-    <EditorCard icon={ImagesIcon} title='ギャラリー'>
+    <EditorCard withSortableItemHandle icon={ImagesIcon} title='ギャラリー'>
       <div className='flex flex-col gap-4'>
         <ControlledFieldProvider control={form.control} name={`${basePath}.items`}>
           <ControlledFieldError />

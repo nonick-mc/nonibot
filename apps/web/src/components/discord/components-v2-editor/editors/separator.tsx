@@ -26,6 +26,7 @@ export function SeparatorEditor() {
 
   return (
     <EditorCard
+      withSortableItemHandle
       headerActions={
         <Popover>
           <PopoverTrigger render={<Button variant='ghost' size='icon-sm' />}>

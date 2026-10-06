@@ -140,6 +140,7 @@ export function ContainerEditor() {
 
   return (
     <EditorCard
+      withSortableItemHandle
       icon={BoxIcon}
       title='コンテナ'
       headerActions={

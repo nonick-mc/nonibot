@@ -32,7 +32,7 @@ export function TextDisplayEditor() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   return (
-    <EditorCard icon={TypeIcon} title='テキスト'>
+    <EditorCard withSortableItemHandle icon={TypeIcon} title='テキスト'>
       <ControlledField control={control} name={`${basePath}.content`}>
         <InputGroup className='max-h-96'>
           <ControlledInputGroupTextarea ref={textareaRef} placeholder='テキストを入力' />
