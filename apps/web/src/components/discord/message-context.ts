@@ -1,4 +1,5 @@
 import type { Placeholder } from '@repo/placeholders';
+import type { ComponentAction } from '@repo/shared';
 import type { APIEmoji, APIGuildChannel, APIRole, GuildChannelType } from 'discord-api-types/v10';
 import { createContext } from 'react';
 
@@ -7,6 +8,7 @@ export type DiscordMessageContextValue = {
   roles?: APIRole[];
   channels?: APIGuildChannel<GuildChannelType>[];
   placeholders?: Placeholder;
+  componentActions?: ComponentAction[];
 };
 
 export const DiscordMessageContext = createContext<DiscordMessageContextValue>({});

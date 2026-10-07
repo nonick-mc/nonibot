@@ -1,7 +1,9 @@
+import { ComponentType } from 'discord-api-types/v10';
 import { CheckIcon } from 'lucide-react';
 import { useState } from 'react';
 import type z from 'zod';
 import type { MessageUserComponentsSchema } from '@/lib/discord/zod';
+import { cn } from '@/lib/utils';
 import { ComponentV2 } from './components-v2';
 
 export type MessagePreviewProps = {
@@ -43,10 +45,22 @@ export function DiscordMessage({
         </div>
         <div className='max-w-150'>
           {components.length > 0 && (
-            <div className='mt-1 flex flex-col gap-2'>
+            // ContainerとSectionは一番幅の広いものに揃える
+            <div className='mt-1 grid grid-cols-[auto_1fr] gap-y-2'>
               {components.map((component, i) => (
-                // biome-ignore lint/suspicious/noArrayIndexKey: index以外に使用できない
-                <ComponentV2 key={i} component={component} />
+                <div
+                  // biome-ignore lint/suspicious/noArrayIndexKey: index以外に使用できない
+                  key={i}
+                  className={cn(
+                    'min-w-0',
+                    component.type === ComponentType.Container ||
+                      component.type === ComponentType.Section
+                      ? 'col-start-1'
+                      : 'col-span-2',
+                  )}
+                >
+                  <ComponentV2 component={component} />
+                </div>
               ))}
             </div>
           )}

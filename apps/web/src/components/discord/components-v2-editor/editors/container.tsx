@@ -10,6 +10,7 @@ import {
   MinusIcon,
   PaletteIcon,
   PlusIcon,
+  RectangleEllipsisIcon,
   TypeIcon,
   XIcon,
 } from 'lucide-react';
@@ -253,6 +254,12 @@ export function ContainerEditor() {
                 >
                   <MinusIcon />
                   区切り線
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => append(defaultComponentValues[ComponentType.ActionRow])}
+                >
+                  <RectangleEllipsisIcon />
+                  アクション行
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
