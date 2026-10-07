@@ -3,7 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { autoCreateThreadRule } from '@repo/database';
 import { autoThreadPlaceholders } from '@repo/placeholders';
-import { Links } from '@repo/shared';
+import { autoCreateThreadActions, Links } from '@repo/shared';
 import type { APIGuildChannel, APIRole, GuildChannelType } from 'discord-api-types/v10';
 import type { InferSelectModel } from 'drizzle-orm';
 import { PencilIcon } from 'lucide-react';
@@ -108,6 +108,7 @@ export function SettingForm({
             channels,
             emojis,
             placeholders: autoThreadPlaceholders,
+            componentActions: autoCreateThreadActions,
           }}
         >
           <Card className='bg-card/50'>
@@ -210,7 +211,10 @@ export function SettingForm({
           </Card>
           <Card className='bg-card/50'>
             <CardHeader>
-              <CardTitle>メッセージ設定</CardTitle>
+              <CardTitle className='inline-flex gap-2 items-center'>
+                メッセージ設定
+                <Badge>New</Badge>
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <FieldGroup>
