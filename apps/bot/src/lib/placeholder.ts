@@ -1,5 +1,6 @@
 import type {
-  autoThreadPlaceholders,
+  autoCreateThreadMessagePlaceholders,
+  autoCreateThreadNamePlaceholders,
   joinMessagePlaceholders,
   leaveMessagePlaceholders,
   PlaceholderParams,
@@ -33,21 +34,29 @@ export function getLeaveMessagePlaceholderParams(
   };
 }
 
-export function getAutoThreadPlaceholderParams(
+export function getAutoCreateThreadNamePlaceholderParams(
   message: Message<true>,
-): PlaceholderParams<typeof autoThreadPlaceholders> {
+): PlaceholderParams<typeof autoCreateThreadNamePlaceholders> {
   const { author, member, createdAt } = message;
   const date = `${createdAt.getFullYear()}-${pad(createdAt.getMonth() + 1)}-${pad(createdAt.getDate())}`;
   const time = `${pad(createdAt.getHours())}:${pad(createdAt.getMinutes())}`;
 
   return {
-    user: `${author}`,
     userName: author.username,
     userGlobalName: author.globalName ?? author.username,
     userDisplayName: member?.displayName ?? author.globalName ?? author.username,
     createdAt: `${date} ${time}`,
     createdAtDate: date,
     createdAtTime: time,
-    userAvatar: author.displayAvatarURL(),
+  };
+}
+
+export function getAutoCreateThreadMessagePlaceholderParams(
+  message: Message<true>,
+): PlaceholderParams<typeof autoCreateThreadMessagePlaceholders> {
+  return {
+    ...getAutoCreateThreadNamePlaceholderParams(message),
+    user: `${message.author}`,
+    userAvatar: message.author.displayAvatarURL(),
   };
 }

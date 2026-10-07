@@ -2,7 +2,10 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { autoCreateThreadRule } from '@repo/database';
-import { autoThreadPlaceholders } from '@repo/placeholders';
+import {
+  autoCreateThreadMessagePlaceholders,
+  autoCreateThreadNamePlaceholders,
+} from '@repo/placeholders';
 import { autoCreateThreadActions, Links } from '@repo/shared';
 import type { APIGuildChannel, APIRole, GuildChannelType } from 'discord-api-types/v10';
 import type { InferSelectModel } from 'drizzle-orm';
@@ -102,21 +105,15 @@ export function SettingForm({
             </FieldGroup>
           </CardContent>
         </Card>
-        <DiscordMessageContext.Provider
-          value={{
-            roles: roles.filter((role) => role.id !== rule.guildId),
-            channels,
-            emojis,
-            placeholders: autoThreadPlaceholders,
-            componentActions: autoCreateThreadActions,
-          }}
-        >
-          <Card className='bg-card/50'>
-            <CardHeader>
-              <CardTitle>スレッド設定</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <FieldGroup>
+        <Card className='bg-card/50'>
+          <CardHeader>
+            <CardTitle>スレッド設定</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <FieldGroup>
+              <DiscordMessageContext.Provider
+                value={{ placeholders: autoCreateThreadNamePlaceholders }}
+              >
                 <ControlledField
                   control={control}
                   name='threadName'
@@ -136,79 +133,89 @@ export function SettingForm({
                       placeholder='スレッドの名前を入力'
                     />
                     <InputGroupAddon align='inline-end'>
-                      <PlaceholderPickerButton inputRef={threadNameRef} types={['text', 'url']} />
+                      <PlaceholderPickerButton inputRef={threadNameRef} />
                     </InputGroupAddon>
                   </InputGroup>
                 </ControlledField>
-                <FieldSeparator />
-                <ControlledField
-                  control={control}
-                  name='autoArchiveDuration'
-                  orientation='horizontal'
-                  disabled={fieldsDisabled}
-                >
-                  <FieldContent>
-                    <ControlledFieldLabel>スレッドの自動アーカイブ時間</ControlledFieldLabel>
-                    <FieldDescription>
-                      指定した期間アクティブでなかったスレッドはアーカイブされます。
-                    </FieldDescription>
-                    <ControlledFieldError />
-                  </FieldContent>
-                  <ControlledSelect>
-                    <ControlledSelectTrigger className='sm:min-w-3xs'>
-                      <SelectValue placeholder='期間を選択'>
-                        {(value: number) =>
-                          ArchiveDurationOptions.find((option) => option.value === value)?.label
-                        }
-                      </SelectValue>
-                    </ControlledSelectTrigger>
-                    <SelectContent align='end' alignItemWithTrigger={false}>
-                      <SelectGroup>
-                        {ArchiveDurationOptions.map((option) => (
-                          <SelectItem key={option.value} value={option.value}>
-                            {option.label}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </ControlledSelect>
-                </ControlledField>
-                <FieldSeparator />
-                <ControlledField
-                  control={control}
-                  name='initialThreadState'
-                  orientation='responsive'
-                  disabled={fieldsDisabled}
-                >
-                  <FieldContent>
-                    <ControlledFieldLabel>
-                      スレッドの初期状態<Badge>New</Badge>
-                    </ControlledFieldLabel>
-                    <FieldDescription>作成するスレッドの初期状態を変更します。</FieldDescription>
-                    <ControlledFieldError />
-                  </FieldContent>
-                  <ControlledSelect>
-                    <ControlledSelectTrigger className='sm:min-w-3xs'>
-                      <SelectValue placeholder='状態を選択'>
-                        {(value: string) =>
-                          ThreadStateOptions.find((option) => option.value === value)?.label
-                        }
-                      </SelectValue>
-                    </ControlledSelectTrigger>
-                    <SelectContent align='end' alignItemWithTrigger={false}>
-                      <SelectGroup>
-                        {ThreadStateOptions.map((option) => (
-                          <SelectItem key={option.value} value={option.value}>
-                            {option.label}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </ControlledSelect>
-                </ControlledField>
-              </FieldGroup>
-            </CardContent>
-          </Card>
+              </DiscordMessageContext.Provider>
+              <FieldSeparator />
+              <ControlledField
+                control={control}
+                name='autoArchiveDuration'
+                orientation='horizontal'
+                disabled={fieldsDisabled}
+              >
+                <FieldContent>
+                  <ControlledFieldLabel>スレッドの自動アーカイブ時間</ControlledFieldLabel>
+                  <FieldDescription>
+                    指定した期間アクティブでなかったスレッドはアーカイブされます。
+                  </FieldDescription>
+                  <ControlledFieldError />
+                </FieldContent>
+                <ControlledSelect>
+                  <ControlledSelectTrigger className='sm:min-w-3xs'>
+                    <SelectValue placeholder='期間を選択'>
+                      {(value: number) =>
+                        ArchiveDurationOptions.find((option) => option.value === value)?.label
+                      }
+                    </SelectValue>
+                  </ControlledSelectTrigger>
+                  <SelectContent align='end' alignItemWithTrigger={false}>
+                    <SelectGroup>
+                      {ArchiveDurationOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </ControlledSelect>
+              </ControlledField>
+              <FieldSeparator />
+              <ControlledField
+                control={control}
+                name='initialThreadState'
+                orientation='responsive'
+                disabled={fieldsDisabled}
+              >
+                <FieldContent>
+                  <ControlledFieldLabel>
+                    スレッドの初期状態<Badge>New</Badge>
+                  </ControlledFieldLabel>
+                  <FieldDescription>作成するスレッドの初期状態を変更します。</FieldDescription>
+                  <ControlledFieldError />
+                </FieldContent>
+                <ControlledSelect>
+                  <ControlledSelectTrigger className='sm:min-w-3xs'>
+                    <SelectValue placeholder='状態を選択'>
+                      {(value: string) =>
+                        ThreadStateOptions.find((option) => option.value === value)?.label
+                      }
+                    </SelectValue>
+                  </ControlledSelectTrigger>
+                  <SelectContent align='end' alignItemWithTrigger={false}>
+                    <SelectGroup>
+                      {ThreadStateOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </ControlledSelect>
+              </ControlledField>
+            </FieldGroup>
+          </CardContent>
+        </Card>
+        <DiscordMessageContext.Provider
+          value={{
+            roles: roles.filter((role) => role.id !== rule.guildId),
+            channels,
+            emojis,
+            placeholders: autoCreateThreadMessagePlaceholders,
+            componentActions: autoCreateThreadActions,
+          }}
+        >
           <Card className='bg-card/50'>
             <CardHeader>
               <CardTitle className='inline-flex gap-2 items-center'>

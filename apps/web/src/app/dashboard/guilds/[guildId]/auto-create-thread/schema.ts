@@ -1,5 +1,5 @@
 import { autoCreateThreadRule } from '@repo/database';
-import { autoThreadPlaceholders } from '@repo/placeholders';
+import { autoCreateThreadMessagePlaceholders } from '@repo/placeholders';
 import { autoCreateThreadActions } from '@repo/shared';
 import { ComponentType, ThreadAutoArchiveDuration } from 'discord-api-types/v10';
 import { createInsertSchema } from 'drizzle-zod';
@@ -19,7 +19,7 @@ const ruleSchema = createInsertSchema(autoCreateThreadRule, {
   initialThreadState: (schema) => schema.default('open'),
   ignoreRoles: () => snowflakeArraySchema.max(20, 'ロールは最大20個まで設定できます。'),
   messageComponents: createMessageUserComponentsSchema(
-    autoThreadPlaceholders,
+    autoCreateThreadMessagePlaceholders,
     autoCreateThreadActions,
   ).default([
     {
