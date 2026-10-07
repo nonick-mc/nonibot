@@ -76,4 +76,3 @@ function Badge({ className, variant, size, radius, render, ...props }: BadgeProp
 }
 
 export { Badge, type BadgeProps, badgeVariants };
-
