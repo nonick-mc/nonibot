@@ -18,7 +18,7 @@ export function memberPerms(...requirePerms: PermissionResolvable[]) {
     if (entry.isRepliable() && isMissing)
       return entry.reply({
         content: `${getAppEmoji(Destructive.circleAlert)} この操作を実行するためには、以下の権限を所持している必要があります：${missing.map((perm) => inlineCode(perm)).join(' ')}`,
-        flags: entry.ephemeral ? [MessageFlags.Ephemeral] : [],
+        flags: [MessageFlags.Ephemeral],
       });
 
     return !isMissing && next();
@@ -42,8 +42,8 @@ export function appPerms(...requirePerms: PermissionResolvable[]) {
     if (entry.isAutocomplete() && isMissing) return entry.respond([]);
     if (entry.isRepliable() && isMissing)
       return entry.reply({
-        content: `${getAppEmoji(Destructive.circleAlert)} この操作を実行するためには、${entry.client}に以下の権限を付与する必要があります：${missing.map((perm) => inlineCode(perm)).join(' ')}`,
-        flags: entry.ephemeral ? [MessageFlags.Ephemeral] : [],
+        content: `${getAppEmoji(Destructive.circleAlert)} この操作を実行するためには、${entry.client.user}に以下の権限を付与する必要があります：${missing.map((perm) => inlineCode(perm)).join(' ')}`,
+        flags: [MessageFlags.Ephemeral],
       });
 
     return !isMissing && next();
