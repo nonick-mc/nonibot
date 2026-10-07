@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import type { autoCreateThreadRule } from '@repo/database';
 import { type APIGuildChannel, ChannelType, type GuildChannelType } from 'discord-api-types/v10';
 import type { InferSelectModel } from 'drizzle-orm';
-import { AlignRightIcon, ArrowRight, ArrowRightIcon, CheckIcon, PlusIcon } from 'lucide-react';
+import { ArrowRightIcon, PlusIcon } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm, Watch } from 'react-hook-form';
@@ -21,7 +21,6 @@ import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
