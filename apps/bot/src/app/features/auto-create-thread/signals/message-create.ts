@@ -1,5 +1,15 @@
 import { renderPlaceholders } from '@repo/placeholders';
-import { Events, MessageFlags } from 'discord.js';
+import {
+  autoCreateThreadActions,
+  collectInteractiveComponents,
+  isAllowedComponent,
+} from '@repo/shared';
+import {
+  type APIMessageTopLevelComponent,
+  Events,
+  MessageFlags,
+  type ThreadChannel,
+} from 'discord.js';
 import { execute, Signal } from 'sunar';
 import { db } from '@/src/lib/db';
 import { getAutoThreadPlaceholderParams } from '@/src/lib/placeholder';
@@ -35,12 +45,7 @@ execute(signal, async (message) => {
 
   // アーカイブ済みのスレッドに送信すると再オープンされるため、状態を変更する前に送信する
   if (thread && rule.messageEnabled && rule.messageComponents.length) {
-    await thread
-      .send({
-        components: renderPlaceholders(rule.messageComponents, placeholderParams),
-        flags: MessageFlags.IsComponentsV2,
-      })
-      .catch((e) => console.error(e));
+    await sendMessage(thread, rule.messageComponents, placeholderParams);
   }
 
   if (thread && rule.initialThreadState !== 'open') {
@@ -54,3 +59,28 @@ execute(signal, async (message) => {
       .catch((e) => console.error(e));
   }
 });
+
+async function sendMessage(
+  thread: ThreadChannel,
+  components: APIMessageTopLevelComponent[],
+  params: Record<string, string>,
+) {
+  // 任意のcustom_idによるインタラクションの実行を防ぐため、許可されていないコンポーネントを含む場合は送信しない
+  if (
+    collectInteractiveComponents(components).some(
+      (component) => !isAllowedComponent(autoCreateThreadActions, component),
+    )
+  ) {
+    console.error(
+      `[auto-create-thread] 許可されていないcustom_idが含まれています: ${thread.guildId}`,
+    );
+    return;
+  }
+
+  await thread
+    .send({
+      components: renderPlaceholders(components, params),
+      flags: MessageFlags.IsComponentsV2,
+    })
+    .catch((e) => console.error(e));
+}
