@@ -1,4 +1,5 @@
 import { ButtonStyle } from 'discord-api-types/v10';
+import { ExternalLinkIcon } from 'lucide-react';
 import type { ComponentProps } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '../../ui/button';
@@ -6,7 +7,7 @@ import { Emoji, Twemoji } from './markdown';
 
 type DiscordButtonEmoji = { id?: string; name: string; animated?: boolean };
 
-// Secondaryはshadcn/uiのoutlineボタンをそのまま使用する
+// Secondary・Linkはshadcn/uiのoutlineボタンをそのまま使用する
 const ButtonStyleClass: Partial<Record<ButtonStyle, string>> = {
   [ButtonStyle.Primary]: 'bg-discord-primary text-white hover:bg-discord-primary/80',
   [ButtonStyle.Success]: 'bg-discord-success text-white hover:bg-discord-success/80',
@@ -36,7 +37,11 @@ export function DiscordButton({
     <Button
       type='button'
       size='sm'
-      variant={buttonStyle === ButtonStyle.Secondary ? 'outline' : 'default'}
+      variant={
+        buttonStyle === ButtonStyle.Secondary || buttonStyle === ButtonStyle.Link
+          ? 'outline'
+          : 'default'
+      }
       className={cn(
         'max-w-full rounded-lg py-0.75 px-2.75 [&_img]:size-4.5!',
         ButtonStyleClass[buttonStyle],
@@ -50,6 +55,7 @@ export function DiscordButton({
         </span>
       )}
       {label && <span className='truncate text-sm'>{label}</span>}
+      {buttonStyle === ButtonStyle.Link && <ExternalLinkIcon />}
     </Button>
   );
 }
