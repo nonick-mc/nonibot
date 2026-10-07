@@ -12,6 +12,7 @@ import {
   MessagesSquareIcon,
   ScanQrCodeIcon,
   ShieldCheckIcon,
+  SpoolIcon,
 } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { Badge } from '@/components/reui/badge';
@@ -103,7 +104,7 @@ export const SidebarNavigationItems: SidebarGroupItem<string>[] = [
         key: 'auto-create-thread',
         title: '自動スレッド作成',
         url: (guildId) => `/dashboard/guilds/${guildId}/auto-create-thread`,
-        icon: MessagesSquareIcon,
+        icon: SpoolIcon,
       },
       {
         key: 'automod-plus',
