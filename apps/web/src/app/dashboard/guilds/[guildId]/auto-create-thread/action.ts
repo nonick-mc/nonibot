@@ -15,10 +15,12 @@ import { createRuleFormSchema, updateRuleFormSchema } from './schema';
 export const createRuleAction = guildActionClient
   .inputSchema(createRuleFormSchema)
   .action(async ({ parsedInput, bindArgsParsedInputs: [guildId], ctx: { session } }) => {
-    const currentRules = await db.query.autoCreateThreadRule.findMany({
-      where: (rule, { eq }) => eq(rule.guildId, guildId),
-    });
-    if (currentRules.length >= RulesMaxSize) {
+    const currentCount = await db.$count(
+      autoCreateThreadRule,
+      eq(autoCreateThreadRule.guildId, guildId),
+    );
+
+    if (currentCount >= RulesMaxSize) {
       throw new ActionClientError('チャンネルの登録上限数に達しています。');
     }
 
