@@ -59,6 +59,7 @@ export const updateRuleAction = guildActionClient
     const beforeRule = await db.query.autoCreateThreadRule.findFirst({
       where: (rule, { eq, and }) => and(eq(rule.guildId, guildId), eq(rule.channelId, channelId)),
     });
+    if (!beforeRule) throw new ActionClientError('ルールが見つかりません。');
 
     const [afterRule] = await db
       .update(autoCreateThreadRule)
@@ -92,6 +93,7 @@ export const deleteRuleAction = guildActionClient
     const beforeRule = await db.query.autoCreateThreadRule.findFirst({
       where: (rule, { eq, and }) => and(eq(rule.guildId, guildId), eq(rule.channelId, channelId)),
     });
+    if (!beforeRule) throw new ActionClientError('ルールが見つかりません。');
 
     await db
       .delete(autoCreateThreadRule)
