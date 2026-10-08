@@ -13,6 +13,7 @@ import {
 import { useContext, useRef, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { DiscordEmojiPicker } from '@/components/discord/emoji-picker';
+import { PlaceholderPickerButton } from '@/components/placeholder/placeholder-picker-button';
 import {
   ControlledField,
   ControlledFieldError,
@@ -37,7 +38,6 @@ import { DiscordMessageContext } from '../../message-context';
 import { DiscordButtonEmoji } from '../../preview/button';
 import { ComponentEditorContext } from '../context';
 import { EditorCard } from '../editor-card';
-import { PlaceholderPickerButton } from '../placeholder-picker-button';
 
 const ButtonStyleOptions = [
   { label: 'Primary', value: ButtonStyle.Primary, colorClassName: 'bg-discord-primary' },

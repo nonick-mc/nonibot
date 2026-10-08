@@ -3,10 +3,10 @@
 import { ComponentType, SeparatorSpacingSize } from 'discord-api-types/v10';
 import { useContext } from 'react';
 import type z from 'zod';
+import { PlaceholderContext } from '@/components/placeholder/placeholder-context';
 import type { MessageUserComponentsSchema } from '@/lib/discord/zod';
 import { cn } from '@/lib/utils';
 import { Separator as ShadcnSeparator } from '../../ui/separator';
-import { DiscordMessageContext } from '../message-context';
 import { DiscordButton } from './button';
 import { DiscordImage, resolveUrlPlaceholder } from './image';
 import { DiscordMarkdown } from './markdown';
@@ -70,7 +70,7 @@ export function Section({ component }: ComponentProps<ComponentType.Section>) {
 }
 
 export function MediaGallery({ component }: ComponentProps<ComponentType.MediaGallery>) {
-  const { placeholders } = useContext(DiscordMessageContext);
+  const { placeholders } = useContext(PlaceholderContext);
   const items = component.items.filter((item) => item.media.url);
   if (!items.length) return null;
 

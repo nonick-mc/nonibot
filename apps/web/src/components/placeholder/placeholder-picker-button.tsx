@@ -14,7 +14,7 @@ import {
 import { InputGroupButton } from '@/components/ui/input-group';
 import { Item, ItemContent, ItemDescription, ItemMedia, ItemTitle } from '@/components/ui/item';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { DiscordMessageContext } from '../message-context';
+import { PlaceholderContext } from './placeholder-context';
 
 export type TextInputRef = RefObject<HTMLInputElement | HTMLTextAreaElement | null>;
 export type TextInputInsertMode = 'insert' | 'replace';
@@ -55,7 +55,7 @@ type PlaceholderPickerButtonProps = {
 };
 
 export function PlaceholderPickerButton({ inputRef, types, mode }: PlaceholderPickerButtonProps) {
-  const { placeholders } = useContext(DiscordMessageContext);
+  const { placeholders } = useContext(PlaceholderContext);
   const { open, setOpen, handleSelect, handleOpenChangeComplete } = useTextInputInsert(
     inputRef,
     mode,

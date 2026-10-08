@@ -3,6 +3,7 @@
 import { EyeIcon, EyeOffIcon, ImageIcon, LinkIcon } from 'lucide-react';
 import { useRef } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
+import { PlaceholderPickerButton } from '@/components/placeholder/placeholder-picker-button';
 import {
   ControlledField,
   ControlledFieldError,
@@ -13,7 +14,6 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { ComponentEditorContext } from '../context';
 import { DebouncedUrlInput } from '../debounced-url-input';
 import { EditorCard } from '../editor-card';
-import { PlaceholderPickerButton } from '../placeholder-picker-button';
 
 type ThumbnailEditorProps = {
   basePath: string;

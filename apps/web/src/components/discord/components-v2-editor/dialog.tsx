@@ -17,6 +17,7 @@ import { type ComponentProps, useContext, useEffect, useMemo, useState } from 'r
 import { FormProvider, useFieldArray, useForm, Watch } from 'react-hook-form';
 import z from 'zod';
 import { FormDevTool } from '@/components/form';
+import { PlaceholderContext } from '@/components/placeholder/placeholder-context';
 import { ControlledFieldError, ControlledFieldProvider } from '@/components/rhf/field';
 import { Button } from '@/components/ui/button';
 import {
@@ -57,7 +58,8 @@ export function ComponentsV2EditorDialog({
 }: ComponentsV2EditorModalProps) {
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'editor' | 'preview'>('editor');
-  const { placeholders, componentActions } = useContext(DiscordMessageContext);
+  const { componentActions } = useContext(DiscordMessageContext);
+  const { placeholders } = useContext(PlaceholderContext);
 
   const schema = useMemo(
     () =>

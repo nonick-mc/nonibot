@@ -4,6 +4,10 @@ import { AtSignIcon, BotIcon, HashIcon, SmileIcon, TypeIcon } from 'lucide-react
 import { Fragment, type RefObject, useContext, useMemo, useRef } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { DiscordEmojiPicker } from '@/components/discord/emoji-picker';
+import {
+  PlaceholderPickerButton,
+  useTextInputInsert,
+} from '@/components/placeholder/placeholder-picker-button';
 import { ControlledField, ControlledFieldError } from '@/components/rhf/field';
 import { ControlledInputGroupTextarea } from '@/components/rhf/input-group';
 import {
@@ -24,7 +28,6 @@ import { DiscordMessageContext } from '../../message-context';
 import { RoleColor } from '../../role-color';
 import { useComponentEditorContext } from '../context';
 import { EditorCard } from '../editor-card';
-import { PlaceholderPickerButton, useTextInputInsert } from '../placeholder-picker-button';
 
 export function TextDisplayEditor() {
   const { control } = useFormContext();

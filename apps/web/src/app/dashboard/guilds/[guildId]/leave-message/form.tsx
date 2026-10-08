@@ -15,6 +15,7 @@ import {
 } from '@/components/discord/message-context';
 import { DiscordMessage } from '@/components/discord/preview/message';
 import { FormChangePublisher, FormDevTool } from '@/components/form';
+import { PlaceholderContext } from '@/components/placeholder/placeholder-context';
 import { ControlledButton } from '@/components/rhf/button';
 import { ControlledChannelSelect } from '@/components/rhf/channel-select';
 import { ControlledComponentsV2EditorDialog } from '@/components/rhf/components-v2-editor-dialog';
@@ -55,138 +56,139 @@ export function SettingForm({ channels, defaultValues, roles, emojis }: FormProp
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='flex flex-col gap-6 pb-24'>
-        <DiscordMessageContext.Provider
-          value={{
-            roles: roles?.filter((role) => role.id !== guildId),
-            channels,
-            emojis,
-            placeholders: leaveMessagePlaceholders,
-          }}
-        >
-          <Card className='bg-card/50'>
-            <CardContent>
-              <FieldGroup>
-                <ControlledField control={form.control} name='enabled' orientation='horizontal'>
-                  <FieldContent>
-                    <ControlledFieldLabel>退室メッセージを有効にする</ControlledFieldLabel>
-                    <ControlledFieldError />
-                  </FieldContent>
-                  <ControlledSwitch />
-                </ControlledField>
-              </FieldGroup>
-            </CardContent>
-          </Card>
-          <Card className='bg-card/50'>
-            <CardHeader>
-              <CardTitle>全般設定</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <FieldGroup>
-                <Watch
-                  control={form.control}
-                  name={'enabled'}
-                  render={(enabled) => (
-                    <>
-                      <ControlledField
-                        control={form.control}
-                        name='channel'
-                        orientation='responsive'
-                        align='center'
-                        disabled={!enabled}
-                      >
-                        <FieldContent>
-                          <ControlledFieldLabel>
-                            メッセージを送信するチャンネル
-                          </ControlledFieldLabel>
-                          <ControlledFieldError />
-                        </FieldContent>
-                        <ControlledChannelSelect
-                          items={channels}
-                          includeTypes={[ChannelType.GuildText]}
-                          className='sm:min-w-xs'
-                        />
-                      </ControlledField>
-                      <FieldSeparator />
-                      <ControlledField
-                        control={form.control}
-                        name='ignoreBot'
-                        orientation='horizontal'
-                        disabled={!enabled}
-                      >
-                        <FieldContent>
-                          <ControlledFieldLabel>
-                            BOT退室時にメッセージを送信しない
-                          </ControlledFieldLabel>
-                          <FieldDescription>
-                            有効にすると、BOTがサーバーから削除された際にメッセージが送信されないようになります。
-                          </FieldDescription>
-                          <ControlledFieldError />
-                        </FieldContent>
-                        <ControlledSwitch />
-                      </ControlledField>
-                    </>
-                  )}
-                />
-              </FieldGroup>
-            </CardContent>
-          </Card>
-          <Card className='bg-card/50'>
-            <CardHeader>
-              <CardTitle>メッセージ設定</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <FieldGroup>
-                <Watch
-                  control={form.control}
-                  name='enabled'
-                  render={(enabled) => (
-                    <ControlledField
-                      control={form.control}
-                      name='messageComponents'
-                      orientation='responsive'
-                      disabled={!enabled}
-                    >
-                      <FieldContent>
-                        <ControlledFieldLabel>メッセージ</ControlledFieldLabel>
-                        <FieldDescription>
-                          チャンネルに送信されるメッセージをカスタマイズします。
-                        </FieldDescription>
-                      </FieldContent>
-                      <div className='sm:flex-1 flex flex-col gap-2'>
-                        <Watch
+        <PlaceholderContext.Provider value={{ placeholders: leaveMessagePlaceholders }}>
+          <DiscordMessageContext.Provider
+            value={{
+              roles: roles?.filter((role) => role.id !== guildId),
+              channels,
+              emojis,
+            }}
+          >
+            <Card className='bg-card/50'>
+              <CardContent>
+                <FieldGroup>
+                  <ControlledField control={form.control} name='enabled' orientation='horizontal'>
+                    <FieldContent>
+                      <ControlledFieldLabel>退室メッセージを有効にする</ControlledFieldLabel>
+                      <ControlledFieldError />
+                    </FieldContent>
+                    <ControlledSwitch />
+                  </ControlledField>
+                </FieldGroup>
+              </CardContent>
+            </Card>
+            <Card className='bg-card/50'>
+              <CardHeader>
+                <CardTitle>全般設定</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <FieldGroup>
+                  <Watch
+                    control={form.control}
+                    name={'enabled'}
+                    render={(enabled) => (
+                      <>
+                        <ControlledField
                           control={form.control}
-                          name='messageComponents'
-                          render={(messageComponents) => (
-                            <div
-                              className={cn(
-                                'max-sm:p-4 p-6 bg-discord-background border rounded-lg max-h-100 overflow-y-auto scroll-fade-y no-scrollbar',
-                                { 'opacity-50': !enabled },
-                              )}
-                            >
-                              <DiscordMessage
-                                components={messageComponents ?? []}
-                                username='nonibot'
-                                avatarUrl={Links.AvatarUrl}
-                                showAppTag
-                                verified
-                              />
-                            </div>
-                          )}
-                        />
-                        <ControlledComponentsV2EditorDialog>
-                          <ControlledButton variant='outline' className='w-full'>
-                            <PencilIcon />
-                            メッセージを編集
-                          </ControlledButton>
-                        </ControlledComponentsV2EditorDialog>
-                      </div>
-                    </ControlledField>
-                  )}
-                />
-              </FieldGroup>
-            </CardContent>
-          </Card>
-        </DiscordMessageContext.Provider>
+                          name='channel'
+                          orientation='responsive'
+                          align='center'
+                          disabled={!enabled}
+                        >
+                          <FieldContent>
+                            <ControlledFieldLabel>
+                              メッセージを送信するチャンネル
+                            </ControlledFieldLabel>
+                            <ControlledFieldError />
+                          </FieldContent>
+                          <ControlledChannelSelect
+                            items={channels}
+                            includeTypes={[ChannelType.GuildText]}
+                            className='sm:min-w-xs'
+                          />
+                        </ControlledField>
+                        <FieldSeparator />
+                        <ControlledField
+                          control={form.control}
+                          name='ignoreBot'
+                          orientation='horizontal'
+                          disabled={!enabled}
+                        >
+                          <FieldContent>
+                            <ControlledFieldLabel>
+                              BOT退室時にメッセージを送信しない
+                            </ControlledFieldLabel>
+                            <FieldDescription>
+                              有効にすると、BOTがサーバーから削除された際にメッセージが送信されないようになります。
+                            </FieldDescription>
+                            <ControlledFieldError />
+                          </FieldContent>
+                          <ControlledSwitch />
+                        </ControlledField>
+                      </>
+                    )}
+                  />
+                </FieldGroup>
+              </CardContent>
+            </Card>
+            <Card className='bg-card/50'>
+              <CardHeader>
+                <CardTitle>メッセージ設定</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <FieldGroup>
+                  <Watch
+                    control={form.control}
+                    name='enabled'
+                    render={(enabled) => (
+                      <ControlledField
+                        control={form.control}
+                        name='messageComponents'
+                        orientation='responsive'
+                        disabled={!enabled}
+                      >
+                        <FieldContent>
+                          <ControlledFieldLabel>メッセージ</ControlledFieldLabel>
+                          <FieldDescription>
+                            チャンネルに送信されるメッセージをカスタマイズします。
+                          </FieldDescription>
+                        </FieldContent>
+                        <div className='sm:flex-1 flex flex-col gap-2'>
+                          <Watch
+                            control={form.control}
+                            name='messageComponents'
+                            render={(messageComponents) => (
+                              <div
+                                className={cn(
+                                  'max-sm:p-4 p-6 bg-discord-background border rounded-lg max-h-100 overflow-y-auto scroll-fade-y no-scrollbar',
+                                  { 'opacity-50': !enabled },
+                                )}
+                              >
+                                <DiscordMessage
+                                  components={messageComponents ?? []}
+                                  username='nonibot'
+                                  avatarUrl={Links.AvatarUrl}
+                                  showAppTag
+                                  verified
+                                />
+                              </div>
+                            )}
+                          />
+                          <ControlledComponentsV2EditorDialog>
+                            <ControlledButton variant='outline' className='w-full'>
+                              <PencilIcon />
+                              メッセージを編集
+                            </ControlledButton>
+                          </ControlledComponentsV2EditorDialog>
+                        </div>
+                      </ControlledField>
+                    )}
+                  />
+                </FieldGroup>
+              </CardContent>
+            </Card>
+          </DiscordMessageContext.Provider>
+        </PlaceholderContext.Provider>
         <FormDevTool />
         <FormChangePublisher />
       </form>

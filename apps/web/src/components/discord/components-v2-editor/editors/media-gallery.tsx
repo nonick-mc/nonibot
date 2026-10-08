@@ -17,6 +17,7 @@ import {
   useFieldArray,
   useFormContext,
 } from 'react-hook-form';
+import { PlaceholderPickerButton } from '@/components/placeholder/placeholder-picker-button';
 import { Sortable, SortableItem, SortableItemHandle } from '@/components/reui/sortable';
 import {
   ControlledField,
@@ -30,7 +31,6 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { useComponentEditorContext } from '../context';
 import { DebouncedUrlInput } from '../debounced-url-input';
 import { EditorCard } from '../editor-card';
-import { PlaceholderPickerButton } from '../placeholder-picker-button';
 
 export function MediaGalleryEditor() {
   const form = useFormContext();

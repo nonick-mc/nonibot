@@ -3,9 +3,9 @@
 import type { Placeholder } from '@repo/placeholders';
 import { ImageIcon } from 'lucide-react';
 import { useContext } from 'react';
+import { PlaceholderContext } from '@/components/placeholder/placeholder-context';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
-import { DiscordMessageContext } from '../message-context';
 
 const PlaceHolderRegex = /^\{\{\s*(\w+)\s*\}\}$/;
 
@@ -24,7 +24,7 @@ type DiscordImageProps = {
 };
 
 export function DiscordImage({ src, alt, className, spoiler }: DiscordImageProps) {
-  const { placeholders } = useContext(DiscordMessageContext);
+  const { placeholders } = useContext(PlaceholderContext);
 
   const placeholder = resolveUrlPlaceholder(src, placeholders);
   const isUrlPlaceholder = placeholder !== undefined;

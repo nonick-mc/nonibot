@@ -14,13 +14,14 @@ import { useRef } from 'react';
 import { FormProvider, useForm, useWatch, Watch } from 'react-hook-form';
 import { toast } from 'sonner';
 import type { z } from 'zod';
-import { PlaceholderPickerButton } from '@/components/discord/components-v2-editor/placeholder-picker-button';
 import {
   DiscordMessageContext,
   type DiscordMessageContextValue,
 } from '@/components/discord/message-context';
 import { DiscordMessage } from '@/components/discord/preview/message';
 import { FormChangePublisher, FormDevTool } from '@/components/form';
+import { PlaceholderContext } from '@/components/placeholder/placeholder-context';
+import { PlaceholderPickerButton } from '@/components/placeholder/placeholder-picker-button';
 import { Badge } from '@/components/reui/badge';
 import { ControlledButton } from '@/components/rhf/button';
 import { ControlledComponentsV2EditorDialog } from '@/components/rhf/components-v2-editor-dialog';
@@ -111,7 +112,7 @@ export function SettingForm({
           </CardHeader>
           <CardContent>
             <FieldGroup>
-              <DiscordMessageContext.Provider
+              <PlaceholderContext.Provider
                 value={{ placeholders: autoCreateThreadNamePlaceholders }}
               >
                 <ControlledField
@@ -137,7 +138,7 @@ export function SettingForm({
                     </InputGroupAddon>
                   </InputGroup>
                 </ControlledField>
-              </DiscordMessageContext.Provider>
+              </PlaceholderContext.Provider>
               <FieldSeparator />
               <ControlledField
                 control={control}
@@ -207,84 +208,85 @@ export function SettingForm({
             </FieldGroup>
           </CardContent>
         </Card>
-        <DiscordMessageContext.Provider
-          value={{
-            roles: roles.filter((role) => role.id !== rule.guildId),
-            channels,
-            emojis,
-            placeholders: autoCreateThreadMessagePlaceholders,
-            componentActions: autoCreateThreadActions,
-          }}
-        >
-          <Card className='bg-card/50'>
-            <CardHeader>
-              <CardTitle className='inline-flex gap-2 items-center'>
-                メッセージ設定
-                <Badge>New</Badge>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <FieldGroup>
-                <ControlledField
-                  control={control}
-                  name='messageEnabled'
-                  orientation='horizontal'
-                  disabled={fieldsDisabled}
-                >
-                  <FieldContent>
-                    <ControlledFieldLabel>
-                      スレッド作成後にメッセージを送信する
-                    </ControlledFieldLabel>
-                    <ControlledFieldError />
-                  </FieldContent>
-                  <ControlledSwitch />
-                </ControlledField>
-                <FieldSeparator />
-                <ControlledField
-                  control={control}
-                  name='messageComponents'
-                  orientation='responsive'
-                  disabled={messageDisabled}
-                >
-                  <FieldContent>
-                    <ControlledFieldLabel>メッセージ</ControlledFieldLabel>
-                    <FieldDescription>
-                      スレッドに送信されるメッセージをカスタマイズします。
-                    </FieldDescription>
-                  </FieldContent>
-                  <div className='sm:flex-1 flex flex-col gap-2'>
-                    <Watch
-                      control={control}
-                      name='messageComponents'
-                      render={(messageComponents) => (
-                        <div
-                          className={cn(
-                            'max-sm:p-4 p-6 bg-discord-background border rounded-lg max-h-100 overflow-y-auto scroll-fade-y no-scrollbar',
-                            { 'opacity-50': messageDisabled },
-                          )}
-                        >
-                          <DiscordMessage
-                            components={messageComponents ?? []}
-                            username='nonibot'
-                            avatarUrl={Links.AvatarUrl}
-                            showAppTag
-                            verified
-                          />
-                        </div>
-                      )}
-                    />
-                    <ControlledComponentsV2EditorDialog>
-                      <ControlledButton variant='outline' className='w-full'>
-                        <PencilIcon />
-                        メッセージを編集
-                      </ControlledButton>
-                    </ControlledComponentsV2EditorDialog>
-                  </div>
-                </ControlledField>
-              </FieldGroup>
-            </CardContent>
-          </Card>
-        </DiscordMessageContext.Provider>
+        <PlaceholderContext.Provider value={{ placeholders: autoCreateThreadMessagePlaceholders }}>
+          <DiscordMessageContext.Provider
+            value={{
+              roles: roles.filter((role) => role.id !== rule.guildId),
+              channels,
+              emojis,
+              componentActions: autoCreateThreadActions,
+            }}
+          >
+            <Card className='bg-card/50'>
+              <CardHeader>
+                <CardTitle className='inline-flex gap-2 items-center'>
+                  メッセージ設定
+                  <Badge>New</Badge>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <FieldGroup>
+                  <ControlledField
+                    control={control}
+                    name='messageEnabled'
+                    orientation='horizontal'
+                    disabled={fieldsDisabled}
+                  >
+                    <FieldContent>
+                      <ControlledFieldLabel>
+                        スレッド作成後にメッセージを送信する
+                      </ControlledFieldLabel>
+                      <ControlledFieldError />
+                    </FieldContent>
+                    <ControlledSwitch />
+                  </ControlledField>
+                  <FieldSeparator />
+                  <ControlledField
+                    control={control}
+                    name='messageComponents'
+                    orientation='responsive'
+                    disabled={messageDisabled}
+                  >
+                    <FieldContent>
+                      <ControlledFieldLabel>メッセージ</ControlledFieldLabel>
+                      <FieldDescription>
+                        スレッドに送信されるメッセージをカスタマイズします。
+                      </FieldDescription>
+                    </FieldContent>
+                    <div className='sm:flex-1 flex flex-col gap-2'>
+                      <Watch
+                        control={control}
+                        name='messageComponents'
+                        render={(messageComponents) => (
+                          <div
+                            className={cn(
+                              'max-sm:p-4 p-6 bg-discord-background border rounded-lg max-h-100 overflow-y-auto scroll-fade-y no-scrollbar',
+                              { 'opacity-50': messageDisabled },
+                            )}
+                          >
+                            <DiscordMessage
+                              components={messageComponents ?? []}
+                              username='nonibot'
+                              avatarUrl={Links.AvatarUrl}
+                              showAppTag
+                              verified
+                            />
+                          </div>
+                        )}
+                      />
+                      <ControlledComponentsV2EditorDialog>
+                        <ControlledButton variant='outline' className='w-full'>
+                          <PencilIcon />
+                          メッセージを編集
+                        </ControlledButton>
+                      </ControlledComponentsV2EditorDialog>
+                    </div>
+                  </ControlledField>
+                </FieldGroup>
+              </CardContent>
+            </Card>
+          </DiscordMessageContext.Provider>
+        </PlaceholderContext.Provider>
         <Card className='bg-card/50'>
           <CardHeader>
             <CardTitle>例外設定</CardTitle>
