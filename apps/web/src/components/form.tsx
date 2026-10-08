@@ -1,7 +1,7 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { InfoIcon, SaveIcon, TrashIcon } from 'lucide-react';
+import { InfoIcon, SaveIcon } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useFormContext, useFormState } from 'react-hook-form';
 import { Button } from '@/components/ui/button';

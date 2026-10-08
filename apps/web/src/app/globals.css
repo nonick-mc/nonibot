@@ -64,6 +64,8 @@
   --color-discord-primary: var(--discord-primary);
   --color-discord-card: var(--discord-card);
   --color-discord-spoiler: var(--discord-spoiler);
+  --color-discord-success: var(--discord-success);
+  --color-discord-danger: var(--discord-danger);
 }
 
 :root {
@@ -110,6 +112,8 @@
   --foreground: oklch(0.145 0 0);
   --discord-background: rgb(250.77, 250.77, 250.77);
   --discord-primary: rgb(88 101 242);
+  --discord-success: rgb(1 133 69);
+  --discord-danger: rgb(210 45 58);
   --discord-card: rgb(254.75, 254.75, 254.75);
   --discord-spoiler: rgb(143.77, 144.15, 151.36);
 }

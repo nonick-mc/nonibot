@@ -7,10 +7,9 @@ import { type APIGuildChannel, ChannelType, type GuildChannelType } from 'discor
 import { PencilIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { Controller, FormProvider, useForm, Watch } from 'react-hook-form';
+import { FormProvider, useForm, Watch } from 'react-hook-form';
 import { toast } from 'sonner';
 import type { z } from 'zod';
-import { ComponentsV2EditorDialog } from '@/components/discord/components-v2-editor/dialog';
 import {
   DiscordMessageContext,
   type DiscordMessageContextValue,

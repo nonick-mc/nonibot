@@ -22,6 +22,7 @@ type RoleSelectCommonProps = {
   items: APIRole[];
   name?: string;
   disabled?: boolean;
+  disabledItemFilter?: (value: APIRole) => boolean;
   invalid?: boolean;
   className?: string;
 };
@@ -51,6 +52,7 @@ function RoleSelectMultiple({
   onChange,
   name,
   disabled,
+  disabledItemFilter,
   invalid,
   className,
 }: RoleSelectMultipleProps) {
@@ -88,7 +90,7 @@ function RoleSelectMultiple({
         <ComboboxEmpty>ロールが見つかりません</ComboboxEmpty>
         <ComboboxList>
           {items.map((role) => (
-            <ComboboxItem key={role.id} value={role}>
+            <ComboboxItem key={role.id} value={role} disabled={disabledItemFilter?.(role)}>
               <RoleColor colors={role.colors} />
               <span className='truncate'>{role.name}</span>
             </ComboboxItem>
@@ -105,6 +107,7 @@ function RoleSelectSingle({
   onChange,
   name,
   disabled,
+  disabledItemFilter,
   invalid,
   className,
 }: RoleSelectSingleProps) {
@@ -142,7 +145,7 @@ function RoleSelectSingle({
         <ComboboxEmpty>ロールが見つかりません</ComboboxEmpty>
         <ComboboxList>
           {items.map((role) => (
-            <ComboboxItem key={role.id} value={role}>
+            <ComboboxItem key={role.id} value={role} disabled={disabledItemFilter?.(role)}>
               <RoleColor colors={role.colors} />
               <span className='truncate'>{role.name}</span>
             </ComboboxItem>

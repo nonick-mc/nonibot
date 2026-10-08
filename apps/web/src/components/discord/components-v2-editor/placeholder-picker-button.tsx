@@ -1,7 +1,8 @@
 'use client';
 
-import { BracesIcon, LinkIcon } from 'lucide-react';
-import { type RefObject, useContext, useState } from 'react';
+import type { PlaceholderType } from '@repo/placeholders';
+import { AtSignIcon, BracesIcon, LinkIcon } from 'lucide-react';
+import { type ReactNode, type RefObject, useContext, useState } from 'react';
 import { Badge } from '@/components/reui/badge';
 import {
   DropdownMenu,
@@ -41,19 +42,25 @@ export function useTextInputInsert(inputRef: TextInputRef, mode: TextInputInsert
   return { open, setOpen, handleSelect, handleOpenChangeComplete };
 }
 
+const PlaceholderIcons = {
+  text: <BracesIcon />,
+  mention: <AtSignIcon />,
+  url: <LinkIcon />,
+} satisfies Record<PlaceholderType, ReactNode>;
+
 type PlaceholderPickerButtonProps = {
   inputRef: TextInputRef;
-  urlOnly?: boolean;
+  types?: PlaceholderType[];
   mode?: TextInputInsertMode;
 };
 
-export function PlaceholderPickerButton({ inputRef, urlOnly, mode }: PlaceholderPickerButtonProps) {
+export function PlaceholderPickerButton({ inputRef, types, mode }: PlaceholderPickerButtonProps) {
   const { placeholders } = useContext(DiscordMessageContext);
   const { open, setOpen, handleSelect, handleOpenChangeComplete } = useTextInputInsert(
     inputRef,
     mode,
   );
-  const items = urlOnly ? placeholders?.filter((p) => p.isUrl) : placeholders;
+  const items = types ? placeholders?.filter((p) => types.includes(p.type)) : placeholders;
 
   if (!items?.length) return null;
 
@@ -73,11 +80,11 @@ export function PlaceholderPickerButton({ inputRef, urlOnly, mode }: Placeholder
       </Tooltip>
       <DropdownMenuContent align='end' className='min-w-64'>
         <DropdownMenuGroup>
-          {items.map(({ key, description, isUrl, deprecated }) => (
+          {items.map(({ key, description, type, deprecated }) => (
             <DropdownMenuItem key={key} onClick={() => handleSelect(`{{${key}}}`)}>
               <Item size='xs'>
                 <ItemMedia className='self-center! text-muted-foreground'>
-                  {isUrl ? <LinkIcon /> : <BracesIcon />}
+                  {PlaceholderIcons[type]}
                 </ItemMedia>
                 <ItemContent>
                   <ItemTitle className='inline-flex font-mono gap-2'>

@@ -1,3 +1,9 @@
 {
-  "pages": ["join-message", "leave-message", "report", "log"]
+  "pages": [
+    "join-message",
+    "leave-message",
+    "report",
+    "log",
+    "auto-create-thread"
+  ]
 }

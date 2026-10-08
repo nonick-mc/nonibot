@@ -1,6 +1,7 @@
 'use client';
 
-import { useSelectedLayoutSegments } from 'next/navigation';
+import type { Route } from 'next';
+import Link from 'next/link';
 import { Fragment } from 'react';
 import {
   Breadcrumb,
@@ -12,60 +13,79 @@ import {
 } from '@/components/ui/breadcrumb';
 import { SidebarNavigationItems } from './sidebar-navigation-items';
 
-export function NavbarBreadcrumb() {
-  const segments = useSelectedLayoutSegments().filter((s) => !s.startsWith('('));
+type NavbarBreadcrumbProps = {
+  guildId: string;
+  segments: string[];
+  /** 末尾に追加するラベル（動的な子ページの名前など） */
+  current?: string;
+};
 
-  const getBreadcrumbItems = () => {
-    const items: string[] = [];
+type BreadcrumbEntry = {
+  title: string;
+  href?: string;
+};
 
-    for (const group of SidebarNavigationItems) {
-      for (const item of group.items) {
-        if (item.key && segments[0] === item.key) {
-          items.push(group.title);
-          items.push(item.title);
+function getBreadcrumbItems(guildId: string, segments: string[]) {
+  const items: BreadcrumbEntry[] = [];
 
-          // サブアイテムのチェック
-          if (item.subitems && segments[1]) {
-            const subitem = item.subitems.find((sub) => sub.key === segments[1]);
-            if (subitem) {
-              items.push(subitem.title);
-            }
+  for (const group of SidebarNavigationItems) {
+    for (const item of group.items) {
+      if (item.key && segments[0] === item.key) {
+        items.push({ title: group.title });
+        items.push({ title: item.title, href: item.url(guildId) });
+
+        // サブアイテムのチェック
+        if (item.subitems && segments[1]) {
+          const subitem = item.subitems.find((sub) => sub.key === segments[1]);
+          if (subitem) {
+            items.push({ title: subitem.title });
           }
-          return items;
         }
+        return items;
       }
     }
+  }
 
-    // キーがない場合はグループ名のみ追加
-    if (segments.length === 0) {
-      const firstGroup = SidebarNavigationItems[0];
-      items.push(firstGroup?.title ?? '');
-      const firstItem = firstGroup?.items[0];
-      items.push(firstItem?.title ?? '');
-    }
+  // キーがない場合はグループ名のみ追加
+  if (segments.length === 0) {
+    const firstGroup = SidebarNavigationItems[0];
+    items.push({ title: firstGroup?.title ?? '' });
+    const firstItem = firstGroup?.items[0];
+    items.push({ title: firstItem?.title ?? '' });
+  }
 
-    return items;
-  };
+  return items;
+}
 
-  const breadcrumbItems = getBreadcrumbItems();
+export function NavbarBreadcrumb({ guildId, segments, current }: NavbarBreadcrumbProps) {
+  const breadcrumbItems = getBreadcrumbItems(guildId, segments);
+  if (current) {
+    breadcrumbItems.push({ title: current });
+  }
 
   return (
     <Breadcrumb>
       <BreadcrumbList>
         {breadcrumbItems.map((item, index) => {
-          const itemKey = `${item}-${index}`;
+          const itemKey = `${item.title}-${index}`;
           return (
             <Fragment key={itemKey}>
               {index < breadcrumbItems.length - 1 ? (
                 <>
                   <BreadcrumbItem className='hidden md:block'>
-                    <BreadcrumbLink>{item}</BreadcrumbLink>
+                    {item.href ? (
+                      <BreadcrumbLink render={<Link href={item.href as Route} />}>
+                        {item.title}
+                      </BreadcrumbLink>
+                    ) : (
+                      <BreadcrumbLink>{item.title}</BreadcrumbLink>
+                    )}
                   </BreadcrumbItem>
                   <BreadcrumbSeparator className='hidden md:block' />
                 </>
               ) : (
                 <BreadcrumbItem>
-                  <BreadcrumbPage>{item}</BreadcrumbPage>
+                  <BreadcrumbPage>{item.title}</BreadcrumbPage>
                 </BreadcrumbItem>
               )}
             </Fragment>

@@ -1,6 +1,7 @@
 import { ComponentType } from 'discord-api-types/v10';
 import { useWatch } from 'react-hook-form';
 import { ComponentEditorContext } from '../context';
+import { ActionRowEditor } from './action-row';
 import { ContainerEditor } from './container';
 import { MediaGalleryEditor } from './media-gallery';
 import { SectionEditor } from './section';
@@ -29,6 +30,8 @@ export function ComponentEditorByType({ name, index, onRemove }: ComponentEditor
         return <SectionEditor />;
       case ComponentType.Container:
         return <ContainerEditor />;
+      case ComponentType.ActionRow:
+        return <ActionRowEditor />;
       default:
         return null;
     }

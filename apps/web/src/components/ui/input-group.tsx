@@ -52,7 +52,11 @@ function InputGroupAddon({
       data-align={align}
       className={cn(inputGroupAddonVariants({ align }), className)}
       onClick={(e) => {
-        if ((e.target as HTMLElement).closest('button')) {
+        // ポータル内 (Popover等) からReactツリー経由でバブリングしたクリックは無視する
+        if (
+          !e.currentTarget.contains(e.target as Node) ||
+          (e.target as HTMLElement).closest('button')
+        ) {
           return;
         }
         e.currentTarget.parentElement?.querySelector('input')?.focus();
@@ -62,19 +66,22 @@ function InputGroupAddon({
   );
 }
 
-const inputGroupButtonVariants = cva('flex items-center gap-2 rounded-xl text-sm shadow-none disabled:opacity-100', {
-  variants: {
-    size: {
-      xs: "h-6 gap-1 px-1.5 [&>svg:not([class*='size-'])]:size-3.5",
-      sm: '',
-      'icon-xs': 'size-6 p-0 has-[>svg]:p-0',
-      'icon-sm': 'size-8 p-0 has-[>svg]:p-0',
+const inputGroupButtonVariants = cva(
+  'flex items-center gap-2 rounded-xl text-sm shadow-none disabled:opacity-100',
+  {
+    variants: {
+      size: {
+        xs: "h-6 gap-1 px-1.5 [&>svg:not([class*='size-'])]:size-3.5",
+        sm: '',
+        'icon-xs': 'size-6 p-0 has-[>svg]:p-0',
+        'icon-sm': 'size-8 p-0 has-[>svg]:p-0',
+      },
+    },
+    defaultVariants: {
+      size: 'xs',
     },
   },
-  defaultVariants: {
-    size: 'xs',
-  },
-});
+);
 
 function InputGroupButton({
   className,

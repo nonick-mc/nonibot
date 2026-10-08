@@ -17,3 +17,7 @@ export async function createAttachment(attachments: Collection<string, Attachmen
 export function createJsonAttachment(data: unknown, name: string) {
   return new AttachmentBuilder(Buffer.from(JSON.stringify(data, null, 2)), { name });
 }
+
+export function pad(n: number) {
+  return n.toString().padStart(2, '0');
+}

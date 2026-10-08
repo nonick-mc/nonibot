@@ -8,8 +8,9 @@ import {
   ImagesIcon,
   LayoutListIcon,
   MinusIcon,
+  PaletteIcon,
   PlusIcon,
-  SettingsIcon,
+  RectangleEllipsisIcon,
   TypeIcon,
   XIcon,
 } from 'lucide-react';
@@ -140,12 +141,13 @@ export function ContainerEditor() {
 
   return (
     <EditorCard
+      withSortableItemHandle
       icon={BoxIcon}
       title='コンテナ'
       headerActions={
         <Popover>
           <PopoverTrigger render={<Button variant='ghost' size='icon-sm' />}>
-            <SettingsIcon />
+            <PaletteIcon />
           </PopoverTrigger>
           <PopoverContent>
             <FieldGroup className='gap-5'>
@@ -252,6 +254,12 @@ export function ContainerEditor() {
                 >
                   <MinusIcon />
                   区切り線
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => append(defaultComponentValues[ComponentType.ActionRow])}
+                >
+                  <RectangleEllipsisIcon />
+                  アクション行
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

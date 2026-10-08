@@ -42,7 +42,7 @@ export function MediaGalleryEditor() {
   });
 
   return (
-    <EditorCard icon={ImagesIcon} title='ギャラリー'>
+    <EditorCard withSortableItemHandle icon={ImagesIcon} title='ギャラリー'>
       <div className='flex flex-col gap-4'>
         <ControlledFieldProvider control={form.control} name={`${basePath}.items`}>
           <ControlledFieldError />
@@ -117,7 +117,7 @@ function MediaGalleryItemUrlField({ control, basePath, itemIndex }: MediaGallery
         </InputGroupAddon>
         <InputGroupAddon align='inline-end'>
           <div className='flex items-center gap-0.5'>
-            <PlaceholderPickerButton inputRef={urlRef} urlOnly mode='replace' />
+            <PlaceholderPickerButton inputRef={urlRef} types={['url']} mode='replace' />
             <Tooltip>
               <Controller
                 control={control}

@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Links } from '@repo/shared';
-import { APIEmoji, ComponentType, type RESTGetAPIGuildEmojisResult } from 'discord-api-types/v10';
+import { ComponentType } from 'discord-api-types/v10';
 import {
   BoxIcon,
   EyeIcon,
@@ -9,6 +9,7 @@ import {
   MinusIcon,
   PencilIcon,
   PlusIcon,
+  RectangleEllipsisIcon,
   SaveIcon,
   TypeIcon,
 } from 'lucide-react';
@@ -56,11 +57,14 @@ export function ComponentsV2EditorDialog({
 }: ComponentsV2EditorModalProps) {
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'editor' | 'preview'>('editor');
-  const { placeholders } = useContext(DiscordMessageContext);
+  const { placeholders, componentActions } = useContext(DiscordMessageContext);
 
   const schema = useMemo(
-    () => z.object({ components: createMessageUserComponentsSchema(placeholders) }),
-    [placeholders],
+    () =>
+      z.object({
+        components: createMessageUserComponentsSchema(placeholders, componentActions),
+      }),
+    [placeholders, componentActions],
   );
 
   const form = useForm({
@@ -124,7 +128,7 @@ export function ComponentsV2EditorDialog({
             />
             <div
               className={cn(
-                'flex-1 flex flex-col max-sm:p-4 p-6 bg-discord-background border rounded-xl',
+                'flex-1 min-w-0 flex flex-col max-sm:p-4 p-6 bg-discord-background border rounded-xl',
                 activeTab === 'editor' && 'max-md:hidden',
               )}
             >
@@ -183,6 +187,12 @@ export function ComponentsV2EditorDialog({
                 >
                   <MinusIcon />
                   区切り線
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => append(defaultComponentValues[ComponentType.ActionRow])}
+                >
+                  <RectangleEllipsisIcon />
+                  アクション行
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => append(defaultComponentValues[ComponentType.Container])}

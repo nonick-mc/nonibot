@@ -30,6 +30,7 @@ type ChannelSelectProps = {
   onChange?: (value: string | null) => void;
   name?: string;
   disabled?: boolean;
+  disabledItemFilter?: (value: APIGuildChannel<GuildChannelType>) => boolean;
   invalid?: boolean;
   includeTypes?: ChannelType[];
   excludeTypes?: ChannelType[];
@@ -42,6 +43,7 @@ export function ChannelSelect({
   onChange,
   name,
   disabled,
+  disabledItemFilter,
   invalid,
   includeTypes,
   excludeTypes,
@@ -102,7 +104,11 @@ export function ChannelSelect({
       </div>
       <ComboboxContent anchor={anchor}>
         <ComboboxEmpty>チャンネルが見つかりません</ComboboxEmpty>
-        <ChannelComboboxList categories={categories} isCategorySelectable={isCategorySelectable} />
+        <ChannelComboboxList
+          categories={categories}
+          isCategorySelectable={isCategorySelectable}
+          disabledItemFilter={disabledItemFilter}
+        />
       </ComboboxContent>
     </Combobox>
   );
@@ -111,9 +117,14 @@ export function ChannelSelect({
 type ChannelComboboxListProps = {
   categories: APIGuildCategoryChannel[];
   isCategorySelectable: boolean;
+  disabledItemFilter?: (value: APIGuildChannel<GuildChannelType>) => boolean;
 };
 
-function ChannelComboboxList({ categories, isCategorySelectable }: ChannelComboboxListProps) {
+function ChannelComboboxList({
+  categories,
+  isCategorySelectable,
+  disabledItemFilter,
+}: ChannelComboboxListProps) {
   const filteredItems = useComboboxFilteredItems<APIGuildChannel<GuildChannelType>>();
 
   const { groupedChannels, uncategorized } = useMemo(
@@ -124,7 +135,7 @@ function ChannelComboboxList({ categories, isCategorySelectable }: ChannelCombob
   return (
     <ComboboxList>
       {uncategorized.map((ch) => (
-        <ComboboxItem key={ch.id} value={ch}>
+        <ComboboxItem key={ch.id} value={ch} disabled={disabledItemFilter?.(ch)}>
           <ChannelTypeIcon type={ch.type} />
           {ch.name}
         </ComboboxItem>
@@ -138,7 +149,7 @@ function ChannelComboboxList({ categories, isCategorySelectable }: ChannelCombob
             <ComboboxGroup>
               <ComboboxLabel>{category.name}</ComboboxLabel>
               {channels.map((ch) => (
-                <ComboboxItem key={ch.id} value={ch}>
+                <ComboboxItem key={ch.id} value={ch} disabled={disabledItemFilter?.(ch)}>
                   <ChannelTypeIcon type={ch.type} />
                   {ch.name}
                 </ComboboxItem>

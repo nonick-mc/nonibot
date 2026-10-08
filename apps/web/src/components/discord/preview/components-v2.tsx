@@ -7,6 +7,7 @@ import type { MessageUserComponentsSchema } from '@/lib/discord/zod';
 import { cn } from '@/lib/utils';
 import { Separator as ShadcnSeparator } from '../../ui/separator';
 import { DiscordMessageContext } from '../message-context';
+import { DiscordButton } from './button';
 import { DiscordImage, resolveUrlPlaceholder } from './image';
 import { DiscordMarkdown } from './markdown';
 
@@ -26,22 +27,44 @@ export function TextDisplay({ component }: ComponentProps<ComponentType.TextDisp
 }
 
 export function Section({ component }: ComponentProps<ComponentType.Section>) {
+  const isSingleLine =
+    component.components.length === 1 && !component.components[0].content.includes('\n');
+  const centerAccessory = isSingleLine && component.accessory?.type === ComponentType.Button;
+
+  const accessory = (() => {
+    switch (component.accessory?.type) {
+      case ComponentType.Button:
+        return (
+          <DiscordButton
+            className='shrink-0'
+            buttonStyle={component.accessory.style}
+            label={component.accessory.label}
+            emoji={component.accessory.emoji}
+          />
+        );
+      case ComponentType.Thumbnail:
+        return (
+          <DiscordImage
+            src={component.accessory.media.url}
+            alt={component.accessory.description ?? undefined}
+            spoiler={component.accessory.spoiler}
+            className='size-21.25 shrink-0'
+          />
+        );
+      default:
+        return null;
+    }
+  })();
+
   return (
-    <div className='flex items-start gap-4'>
+    <div className={cn('flex gap-3', centerAccessory ? 'items-center' : 'items-start')}>
       <div className='flex flex-1 min-w-0 flex-col gap-1 leading-snug'>
         {component.components.map((textComp, i) => (
           // biome-ignore lint/suspicious/noArrayIndexKey: There are no usable elements other than the index
           <DiscordMarkdown key={i} content={textComp.content} />
         ))}
       </div>
-      {component.accessory.media.url && (
-        <DiscordImage
-          src={component.accessory.media.url}
-          alt={component.accessory.description ?? undefined}
-          spoiler={component.accessory.spoiler}
-          className='size-21.25 shrink-0'
-        />
-      )}
+      {accessory}
     </div>
   );
 }
@@ -113,9 +136,34 @@ export function Separator({ component }: ComponentProps<ComponentType.Separator>
   );
 }
 
+export function ActionRow({ component }: ComponentProps<ComponentType.ActionRow>) {
+  return (
+    <div className='flex flex-wrap gap-2'>
+      {component.components.map((child, i) => {
+        switch (child.type) {
+          case ComponentType.Button:
+            return (
+              <DiscordButton
+                // biome-ignore lint/suspicious/noArrayIndexKey: There are no usable elements other than the index
+                key={i}
+                buttonStyle={child.style}
+                label={child.label}
+                emoji={child.emoji}
+              />
+            );
+          default:
+            return null;
+        }
+      })}
+    </div>
+  );
+}
+
 export function Container({ component }: ComponentProps<ComponentType.Container>) {
   const accentColor = component.accent_color;
   const hasAccent = accentColor != null;
+
+  if (!component.components.length) return null;
 
   return (
     <div className='relative overflow-hidden rounded-lg border bg-discord-card'>
@@ -160,6 +208,8 @@ export function ComponentV2({ component }: { component: PreviewComponent }) {
       return <Separator component={component} />;
     case ComponentType.Container:
       return <Container component={component} />;
+    case ComponentType.ActionRow:
+      return <ActionRow component={component} />;
     default:
       return null;
   }

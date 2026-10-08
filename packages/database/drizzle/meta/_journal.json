@@ -232,6 +232,20 @@
       "when": 1789368402759,
       "tag": "0032_discord_dummy_email",
       "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "7",
+      "when": 1790911914469,
+      "tag": "0033_bizarre_firestar",
+      "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "7",
+      "when": 1791186124160,
+      "tag": "0034_even_maria_hill",
+      "breakpoints": true
     }
   ]
 }

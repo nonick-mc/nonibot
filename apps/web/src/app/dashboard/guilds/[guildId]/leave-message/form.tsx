@@ -3,18 +3,12 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { leaveMessagePlaceholders } from '@repo/placeholders';
 import { Links } from '@repo/shared';
-import {
-  type APIGuildChannel,
-  ChannelType,
-  ComponentType,
-  type GuildChannelType,
-} from 'discord-api-types/v10';
+import { type APIGuildChannel, ChannelType, type GuildChannelType } from 'discord-api-types/v10';
 import { PencilIcon } from 'lucide-react';
 import { useParams } from 'next/navigation';
-import { Controller, FormProvider, useForm, Watch } from 'react-hook-form';
+import { FormProvider, useForm, Watch } from 'react-hook-form';
 import { toast } from 'sonner';
 import type z from 'zod';
-import { ComponentsV2EditorDialog } from '@/components/discord/components-v2-editor/dialog';
 import {
   DiscordMessageContext,
   type DiscordMessageContextValue,
@@ -30,7 +24,6 @@ import {
   ControlledFieldLabel,
 } from '@/components/rhf/field';
 import { ControlledSwitch } from '@/components/rhf/switch';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FieldContent, FieldDescription, FieldGroup, FieldSeparator } from '@/components/ui/field';
 import { cn } from '@/lib/utils';

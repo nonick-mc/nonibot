@@ -1,5 +1,10 @@
 import type { Placeholder } from '@repo/placeholders';
-import { ComponentType, SeparatorSpacingSize } from 'discord-api-types/v10';
+import {
+  type AllowedComponent,
+  collectInteractiveComponents,
+  isAllowedComponent,
+} from '@repo/shared';
+import { ButtonStyle, ComponentType, SeparatorSpacingSize } from 'discord-api-types/v10';
 import z from 'zod';
 import { countTotalComponents } from './utils';
 
@@ -16,20 +21,23 @@ function escapeRegExp(value: string) {
 }
 
 function createUrlOrPlaceholderSchema(placeholders?: Placeholder) {
-  const urlPlaceholderKeys = placeholders?.filter((p) => p.isUrl).map((p) => p.key) ?? [];
+  const urlPlaceholderKeys = placeholders?.filter((p) => p.type === 'url').map((p) => p.key) ?? [];
   const placeholderRegex = urlPlaceholderKeys.length
     ? new RegExp(`^\\{\\{\\s*(?:${urlPlaceholderKeys.map(escapeRegExp).join('|')})\\s*\\}\\}$`)
     : null;
 
   return z
-    .string()
+    .string({ error: '有効なURLを入力してください。' })
     .min(1, '有効なURLを入力してください。')
     .refine((value) => Boolean(placeholderRegex?.test(value)) || z.url().safeParse(value).success, {
       error: '有効なURLを入力してください。',
     });
 }
 
-function createUserComponentV2Schema(placeholders: Placeholder | undefined) {
+function createUserComponentV2Schema(
+  placeholders: Placeholder | undefined,
+  allowedComponents: readonly AllowedComponent[],
+) {
   const UnfurledMediaItem = z.object({
     url: createUrlOrPlaceholderSchema(placeholders),
   });
@@ -74,14 +82,90 @@ function createUserComponentV2Schema(placeholders: Placeholder | undefined) {
     spacing: z.enum(SeparatorSpacingSize).optional(),
   });
 
+  const ButtonBase = z.object({
+    type: z.literal(ComponentType.Button),
+    id: z.number().int().optional(),
+    label: z
+      .string()
+      .max(80)
+      .optional()
+      .transform((v) => v || undefined),
+    emoji: z
+      .object({
+        id: z.string().regex(SnowflakeRegex).optional(),
+        name: z.string().min(1),
+        animated: z.boolean().optional(),
+      })
+      .nullish()
+      .transform((v) => v ?? undefined),
+  });
+
+  const hasLabelOrEmoji = (v: { label?: string; emoji?: object }) => !!(v.label || v.emoji);
+  const hasLabelOrEmojiParams = {
+    error: 'ラベルまたは絵文字を設定してください。',
+    path: ['label'],
+  };
+
+  // custom_idは任意のインタラクションを実行できてしまうため、許可されたIDのみを受け付ける
+  const InteractiveButton = ButtonBase.extend({
+    style: z.union([
+      z.literal(ButtonStyle.Primary),
+      z.literal(ButtonStyle.Secondary),
+      z.literal(ButtonStyle.Success),
+      z.literal(ButtonStyle.Danger),
+    ]),
+    custom_id: z
+      .string({ error: 'アクションを選択してください。' })
+      .refine(
+        (customId) =>
+          isAllowedComponent(allowedComponents, { type: ComponentType.Button, customId }),
+        '許可されていないボタンです。',
+      ),
+  }).refine(hasLabelOrEmoji, hasLabelOrEmojiParams);
+
+  // URLボタンはインタラクションを発生させないため、custom_idの代わりにurlを持つ
+  const LinkButton = ButtonBase.extend({
+    style: z.literal(ButtonStyle.Link),
+    url: createUrlOrPlaceholderSchema(placeholders).max(512),
+  }).refine(hasLabelOrEmoji, hasLabelOrEmojiParams);
+
+  // スタイルで判別し、もう一方のフィールド (custom_idまたはurl) は取り除かれる
+  const Button = z.discriminatedUnion('style', [InteractiveButton, LinkButton]);
+
+  const ActionRow = z.object({
+    type: z.literal(ComponentType.ActionRow),
+    id: z.number().int().optional(),
+    // SelectMenuを追加する場合はunionに加える (SelectMenuは1行に1つまで)
+    components: z
+      .array(z.discriminatedUnion('type', [Button]))
+      .min(1, '要素が少なくとも1つ以上必要です。')
+      .max(5)
+      .refine((c) => c.every((x) => x.type === c[0]?.type), '同じ種類の要素のみ配置できます。'),
+  });
+
   const Section = z.object({
     type: z.literal(ComponentType.Section),
     id: z.number().int().optional(),
     components: z.array(TextDisplay).min(1, '要素が少なくとも1つ以上必要です。').max(3),
-    accessory: Thumbnail,
+    accessory: z
+      .discriminatedUnion('type', [Thumbnail, Button])
+      // エディターでは未設定をnullで表す (RHFはundefinedを初期値にフォールバックするため)
+      .nullable()
+      .transform((v, ctx) => {
+        if (v) return v;
+        ctx.addIssue({ code: 'custom', message: 'サムネイルまたはボタンを設定してください。' });
+        return z.NEVER;
+      }),
   });
 
-  const ComponentsInContainer = [Section, TextDisplay, MediaGallery, File, Separator] as const;
+  const ComponentsInContainer = [
+    Section,
+    TextDisplay,
+    MediaGallery,
+    File,
+    Separator,
+    ActionRow,
+  ] as const;
 
   const Container = z.object({
     type: z.literal(ComponentType.Container),
@@ -110,13 +194,21 @@ function createUserComponentV2Schema(placeholders: Placeholder | undefined) {
     File,
     Separator,
     Section,
+    Button,
+    ActionRow,
     Container,
     TopLevelComponent,
   };
 }
 
-export function createMessageUserComponentsSchema(placeholders?: Placeholder) {
-  const { TopLevelComponent } = createUserComponentV2Schema(placeholders);
+/**
+ * @param allowedComponents 設置を許可するインタラクティブコンポーネント。未指定の場合は設置できない。
+ */
+export function createMessageUserComponentsSchema(
+  placeholders?: Placeholder,
+  allowedComponents: readonly AllowedComponent[] = [],
+) {
+  const { TopLevelComponent } = createUserComponentV2Schema(placeholders, allowedComponents);
 
   return z
     .array(TopLevelComponent)
@@ -126,6 +218,16 @@ export function createMessageUserComponentsSchema(placeholders?: Placeholder) {
         ctx.addIssue({
           code: 'custom',
           message: '要素の合計が40を超えています',
+        });
+      }
+      // custom_idはコンポーネントの種類に関係なくメッセージ内で一意である必要がある
+      const interactives = collectInteractiveComponents(components);
+      for (const { customId, path } of interactives) {
+        if (interactives.filter((c) => c.customId === customId).length < 2) continue;
+        ctx.addIssue({
+          code: 'custom',
+          message: '同じ動作のコンポーネントを複数設置することはできません。',
+          path: [...path, 'custom_id'],
         });
       }
     });

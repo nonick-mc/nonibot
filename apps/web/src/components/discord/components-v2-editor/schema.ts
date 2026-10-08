@@ -2,14 +2,20 @@ import { ComponentType, SeparatorSpacingSize } from 'discord-api-types/v10';
 import type z from 'zod';
 import type { MessageUserComponentsSchema } from '@/lib/discord/zod';
 
-export const defaultComponentValues: Record<
-  | ComponentType.TextDisplay
-  | ComponentType.Section
-  | ComponentType.MediaGallery
-  | ComponentType.Separator
-  | ComponentType.Container,
-  z.input<MessageUserComponentsSchema>[number]
-> = {
+type Component = z.input<MessageUserComponentsSchema>[number];
+type Section = Extract<Component, { type: ComponentType.Section }>;
+type Thumbnail = Extract<Section['accessory'], { type: ComponentType.Thumbnail }>;
+
+export const defaultComponentValues: {
+  [K in
+    | ComponentType.TextDisplay
+    | ComponentType.Section
+    | ComponentType.MediaGallery
+    | ComponentType.Separator
+    | ComponentType.Container
+    | ComponentType.ActionRow
+    | ComponentType.Thumbnail]: Extract<Component | Thumbnail, { type: K }>;
+} = {
   [ComponentType.TextDisplay]: {
     type: ComponentType.TextDisplay,
     content: '',
@@ -17,11 +23,7 @@ export const defaultComponentValues: Record<
   [ComponentType.Section]: {
     type: ComponentType.Section,
     components: [],
-    accessory: {
-      type: ComponentType.Thumbnail,
-      media: { url: '' },
-      spoiler: false,
-    },
+    accessory: null,
   },
   [ComponentType.MediaGallery]: {
     type: ComponentType.MediaGallery,
@@ -37,5 +39,14 @@ export const defaultComponentValues: Record<
     accent_color: null,
     spoiler: false,
     components: [],
+  },
+  [ComponentType.ActionRow]: {
+    type: ComponentType.ActionRow,
+    components: [],
+  },
+  [ComponentType.Thumbnail]: {
+    type: ComponentType.Thumbnail,
+    media: { url: '' },
+    spoiler: false,
   },
 };

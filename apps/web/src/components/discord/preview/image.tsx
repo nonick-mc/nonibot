@@ -13,7 +13,7 @@ const PlaceHolderRegex = /^\{\{\s*(\w+)\s*\}\}$/;
 export function resolveUrlPlaceholder(src: string, placeholders: Placeholder | undefined) {
   const key = PlaceHolderRegex.exec(src)?.[1];
   const placeholder = key ? placeholders?.find((v) => v.key === key) : undefined;
-  return placeholder?.isUrl ? placeholder : undefined;
+  return placeholder?.type === 'url' ? placeholder : undefined;
 }
 
 type DiscordImageProps = {
@@ -50,7 +50,7 @@ export function DiscordImage({ src, alt, className, spoiler }: DiscordImageProps
       ) : (
         // biome-ignore lint/performance/noImgElement: Users can specify an arbitrary image URL.
         <img
-          src={src}
+          src={src || undefined}
           alt={alt ?? ''}
           className={cn('block h-full w-full object-cover', spoiler && 'blur-2xl')}
         />
