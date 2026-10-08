@@ -6,6 +6,7 @@ import {
 } from '@repo/shared';
 import {
   type APIMessageTopLevelComponent,
+  ChannelType,
   Events,
   MessageFlags,
   type ThreadChannel,
@@ -21,6 +22,12 @@ export const signal = new Signal(Events.MessageCreate);
 
 execute(signal, async (message) => {
   if (!message.inGuild()) return;
+  if (
+    message.channel.type !== ChannelType.GuildText &&
+    message.channel.type !== ChannelType.GuildAnnouncement
+  )
+    return;
+  if (message.system) return;
   if (message.author.id === message.client.user.id) return;
 
   const rule = await db.query.autoCreateThreadRule.findFirst({

@@ -86,12 +86,14 @@ export function CreateRuleDialog({ channels, rules }: CreateRuleDialogProps) {
               <ControlledField control={form.control} name='channelId'>
                 <FieldContent>
                   <ControlledFieldLabel>スレッドを作成するチャンネル</ControlledFieldLabel>
-                  <FieldDescription>テキストチャンネルである必要があります。</FieldDescription>
+                  <FieldDescription>
+                    スレッドが作成可能なチャンネルである必要があります。
+                  </FieldDescription>
                   <ControlledFieldError />
                 </FieldContent>
                 <ControlledChannelSelect
                   items={channels}
-                  includeTypes={[ChannelType.GuildText]}
+                  includeTypes={[ChannelType.GuildText, ChannelType.GuildAnnouncement]}
                   disabledItemFilter={(channel) =>
                     rules.some((rule) => rule.channelId === channel.id)
                   }
