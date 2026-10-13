@@ -51,14 +51,8 @@ export const reportSetting = settingSchema.table('report', {
   channel: text('channel'),
   resolvedForumTag: text('resolved_forum_tag'),
   ignoredForumTag: text('ignored_forum_tag'),
-  messageCategories: jsonb('message_categories')
-    .array()
-    .$type<{ label: string }[]>()
-    .notNull(),
-  userCategories: jsonb('user_categories')
-    .array()
-    .$type<{ label: string }[]>()
-    .notNull(),
+  messageCategories: jsonb('message_categories').array().$type<{ label: string }[]>().notNull(),
+  userCategories: jsonb('user_categories').array().$type<{ label: string }[]>().notNull(),
   includeModerator: boolean('include_moderator').notNull(),
   ignoreRoles: text('ignore_roles').array().notNull(),
   showModerateLog: boolean('show_moderate_log').notNull(),

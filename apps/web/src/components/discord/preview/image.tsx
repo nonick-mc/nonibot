@@ -3,7 +3,7 @@
 import type { Placeholder } from '@repo/placeholders';
 import { ImageIcon } from 'lucide-react';
 import { useContext } from 'react';
-import { PlaceholderContext } from '@/components/placeholder/placeholder-context';
+import { PreviewResourcesContext } from './context';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 
@@ -24,7 +24,7 @@ type DiscordImageProps = {
 };
 
 export function DiscordImage({ src, alt, className, spoiler }: DiscordImageProps) {
-  const { placeholders } = useContext(PlaceholderContext);
+  const { placeholders } = useContext(PreviewResourcesContext);
 
   const placeholder = resolveUrlPlaceholder(src, placeholders);
   const isUrlPlaceholder = placeholder !== undefined;

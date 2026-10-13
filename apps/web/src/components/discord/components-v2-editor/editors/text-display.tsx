@@ -1,13 +1,10 @@
 'use client';
 
 import { AtSignIcon, BotIcon, HashIcon, SmileIcon, TypeIcon } from 'lucide-react';
-import { Fragment, type RefObject, useContext, useMemo, useRef } from 'react';
+import { Fragment, type RefObject, useMemo, useRef } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { DiscordEmojiPicker, DiscordEmojiPickerTrigger } from '@/components/discord/emoji-picker';
-import {
-  PlaceholderPickerButton,
-  useTextInputInsert,
-} from '@/components/placeholder/placeholder-picker-button';
+import { useTextInputInsert } from '@/components/placeholder/placeholder-picker-button';
 import { ControlledField, ControlledFieldError } from '@/components/rhf/field';
 import { ControlledInputGroupTextarea } from '@/components/rhf/input-group';
 import {
@@ -23,10 +20,11 @@ import { InputGroup, InputGroupAddon, InputGroupButton } from '@/components/ui/i
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { groupChannelsByCategory } from '@/lib/discord/utils';
 import { ChannelTypeIcon } from '../../channel-type-icon';
-import { DiscordMessageContext } from '../../message-context';
 import { RoleColor } from '../../role-color';
 import { useComponentEditorContext } from '../context';
 import { EditorCard } from '../editor-card';
+import { EditorPlaceholderPicker } from '../placeholder-picker';
+import { useEditorResources } from '../context';
 
 export function TextDisplayEditor() {
   const { control } = useFormContext();
@@ -40,7 +38,7 @@ export function TextDisplayEditor() {
           <ControlledInputGroupTextarea ref={textareaRef} placeholder='テキストを入力' />
           <InputGroupAddon align='block-end' className='flex items-center justify-end'>
             <div className='flex items-center gap-0.5'>
-              <PlaceholderPickerButton inputRef={textareaRef} />
+              <EditorPlaceholderPicker inputRef={textareaRef} />
               <ChannelMentionInsertButton textareaRef={textareaRef} />
               <RoleMentionInsertButton textareaRef={textareaRef} />
               <EmojiInsertButton textareaRef={textareaRef} />
@@ -58,7 +56,7 @@ type TextareaInsertComponentProps = {
 };
 
 function RoleMentionInsertButton({ textareaRef }: TextareaInsertComponentProps) {
-  const { roles } = useContext(DiscordMessageContext);
+  const { roles } = useEditorResources();
   const { open, setOpen, handleSelect, handleOpenChangeComplete } = useTextInputInsert(textareaRef);
 
   if (!roles) return null;
@@ -119,7 +117,7 @@ function RoleMentionInsertButton({ textareaRef }: TextareaInsertComponentProps) 
 }
 
 function ChannelMentionInsertButton({ textareaRef }: TextareaInsertComponentProps) {
-  const { channels } = useContext(DiscordMessageContext);
+  const { channels } = useEditorResources();
   const { open, setOpen, handleSelect, handleOpenChangeComplete } = useTextInputInsert(textareaRef);
 
   const { categories, groupedChannels, uncategorized } = useMemo(
@@ -178,7 +176,7 @@ function ChannelMentionInsertButton({ textareaRef }: TextareaInsertComponentProp
 }
 
 function EmojiInsertButton({ textareaRef }: TextareaInsertComponentProps) {
-  const { emojis } = useContext(DiscordMessageContext);
+  const { emojis } = useEditorResources();
   const { open, setOpen, handleSelect } = useTextInputInsert(textareaRef);
 
   return (

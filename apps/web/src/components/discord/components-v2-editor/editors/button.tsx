@@ -10,10 +10,9 @@ import {
   SmilePlusIcon,
   Trash2Icon,
 } from 'lucide-react';
-import { useContext, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { DiscordEmojiPicker, DiscordEmojiPickerTrigger } from '@/components/discord/emoji-picker';
-import { PlaceholderPickerButton } from '@/components/placeholder/placeholder-picker-button';
 import { ColorPicker, ColorPickerSwatches } from '@/components/reui/color-picker';
 import {
   ControlledField,
@@ -35,10 +34,11 @@ import { InputGroup, InputGroupAddon } from '@/components/ui/input-group';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { SelectContent, SelectGroup, SelectItem, SelectValue } from '@/components/ui/select';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { DiscordMessageContext } from '../../message-context';
 import { DiscordButtonEmoji } from '../../preview/button';
 import { ComponentEditorContext } from '../context';
 import { EditorCard } from '../editor-card';
+import { EditorPlaceholderPicker } from '../placeholder-picker';
+import { useEditorResources } from '../context';
 
 const ButtonStyleOptions = [
   { label: 'Primary', value: '#5865f2', style: ButtonStyle.Primary },
@@ -72,7 +72,7 @@ function ButtonStylePicker() {
 }
 
 export function useButtonActions() {
-  const { componentActions = [] } = useContext(DiscordMessageContext);
+  const { componentActions = [] } = useEditorResources();
   return componentActions.filter((action) => action.type === ComponentType.Button);
 }
 
@@ -103,7 +103,7 @@ function parseEmoji(value: string) {
 
 function EmojiField({ name }: { name: string }) {
   const { control } = useFormContext();
-  const { emojis } = useContext(DiscordMessageContext);
+  const { emojis } = useEditorResources();
   const [pickerOpen, setPickerOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const openPickerAfterMenuClose = useRef(false);
@@ -303,7 +303,7 @@ export function URLButtonEditor({ basePath, onRemove, withSortableItemHandle }: 
                 <LinkIcon />
               </InputGroupAddon>
               <InputGroupAddon align='inline-end'>
-                <PlaceholderPickerButton inputRef={urlRef} types={['url']} mode='replace' />
+                <EditorPlaceholderPicker inputRef={urlRef} types={['url']} mode='replace' />
               </InputGroupAddon>
             </InputGroup>
           </ControlledField>

@@ -3,7 +3,6 @@
 import { EyeIcon, EyeOffIcon, ImageIcon, LinkIcon } from 'lucide-react';
 import { useRef } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { PlaceholderPickerButton } from '@/components/placeholder/placeholder-picker-button';
 import {
   ControlledField,
   ControlledFieldError,
@@ -14,6 +13,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { ComponentEditorContext } from '../context';
 import { DebouncedUrlInput } from '../debounced-url-input';
 import { EditorCard } from '../editor-card';
+import { EditorPlaceholderPicker } from '../placeholder-picker';
 
 type ThumbnailEditorProps = {
   basePath: string;
@@ -49,7 +49,7 @@ export function ThumbnailEditor({
               <LinkIcon />
             </InputGroupAddon>
             <InputGroupAddon className='gap-0.5' align='inline-end'>
-              <PlaceholderPickerButton inputRef={urlRef} types={['url']} mode='replace' />
+              <EditorPlaceholderPicker inputRef={urlRef} types={['url']} mode='replace' />
               <Tooltip>
                 <Controller
                   control={control}

@@ -40,8 +40,10 @@ execute(signal, async (message) => {
     return;
 
   const threadName =
-    renderPlaceholders(rule.threadName, getAutoCreateThreadNamePlaceholderParams(message))?.trim() ||
-    `${message.author.displayName}のスレッド`;
+    renderPlaceholders(
+      rule.threadName,
+      getAutoCreateThreadNamePlaceholderParams(message),
+    )?.trim() || `${message.author.displayName}のスレッド`;
 
   const thread = await message
     .startThread({

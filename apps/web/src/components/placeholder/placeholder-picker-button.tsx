@@ -1,8 +1,8 @@
 'use client';
 
-import type { PlaceholderType } from '@repo/placeholders';
+import type { Placeholder, PlaceholderType } from '@repo/placeholders';
 import { AtSignIcon, BracesIcon, LinkIcon } from 'lucide-react';
-import { type ReactNode, type RefObject, useContext, useState } from 'react';
+import { type ReactNode, type RefObject, useState } from 'react';
 import { Badge } from '@/components/reui/badge';
 import {
   DropdownMenu,
@@ -14,7 +14,6 @@ import {
 import { InputGroupButton } from '@/components/ui/input-group';
 import { Item, ItemContent, ItemDescription, ItemMedia, ItemTitle } from '@/components/ui/item';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { PlaceholderContext } from './placeholder-context';
 
 export type TextInputRef = RefObject<HTMLInputElement | HTMLTextAreaElement | null>;
 export type TextInputInsertMode = 'insert' | 'replace';
@@ -48,14 +47,19 @@ const PlaceholderIcons = {
   url: <LinkIcon />,
 } satisfies Record<PlaceholderType, ReactNode>;
 
-type PlaceholderPickerButtonProps = {
+export type PlaceholderPickerButtonProps = {
+  placeholders?: Placeholder;
   inputRef: TextInputRef;
   types?: PlaceholderType[];
   mode?: TextInputInsertMode;
 };
 
-export function PlaceholderPickerButton({ inputRef, types, mode }: PlaceholderPickerButtonProps) {
-  const { placeholders } = useContext(PlaceholderContext);
+export function PlaceholderPickerButton({
+  placeholders,
+  inputRef,
+  types,
+  mode,
+}: PlaceholderPickerButtonProps) {
   const { open, setOpen, handleSelect, handleOpenChangeComplete } = useTextInputInsert(
     inputRef,
     mode,

@@ -7,7 +7,7 @@ import type { ParserRules } from 'discord-markdown-parser/dist/simple-markdown';
 import type { PropsWithChildren } from 'react';
 import { Fragment, type ReactNode, useContext, useState } from 'react';
 import twemoji from 'twemoji';
-import { PlaceholderContext } from '@/components/placeholder/placeholder-context';
+import { PreviewResourcesContext } from './context';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { ChannelMention, GuildNavigationMention, Mention, RoleMention } from './mention';
@@ -398,7 +398,7 @@ function renderNodes(nodes: ASTNode[], placeholders: Placeholder | undefined): R
 }
 
 export function DiscordMarkdown({ content }: { content: string }) {
-  const { placeholders } = useContext(PlaceholderContext);
+  const { placeholders } = useContext(PreviewResourcesContext);
   if (!content) return null;
   return (
     <span

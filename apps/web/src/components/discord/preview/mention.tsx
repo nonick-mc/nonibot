@@ -3,7 +3,7 @@ import type { CSSProperties, PropsWithChildren } from 'react';
 import { useContext } from 'react';
 import { cn } from '@/lib/utils';
 import { ChannelTypeIcon } from '../channel-type-icon';
-import { DiscordMessageContext } from '../message-context';
+import { PreviewResourcesContext } from './context';
 import { toHexColor } from '../role-color';
 
 type MentionProps = PropsWithChildren<{
@@ -82,7 +82,7 @@ export function GuildNavigationMention({ variant }: GuildNavigationMentionProps)
 }
 
 export function ChannelMention({ id }: { id: string }) {
-  const { channels = [] } = useContext(DiscordMessageContext);
+  const { channels = [] } = useContext(PreviewResourcesContext);
   const channel = channels.find((c) => c.id === id);
 
   if (!channel) {
@@ -103,7 +103,7 @@ export function ChannelMention({ id }: { id: string }) {
 }
 
 export function RoleMention({ id }: { id: string }) {
-  const { roles = [] } = useContext(DiscordMessageContext);
+  const { roles = [] } = useContext(PreviewResourcesContext);
   const role = roles.find((r) => r.id === id);
 
   if (!role) return <Mention>@ロール</Mention>;
