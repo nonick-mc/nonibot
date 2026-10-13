@@ -2783,16 +2783,8 @@ export function EmojiPickerPreview({ className, ...props }: EmojiPickerPreviewPr
       {emoji ? (
         <>
           <EmojiGlyph emoji={emoji} value={value} className='shrink-0 text-[22px]' />
-          {/* One line, so the footer stays as dense as the grid. Without room
-              the shortcode wraps onto a second, clipped line rather than
-              truncating to a stray colon; a long name truncates. */}
-          <span className='flex h-5 min-w-0 flex-1 flex-wrap items-baseline gap-x-2 overflow-hidden'>
-            <span className='max-w-full truncate text-sm leading-5 font-medium'>
-              {functions.formatLabel(emoji.label)}
-            </span>
-            {shortcode && (
-              <span className='text-muted-foreground text-xs leading-5'>:{shortcode}:</span>
-            )}
+          <span className='max-w-full min-w-0 flex-1 truncate text-sm leading-5 font-medium'>
+            {shortcode ? `:${shortcode}:` : functions.formatLabel(emoji.label)}
           </span>
         </>
       ) : (
