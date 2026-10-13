@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { useContext, useRef, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
-import { DiscordEmojiPicker } from '@/components/discord/emoji-picker';
+import { DiscordEmojiPicker, DiscordEmojiPickerTrigger } from '@/components/discord/emoji-picker';
 import { PlaceholderPickerButton } from '@/components/placeholder/placeholder-picker-button';
 import {
   ControlledField,
@@ -29,8 +29,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { FieldContent, FieldGroup, FieldSeparator } from '@/components/ui/field';
-import { InputGroup, InputGroupAddon, InputGroupButton } from '@/components/ui/input-group';
-import { Popover, PopoverContent, PopoverPanel, PopoverTrigger } from '@/components/ui/popover';
+import { InputGroup, InputGroupAddon } from '@/components/ui/input-group';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { SelectContent, SelectGroup, SelectItem, SelectValue } from '@/components/ui/select';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
@@ -93,12 +93,14 @@ function EmojiField({ name }: { name: string }) {
       control={control}
       name={name}
       render={({ field }) => (
-        <Popover
+        <DiscordEmojiPicker
+          guildEmojis={emojis}
           open={pickerOpen}
-          onOpenChange={(open, { reason }) => {
-            if (field.value && reason === 'trigger-press') return;
+          onOpenChange={(open) => {
+            if (open && field.value) return;
             setPickerOpen(open);
           }}
+          onEmojiSelect={(value) => field.onChange(parseEmoji(value))}
         >
           <DropdownMenu
             open={menuOpen}
@@ -111,11 +113,7 @@ function EmojiField({ name }: { name: string }) {
           >
             <Tooltip>
               <TooltipTrigger
-                render={
-                  <PopoverTrigger
-                    render={<DropdownMenuTrigger render={<InputGroupButton size='icon-xs' />} />}
-                  />
-                }
+                render={<DropdownMenuTrigger render={<DiscordEmojiPickerTrigger />} />}
               >
                 {field.value ? <DiscordButtonEmoji {...field.value} /> : <SmileIcon />}
               </TooltipTrigger>
@@ -137,16 +135,7 @@ function EmojiField({ name }: { name: string }) {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <PopoverPanel side='top' align='start' initialFocus={false} finalFocus={false}>
-            <DiscordEmojiPicker
-              guildEmojis={emojis}
-              onEmojiSelect={(value) => {
-                field.onChange(parseEmoji(value));
-                setPickerOpen(false);
-              }}
-            />
-          </PopoverPanel>
-        </Popover>
+        </DiscordEmojiPicker>
       )}
     />
   );
