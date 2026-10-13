@@ -2,6 +2,7 @@
 
 import { type APIEmoji, CDNRoutes, ImageFormat, RouteBases } from 'discord-api-types/v10';
 import type { ComponentProps, ReactNode, RefObject } from 'react';
+import twemoji from 'twemoji';
 import {
   EMOJI_PICKER_CATEGORIES,
   EmojiPicker,
@@ -20,6 +21,13 @@ type DiscordEmojiPickerProps = {
   side?: ComponentProps<typeof EmojiPickerContent>['side'];
   align?: ComponentProps<typeof EmojiPickerContent>['align'];
 };
+
+const TwemojiBaseUrl = 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg';
+
+function twemojiUrl(value: string) {
+  const raw = value.includes('\u200d') ? value : value.replace(/\uFE0F/g, '');
+  return `${TwemojiBaseUrl}/${twemoji.convert.toCodePoint(raw)}.svg`;
+}
 
 export function DiscordEmojiPickerTrigger({
   className,
@@ -82,6 +90,17 @@ export function DiscordEmojiPicker({
         customEmojis.length ? [GuildCategory, ...EMOJI_PICKER_CATEGORIES] : EMOJI_PICKER_CATEGORIES
       }
       value={null}
+      emojiVersion={14}
+      renderEmoji={(emoji, value) => (
+        // biome-ignore lint/performance/noImgElement: CDN画像
+        <img
+          src={emoji.src ?? twemojiUrl(value)}
+          alt=''
+          draggable={false}
+          loading='lazy'
+          className='size-[1em] object-contain'
+        />
+      )}
       open={open}
       onOpenChange={onOpenChange}
       recentLimit={0}
