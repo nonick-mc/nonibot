@@ -14,10 +14,12 @@ import { useContext, useRef, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { DiscordEmojiPicker, DiscordEmojiPickerTrigger } from '@/components/discord/emoji-picker';
 import { PlaceholderPickerButton } from '@/components/placeholder/placeholder-picker-button';
+import { ColorPicker, ColorPickerSwatches } from '@/components/reui/color-picker';
 import {
   ControlledField,
   ControlledFieldError,
   ControlledFieldLabel,
+  useControlledField,
 } from '@/components/rhf/field';
 import { ControlledInputGroupInput } from '@/components/rhf/input-group';
 import { ControlledSelect, ControlledSelectTrigger } from '@/components/rhf/select';
@@ -33,22 +35,39 @@ import { InputGroup, InputGroupAddon } from '@/components/ui/input-group';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { SelectContent, SelectGroup, SelectItem, SelectValue } from '@/components/ui/select';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { cn } from '@/lib/utils';
 import { DiscordMessageContext } from '../../message-context';
 import { DiscordButtonEmoji } from '../../preview/button';
 import { ComponentEditorContext } from '../context';
 import { EditorCard } from '../editor-card';
 
 const ButtonStyleOptions = [
-  { label: 'Primary', value: ButtonStyle.Primary, colorClassName: 'bg-discord-primary' },
-  { label: 'Secondary', value: ButtonStyle.Secondary, colorClassName: 'border bg-input/30' },
-  { label: 'Success', value: ButtonStyle.Success, colorClassName: 'bg-discord-success' },
-  { label: 'Danger', value: ButtonStyle.Danger, colorClassName: 'bg-discord-danger' },
+  { label: 'Primary', value: '#5865f2', style: ButtonStyle.Primary },
+  { label: 'Secondary', value: '#4e5058', style: ButtonStyle.Secondary },
+  { label: 'Success', value: '#018545', style: ButtonStyle.Success },
+  { label: 'Danger', value: '#d22d3a', style: ButtonStyle.Danger },
 ];
 
-function ButtonStyleColor({ style }: { style: ButtonStyle }) {
-  const option = ButtonStyleOptions.find((o) => o.value === style);
-  return <span className={cn('size-[0.75em] shrink-0 rounded-full', option?.colorClassName)} />;
+function ButtonStylePicker() {
+  const { field } = useControlledField();
+  const value = ButtonStyleOptions.find((o) => o.style === field.value)?.value ?? null;
+
+  return (
+    <ColorPicker
+      id={field.name}
+      value={value}
+      onValueChange={(hex) => {
+        const option = ButtonStyleOptions.find((o) => o.value === hex);
+        if (option) field.onChange(option.style);
+      }}
+      aria-label='ボタンの色'
+    >
+      <ColorPickerSwatches
+        colors={ButtonStyleOptions}
+        shape='circle'
+        className='grid-cols-[repeat(4,var(--color-picker-swatch-size))] justify-start gap-2'
+      />
+    </ColorPicker>
+  );
 }
 
 export function useButtonActions() {
@@ -198,42 +217,22 @@ export function UserActionButtonEditor({
             <PopoverTrigger render={<Button variant='ghost' size='icon-sm' />}>
               <PaletteIcon />
             </PopoverTrigger>
-            <PopoverContent>
-              <FieldGroup className='gap-5'>
+            <PopoverContent className='w-auto' align='end'>
+              <FieldGroup className='gap-5 @container-normal'>
                 <ControlledField
                   control={control}
                   name={`${basePath}.style`}
-                  orientation='responsive'
+                  orientation='vertical'
                   align='center'
                 >
                   <FieldContent>
-                    <ControlledFieldLabel>ボタンの色</ControlledFieldLabel>
+                    <ControlledFieldLabel>
+                      <PaletteIcon className='size-4 mt-0.5 text-muted-foreground' />
+                      ボタンの色
+                    </ControlledFieldLabel>
                     <ControlledFieldError />
                   </FieldContent>
-                  <ControlledSelect<ButtonStyle>>
-                    <ControlledSelectTrigger>
-                      <SelectValue>
-                        {(value: ButtonStyle) => (
-                          <div className='flex items-center gap-2.5'>
-                            <ButtonStyleColor style={value} />
-                            {ButtonStyleOptions.find((o) => o.value === value)?.label}
-                          </div>
-                        )}
-                      </SelectValue>
-                    </ControlledSelectTrigger>
-                    <SelectContent alignItemWithTrigger={false}>
-                      <SelectGroup>
-                        {ButtonStyleOptions.map((option) => (
-                          <SelectItem key={option.value} value={option.value}>
-                            <div className='flex items-center gap-2.5'>
-                              <ButtonStyleColor style={option.value} />
-                              {option.label}
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </ControlledSelect>
+                  <ButtonStylePicker />
                 </ControlledField>
               </FieldGroup>
             </PopoverContent>
