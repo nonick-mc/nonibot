@@ -1,7 +1,7 @@
 'use client';
 
 import { type APIEmoji, CDNRoutes, ImageFormat, RouteBases } from 'discord-api-types/v10';
-import type { ComponentProps, ReactNode, RefObject } from 'react';
+import { type ComponentProps, type ReactNode, type RefObject, useMemo } from 'react';
 import twemoji from 'twemoji';
 import {
   EMOJI_PICKER_CATEGORIES,
@@ -44,6 +44,9 @@ export function DiscordEmojiPickerTrigger({
 }
 
 const GuildCategory = 'guild';
+const CustomCategory = [{ id: GuildCategory, label: 'サーバー絵文字' }];
+const NoGuildEmojis: APIEmoji[] = [];
+const CategoriesWithGuild = [GuildCategory, ...EMOJI_PICKER_CATEGORIES];
 
 const i18n = {
   labels: {
@@ -59,8 +62,21 @@ const i18n = {
   },
 };
 
+function renderEmoji(emoji: { src?: string }, value: string) {
+  return (
+    // biome-ignore lint/performance/noImgElement: CDN画像
+    <img
+      src={emoji.src ?? twemojiUrl(value)}
+      alt=''
+      draggable={false}
+      loading='lazy'
+      className='size-[1em] object-contain'
+    />
+  );
+}
+
 export function DiscordEmojiPicker({
-  guildEmojis = [],
+  guildEmojis = NoGuildEmojis,
   onEmojiSelect,
   open,
   onOpenChange,
@@ -69,15 +85,19 @@ export function DiscordEmojiPicker({
   side = 'top',
   align = 'start',
 }: DiscordEmojiPickerProps) {
-  const customEmojis = [...guildEmojis]
-    .sort((a, b) => (a.name as string).localeCompare(b.name as string))
-    .map((emoji) => ({
-      id: emoji.id as string,
-      label: emoji.name as string,
-      shortcodes: [emoji.name as string],
-      category: GuildCategory,
-      src: `${RouteBases.cdn}/${CDNRoutes.emoji(emoji.id as string, emoji.animated ? ImageFormat.GIF : ImageFormat.WebP)}`,
-    }));
+  const customEmojis = useMemo(
+    () =>
+      [...guildEmojis]
+        .sort((a, b) => (a.name as string).localeCompare(b.name as string))
+        .map((emoji) => ({
+          id: emoji.id as string,
+          label: emoji.name as string,
+          shortcodes: [emoji.name as string],
+          category: GuildCategory,
+          src: `${RouteBases.cdn}/${CDNRoutes.emoji(emoji.id as string, emoji.animated ? ImageFormat.GIF : ImageFormat.WebP)}`,
+        })),
+    [guildEmojis],
+  );
 
   return (
     <EmojiPicker
@@ -85,28 +105,18 @@ export function DiscordEmojiPicker({
       locale='ja'
       i18n={i18n}
       customEmojis={customEmojis}
-      customCategories={[{ id: GuildCategory, label: 'サーバー絵文字' }]}
-      categories={
-        customEmojis.length ? [GuildCategory, ...EMOJI_PICKER_CATEGORIES] : EMOJI_PICKER_CATEGORIES
-      }
+      customCategories={CustomCategory}
+      categories={customEmojis.length ? CategoriesWithGuild : EMOJI_PICKER_CATEGORIES}
       value={null}
       emojiVersion={14}
-      renderEmoji={(emoji, value) => (
-        // biome-ignore lint/performance/noImgElement: CDN画像
-        <img
-          src={emoji.src ?? twemojiUrl(value)}
-          alt=''
-          draggable={false}
-          loading='lazy'
-          className='size-[1em] object-contain'
-        />
-      )}
+      renderEmoji={renderEmoji}
       open={open}
       onOpenChange={onOpenChange}
       recentLimit={0}
       recentStorageKey={null}
       onEmojiSelect={({ value, emoji }) => {
-        const guildEmoji = emoji.src ? guildEmojis.find((e) => e.id === emoji.id) : undefined;
+        const guildEmoji =
+          emoji.category === GuildCategory ? guildEmojis.find((e) => e.id === emoji.id) : undefined;
         onEmojiSelect?.(
           guildEmoji
             ? `<${guildEmoji.animated ? 'a' : ''}:${guildEmoji.name}:${guildEmoji.id}>`
