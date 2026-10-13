@@ -4,7 +4,13 @@ import { timestamps } from '../utils';
 import { user } from './auth';
 import { guild } from './guild';
 
-const actionType = ['update_guild_setting', 'create_rule', 'update_rule', 'delete_rule'] as const;
+const actionType = [
+  'update_guild_setting',
+  'create_rule',
+  'update_rule',
+  'delete_rule',
+  'send_verification_panel',
+] as const;
 
 const targetName = [
   // guild.ts
