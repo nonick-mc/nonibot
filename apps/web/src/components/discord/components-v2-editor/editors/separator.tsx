@@ -1,7 +1,7 @@
 'use client';
 
 import { SeparatorSpacingSize } from 'discord-api-types/v10';
-import { MinusIcon, PaletteIcon } from 'lucide-react';
+import { EyeIcon, MinusIcon, PaletteIcon, RulerDimensionLineIcon } from 'lucide-react';
 import { useFormContext } from 'react-hook-form';
 import {
   ControlledField,
@@ -30,7 +30,7 @@ export function SeparatorEditor() {
           <PopoverTrigger render={<Button variant='ghost' size='icon-sm' />}>
             <PaletteIcon />
           </PopoverTrigger>
-          <PopoverContent>
+          <PopoverContent align='end'>
             <FieldGroup className='gap-5'>
               <ControlledField
                 control={control}
@@ -39,7 +39,10 @@ export function SeparatorEditor() {
                 align='center'
               >
                 <FieldContent>
-                  <ControlledFieldLabel>間隔の大きさ</ControlledFieldLabel>
+                  <ControlledFieldLabel>
+                    <RulerDimensionLineIcon className='size-4 mt-0.5 text-muted-foreground' />
+                    間隔の大きさ
+                  </ControlledFieldLabel>
                   <ControlledFieldError />
                 </FieldContent>
                 <ControlledSelect<SeparatorSpacingSize>>
@@ -70,7 +73,10 @@ export function SeparatorEditor() {
                 orientation='horizontal'
               >
                 <FieldContent>
-                  <ControlledFieldLabel>線を表示する</ControlledFieldLabel>
+                  <ControlledFieldLabel>
+                    <EyeIcon className='size-4 mt-0.5 text-muted-foreground' />
+                    線を表示する
+                  </ControlledFieldLabel>
                   <ControlledFieldError />
                 </FieldContent>
                 <ControlledSwitch />
