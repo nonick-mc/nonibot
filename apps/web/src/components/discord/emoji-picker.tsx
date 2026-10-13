@@ -1,63 +1,131 @@
 'use client';
 
-import type { CustomSection } from '@ferrucc-io/emoji-picker';
 import { type APIEmoji, CDNRoutes, ImageFormat, RouteBases } from 'discord-api-types/v10';
-import { useMemo } from 'react';
+import { type ComponentProps, type ReactNode, type RefObject, useMemo } from 'react';
+import twemoji from 'twemoji';
 import {
+  EMOJI_PICKER_CATEGORIES,
   EmojiPicker,
-  EmojiPickerGroup,
-  EmojiPickerHeader,
-  EmojiPickerInput,
-  EmojiPickerList,
-} from '../ui/emoji-picker';
+  EmojiPickerContent,
+  EmojiPickerTrigger,
+} from '@/components/reui/emoji-picker';
+import { cn } from '@/lib/utils';
 
 type DiscordEmojiPickerProps = {
   guildEmojis?: APIEmoji[];
   onEmojiSelect?: (emoji: string) => void;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  children: ReactNode;
+  returnFocus?: RefObject<HTMLElement | null>;
+  side?: ComponentProps<typeof EmojiPickerContent>['side'];
+  align?: ComponentProps<typeof EmojiPickerContent>['align'];
 };
 
-export function DiscordEmojiPicker({ guildEmojis = [], onEmojiSelect }: DiscordEmojiPickerProps) {
-  const customSections: CustomSection[] = [];
+const TwemojiBaseUrl = 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg';
 
-  if (guildEmojis.length) {
-    customSections.push({
-      id: 'custom',
-      name: 'サーバー絵文字',
-      priority: 1,
-      emojis: [...guildEmojis]
+function twemojiUrl(value: string) {
+  const raw = value.includes('\u200d') ? value : value.replace(/\uFE0F/g, '');
+  return `${TwemojiBaseUrl}/${twemoji.convert.toCodePoint(raw)}.svg`;
+}
+
+export function DiscordEmojiPickerTrigger({
+  className,
+  ...props
+}: ComponentProps<typeof EmojiPickerTrigger>) {
+  return (
+    <EmojiPickerTrigger
+      variant='ghost'
+      size='default'
+      className={cn('size-6 rounded-xl p-0 shadow-none', className)}
+      {...props}
+    />
+  );
+}
+
+const GuildCategory = 'guild';
+const CustomCategory = [{ id: GuildCategory, label: 'サーバー絵文字' }];
+const NoGuildEmojis: APIEmoji[] = [];
+const CategoriesWithGuild = [GuildCategory, ...EMOJI_PICKER_CATEGORIES];
+
+const i18n = {
+  labels: {
+    search: '絵文字を検索',
+    clearSearch: '検索をクリア',
+    list: '絵文字',
+    categories: '絵文字カテゴリ',
+    searchResults: '検索結果',
+    custom: 'サーバー絵文字',
+    skinTone: '肌の色',
+    empty: '絵文字が見つかりません',
+    preview: '絵文字を選択',
+  },
+};
+
+function renderEmoji(emoji: { src?: string }, value: string) {
+  return (
+    // biome-ignore lint/performance/noImgElement: CDN画像
+    <img
+      src={emoji.src ?? twemojiUrl(value)}
+      alt=''
+      draggable={false}
+      loading='lazy'
+      className='size-[1em] object-contain'
+    />
+  );
+}
+
+export function DiscordEmojiPicker({
+  guildEmojis = NoGuildEmojis,
+  onEmojiSelect,
+  open,
+  onOpenChange,
+  children,
+  returnFocus,
+  side = 'top',
+  align = 'start',
+}: DiscordEmojiPickerProps) {
+  const customEmojis = useMemo(
+    () =>
+      [...guildEmojis]
         .sort((a, b) => (a.name as string).localeCompare(b.name as string))
         .map((emoji) => ({
           id: emoji.id as string,
-          name: emoji.name as string,
-          imageUrl: `${RouteBases.cdn}/${CDNRoutes.emoji(emoji.id as string, emoji.animated ? ImageFormat.GIF : ImageFormat.WebP)}`,
+          label: emoji.name as string,
+          shortcodes: [emoji.name as string],
+          category: GuildCategory,
+          src: `${RouteBases.cdn}/${CDNRoutes.emoji(emoji.id as string, emoji.animated ? ImageFormat.GIF : ImageFormat.WebP)}`,
         })),
-    });
-  }
-
-  const guildEmojiByName = useMemo(
-    () => new Map(guildEmojis.map((emoji) => [emoji.name as string, emoji])),
     [guildEmojis],
   );
 
-  function handleEmojiSelect(value: string) {
-    const match = /^:(.+):$/.exec(value);
-    const emoji = match ? guildEmojiByName.get(match[1]) : undefined;
-    onEmojiSelect?.(emoji ? `<${emoji.animated ? 'a' : ''}:${emoji.name}:${emoji.id}>` : value);
-  }
-
   return (
     <EmojiPicker
-      emojisPerRow={9}
-      emojiSize={32}
-      customSections={customSections}
-      onEmojiSelect={handleEmojiSelect}
+      columns={9}
+      locale='ja'
+      i18n={i18n}
+      customEmojis={customEmojis}
+      customCategories={CustomCategory}
+      categories={customEmojis.length ? CategoriesWithGuild : EMOJI_PICKER_CATEGORIES}
+      value={null}
+      emojiVersion={14}
+      renderEmoji={renderEmoji}
+      open={open}
+      onOpenChange={onOpenChange}
+      recentLimit={0}
+      recentStorageKey={null}
+      onEmojiSelect={({ value, emoji }) => {
+        const guildEmoji =
+          emoji.category === GuildCategory ? guildEmojis.find((e) => e.id === emoji.id) : undefined;
+        onEmojiSelect?.(
+          guildEmoji
+            ? `<${guildEmoji.animated ? 'a' : ''}:${guildEmoji.name}:${guildEmoji.id}>`
+            : value,
+        );
+      }}
     >
-      <EmojiPickerHeader>
-        <EmojiPickerInput />
-      </EmojiPickerHeader>
-      <EmojiPickerGroup>
-        <EmojiPickerList />
-      </EmojiPickerGroup>
+      {children}
+      <EmojiPickerContent side={side} align={align} returnFocus={returnFocus} />
     </EmojiPicker>
   );
 }

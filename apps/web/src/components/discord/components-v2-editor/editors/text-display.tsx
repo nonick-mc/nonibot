@@ -3,7 +3,7 @@
 import { AtSignIcon, BotIcon, HashIcon, SmileIcon, TypeIcon } from 'lucide-react';
 import { Fragment, type RefObject, useContext, useMemo, useRef } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { DiscordEmojiPicker } from '@/components/discord/emoji-picker';
+import { DiscordEmojiPicker, DiscordEmojiPickerTrigger } from '@/components/discord/emoji-picker';
 import {
   PlaceholderPickerButton,
   useTextInputInsert,
@@ -20,7 +20,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { InputGroup, InputGroupAddon, InputGroupButton } from '@/components/ui/input-group';
-import { Popover, PopoverPanel, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { groupChannelsByCategory } from '@/lib/discord/utils';
 import { ChannelTypeIcon } from '../../channel-type-icon';
@@ -183,16 +182,20 @@ function EmojiInsertButton({ textareaRef }: TextareaInsertComponentProps) {
   const { open, setOpen, handleSelect } = useTextInputInsert(textareaRef);
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <DiscordEmojiPicker
+      guildEmojis={emojis}
+      onEmojiSelect={handleSelect}
+      open={open}
+      onOpenChange={setOpen}
+      returnFocus={textareaRef}
+      align='end'
+    >
       <Tooltip>
-        <TooltipTrigger render={<PopoverTrigger render={<InputGroupButton size='icon-xs' />} />}>
+        <TooltipTrigger render={<DiscordEmojiPickerTrigger />}>
           <SmileIcon />
         </TooltipTrigger>
         <TooltipContent>絵文字</TooltipContent>
       </Tooltip>
-      <PopoverPanel side='top' align='end' initialFocus={false} finalFocus={false}>
-        <DiscordEmojiPicker guildEmojis={emojis} onEmojiSelect={handleSelect} />
-      </PopoverPanel>
-    </Popover>
+    </DiscordEmojiPicker>
   );
 }
