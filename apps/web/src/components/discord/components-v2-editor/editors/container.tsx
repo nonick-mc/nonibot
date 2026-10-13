@@ -98,6 +98,7 @@ function AccentColorPicker() {
       id={field.name}
       value={value}
       onValueChange={(hex) => field.onChange(hex ? hexToNum(hex) : null)}
+      format='hex'
       aria-label='アクセントカラー'
       i18n={{
         labels: {
