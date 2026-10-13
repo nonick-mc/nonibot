@@ -60,6 +60,7 @@ function ButtonStylePicker() {
         if (option) field.onChange(option.style);
       }}
       aria-label='ボタンの色'
+      i18n={{ labels: { swatches: 'ボタンの色' } }}
     >
       <ColorPickerSwatches
         colors={ButtonStyleOptions}
