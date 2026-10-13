@@ -1793,7 +1793,10 @@ function EmojiGlyph({
   className?: string;
 }) {
   const context = useContext(EmojiPickerContext);
-  if (emoji && context?.renderEmoji) return <>{context.renderEmoji(emoji, value)}</>;
+  if (emoji && context?.renderEmoji) {
+    const rendered = context.renderEmoji(emoji, value);
+    return className ? <span className={cn('inline-flex', className)}>{rendered}</span> : rendered;
+  }
   if (emoji?.src) {
     return (
       <img
