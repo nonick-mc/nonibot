@@ -22,7 +22,6 @@
     "@repo/shared": "workspace:*",
     "@shadcn/react": "^0.3.1",
     "@types/mdx": "^2.0.13",
-    "@uiw/react-color": "^2.10.3",
     "better-auth": "^1.6.11",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
