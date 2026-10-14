@@ -129,7 +129,6 @@ export const autoModSetting = settingSchema.table('auto_mod', {
 // #endregion
 
 // #region Verification
-export const verificationLogTypes = ['success', 'failure'] as const;
 export const captchaTypeEnum = pgEnum('captcha_type', ['button', 'image', 'web']);
 export const verificationSetting = settingSchema.table('verification', {
   guildId,
@@ -140,9 +139,6 @@ export const verificationSetting = settingSchema.table('verification', {
     .array()
     .$type<APIMessageTopLevelComponent[]>()
     .notNull(),
-  enableLog: boolean('enable_log').notNull(),
-  logChannel: text('log_channel'),
-  logTypes: text('log_types').array().$type<(typeof verificationLogTypes)[number][]>().notNull(),
   ...timestamps,
 });
 // #endregion

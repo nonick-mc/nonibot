@@ -1639,28 +1639,7 @@
           "name": "message_components",
           "type": "jsonb[]",
           "primaryKey": false,
-          "notNull": true,
-          "default": "'{}'"
-        },
-        "enable_log": {
-          "name": "enable_log",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        },
-        "log_channel": {
-          "name": "log_channel",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "log_types": {
-          "name": "log_types",
-          "type": "text[]",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'{\"success\",\"failure\"}'"
+          "notNull": true
         },
         "created_at": {
           "name": "created_at",
