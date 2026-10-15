@@ -75,15 +75,16 @@ export function getGuild(
 }
 
 /** @see https://discord.com/developers/docs/resources/guild#get-guild-member */
-export function getGuildMember(
-  guildId: string,
-  userId: string | '@me',
-  next?: NextFetchRequestConfig,
-) {
+export function getGuildMember(guildId: string, userId: string, next?: NextFetchRequestConfig) {
   return botFetch<RESTGetAPIGuildMemberResult, false>(Routes.guildMember(guildId, userId), {
     next,
     throw: true,
   });
+}
+
+/** Bot自身のサーバー内メンバー情報を取得 **/
+export function getBotMember(guildId: string) {
+  return getGuildMember(guildId, process.env.DISCORD_CLIENT_ID as string);
 }
 
 /** @see https://discord.com/developers/docs/resources/guild#get-guild-roles */
