@@ -65,12 +65,7 @@ export default async function Page({
         channels={sortChannels(channels)}
         emojis={emojis}
         rule={rule}
-        defaultValues={
-          updateRuleFormSchema.safeParse({
-            ...rule,
-            messageComponents: rule.messageComponents.length ? rule.messageComponents : undefined,
-          }).data
-        }
+        defaultValues={updateRuleFormSchema.safeParse(rule).data}
         disabled={!targetChannel}
       />
     </>

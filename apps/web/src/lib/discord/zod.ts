@@ -232,4 +232,20 @@ export function createMessageUserComponentsSchema(
       }
     });
 }
+
+/**
+ * 空配列を未設定として扱い、`defaultValue`にフォールバックする。
+ * DBの`message_components`は未設定のレコードで空配列になるため、`min(1)`を満たさない。
+ */
+export function messageComponentsWithDefault(
+  schema: MessageUserComponentsSchema,
+  defaultValue: z.output<MessageUserComponentsSchema>,
+) {
+  return z
+    .transform((value: z.input<MessageUserComponentsSchema> | undefined) =>
+      value?.length === 0 ? undefined : value,
+    )
+    .pipe(schema.default(defaultValue));
+}
+
 export type MessageUserComponentsSchema = ReturnType<typeof createMessageUserComponentsSchema>;

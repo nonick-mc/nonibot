@@ -28,14 +28,6 @@ export default async function Page({
     }),
   ]);
 
-  const normalizedSetting = setting && {
-    ...setting,
-    messageComponents: setting.messageComponents.length ? setting.messageComponents : undefined,
-    dmMessageComponents: setting.dmMessageComponents.length
-      ? setting.dmMessageComponents
-      : undefined,
-  };
-
   return (
     <>
       <Header
@@ -46,7 +38,7 @@ export default async function Page({
         channels={sortChannels(channels)}
         emojis={emojis}
         roles={sortRoles(roles)}
-        setting={formSchema.safeParse(normalizedSetting ?? {}).data}
+        setting={formSchema.safeParse(setting ?? {}).data}
         enabledVerificationGate={guild.features.includes(
           GuildFeature.MemberVerificationGateEnabled,
         )}
