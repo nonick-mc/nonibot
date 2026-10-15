@@ -20,7 +20,7 @@ export default async function Layout({
       <AppSidebar guildId={guildId} />
       <SidebarInset>
         <Navbar breadcrumb={breadcrumb} />
-        <div className='p-6 flex flex-col gap-6'>{children}</div>
+        <div className='max-w-300 w-full mx-auto p-6 flex flex-col gap-6'>{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );
