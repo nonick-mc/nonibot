@@ -23,9 +23,9 @@ export default async function Page({
   await verifyDashboardAccessPermission(guildId);
 
   const [channels, roles, emojis, rule] = await Promise.all([
-    getChannels(guildId, { revalidate: 30 }),
-    getRoles(guildId, { revalidate: 30 }),
-    getGuildEmojis(guildId, { revalidate: 30 }),
+    getChannels(guildId),
+    getRoles(guildId),
+    getGuildEmojis(guildId),
     db.query.autoCreateThreadRule.findFirst({
       where: (rule, { eq, and }) => and(eq(rule.guildId, guildId), eq(rule.channelId, channelId)),
     }),

@@ -65,7 +65,7 @@ export async function getUserGuilds(
 export function getGuild(
   guildId: string,
   query?: RESTGetAPIGuildQuery,
-  next?: NextFetchRequestConfig,
+  next: NextFetchRequestConfig = { revalidate: 60 },
 ) {
   return botFetch<APIGuild, false>(Routes.guild(guildId), {
     query,
@@ -88,7 +88,7 @@ export function getBotMember(guildId: string) {
 }
 
 /** @see https://discord.com/developers/docs/resources/guild#get-guild-roles */
-export function getRoles(guildId: string, next?: NextFetchRequestConfig) {
+export function getRoles(guildId: string, next: NextFetchRequestConfig = { revalidate: 60 }) {
   return botFetch<RESTGetAPIGuildRolesResult, false>(Routes.guildRoles(guildId), {
     next,
     throw: true,
@@ -96,7 +96,7 @@ export function getRoles(guildId: string, next?: NextFetchRequestConfig) {
 }
 
 /** @see https://discord.com/developers/docs/resources/guild#get-guild-channels */
-export function getChannels(guildId: string, next?: NextFetchRequestConfig) {
+export function getChannels(guildId: string, next: NextFetchRequestConfig = { revalidate: 60 }) {
   return botFetch<RESTGetAPIGuildChannelsResult, false>(Routes.guildChannels(guildId), {
     next,
     throw: true,
@@ -104,7 +104,7 @@ export function getChannels(guildId: string, next?: NextFetchRequestConfig) {
 }
 
 /** @see https://discord.com/developers/docs/resources/emoji#list-guild-emojis */
-export function getGuildEmojis(guildId: string, next?: NextFetchRequestConfig) {
+export function getGuildEmojis(guildId: string, next: NextFetchRequestConfig = { revalidate: 60 }) {
   return botFetch<RESTGetAPIGuildEmojisResult, false>(Routes.guildEmojis(guildId), {
     next,
     throw: true,

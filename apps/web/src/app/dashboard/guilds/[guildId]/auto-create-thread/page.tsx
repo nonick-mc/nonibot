@@ -20,7 +20,7 @@ export default async function Page({
   await verifyDashboardAccessPermission(guildId);
 
   const [channels, rules] = await Promise.all([
-    getChannels(guildId, { revalidate: 30 }),
+    getChannels(guildId),
     db.query.autoCreateThreadRule.findMany({
       where: (rule, { eq }) => eq(rule.guildId, guildId),
       orderBy: (rule, { asc }) => asc(rule.createdAt),
