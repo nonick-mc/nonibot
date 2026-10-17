@@ -11,6 +11,8 @@ import {
   type RESTGetAPIGuildMemberResult,
   type RESTGetAPIGuildQuery,
   type RESTGetAPIGuildRolesResult,
+  type RESTPostAPIChannelMessageJSONBody,
+  type RESTPostAPIChannelMessageResult,
   RouteBases,
   Routes,
 } from 'discord-api-types/v10';
@@ -99,6 +101,15 @@ export function getRoles(guildId: string, next: NextFetchRequestConfig = { reval
 export function getChannels(guildId: string, next: NextFetchRequestConfig = { revalidate: 60 }) {
   return botFetch<RESTGetAPIGuildChannelsResult, false>(Routes.guildChannels(guildId), {
     next,
+    throw: true,
+  });
+}
+
+/** @see https://discord.com/developers/docs/resources/message#create-message */
+export function createChannelMessage(channelId: string, body: RESTPostAPIChannelMessageJSONBody) {
+  return botFetch<RESTPostAPIChannelMessageResult, false>(Routes.channelMessages(channelId), {
+    method: 'POST',
+    body,
     throw: true,
   });
 }
