@@ -22,6 +22,7 @@ import { cache } from 'react';
 import { auth } from '../auth';
 import { defaultRetryOption } from '../better-fetch';
 import { db } from '../db';
+import { computeChannelPermissions } from './permissions';
 import { hasPermission } from './utils';
 
 const defaultFetchOptions: CreateFetchOption = {
@@ -160,4 +161,24 @@ export const getGuildMemberPermissions = cache(async (guildId: string, userId: s
   }
 
   return permissions.toString();
+});
+
+/** Botが指定した権限を持っているチャンネルを取得 **/
+export const getChannelsWithBotPermission = cache(async (guildId: string, permission: bigint) => {
+  const bot = await getBotMember(guildId);
+  const roles = await getRoles(guildId);
+  const channels = await getChannels(guildId);
+
+  return channels.filter((ch) =>
+    hasPermission(
+      computeChannelPermissions({
+        guildId,
+        memberId: bot.user.id,
+        memberRoleIds: bot.roles,
+        roles,
+        overwrites: 'permission_overwrites' in ch ? (ch.permission_overwrites ?? []) : [],
+      }),
+      permission,
+    ),
+  );
 });
