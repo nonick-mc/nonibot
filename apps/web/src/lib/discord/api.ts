@@ -65,19 +65,23 @@ export async function getUserGuilds(
 }
 
 export function getGuild(guildId: string) {
-  return internalFetch<InternalApiGuild, false>(`/guilds/${guildId}`);
+  return internalFetch<InternalApiGuild, false>(`/guilds/${encodeURIComponent(guildId)}`);
 }
 export const getGuildMember = cache((guildId: string, userId: string) => {
-  return internalFetch<InternalApiMember, false>(`/guilds/${guildId}/members/${userId}`);
+  return internalFetch<InternalApiMember, false>(
+    `/guilds/${encodeURIComponent(guildId)}/members/${encodeURIComponent(userId)}`,
+  );
 });
 export function getRoles(guildId: string) {
-  return internalFetch<InternalApiRole[], false>(`/guilds/${guildId}/roles`);
+  return internalFetch<InternalApiRole[], false>(`/guilds/${encodeURIComponent(guildId)}/roles`);
 }
 export function getChannels(guildId: string) {
-  return internalFetch<InternalApiChannel[], false>(`/guilds/${guildId}/channels`);
+  return internalFetch<InternalApiChannel[], false>(
+    `/guilds/${encodeURIComponent(guildId)}/channels`,
+  );
 }
 export function getGuildEmojis(guildId: string) {
-  return internalFetch<InternalApiEmoji[], false>(`/guilds/${guildId}/emojis`);
+  return internalFetch<InternalApiEmoji[], false>(`/guilds/${encodeURIComponent(guildId)}/emojis`);
 }
 
 /** ログイン中のユーザーがどちらも参加しているサーバーを取得 **/
