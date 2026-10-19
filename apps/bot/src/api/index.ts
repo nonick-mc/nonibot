@@ -9,8 +9,9 @@ export function startApi(client: Client<true>) {
   if (!secret) throw new Error('INTERNAL_API_SECRET is not set');
 
   const port = Number(process.env.INTERNAL_API_PORT ?? 3001);
+  const hostname = process.env.INTERNAL_API_HOST ?? '127.0.0.1';
 
-  return serve({ fetch: createApp(client, secret).fetch, port, hostname: '::' }, () => {
-    console.log(pc.green('✓'), 'Internal API started', pc.gray(`(port ${port})`));
+  return serve({ fetch: createApp(client, secret).fetch, port, hostname }, () => {
+    console.log(pc.green('✓'), 'Internal API started', pc.gray(`(${hostname}:${port})`));
   });
 }
