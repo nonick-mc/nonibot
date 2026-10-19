@@ -53,6 +53,9 @@ importers:
 
   apps/bot:
     dependencies:
+      '@hono/node-server':
+        specifier: ^2.1.5
+        version: 2.1.5(hono@4.13.13)
       '@repo/database':
         specifier: workspace:*
         version: link:../../packages/database
@@ -80,6 +83,9 @@ importers:
       drizzle-orm:
         specifier: 'catalog:'
         version: 0.45.2(kysely@0.28.17)(pg@8.20.0)
+      hono:
+        specifier: ^4.13.13
+        version: 4.13.13
       pg:
         specifier: 'catalog:'
         version: 8.20.0
@@ -1291,6 +1297,12 @@ packages:
 
   '@hono/node-server@2.0.2':
     resolution: {integrity: sha512-tXlTi1h/4V7sDe7i97IVP+9re9ZU7wXZZggnR5ucCRclf1+AX6YhGStrR5w8bLj+3Mlyl0pKfBh9gqTqqnGKfQ==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      hono: '>=4.12.12'
+
+  '@hono/node-server@2.1.5':
+    resolution: {integrity: sha512-MgP/I06GdvsilDspMk/qmRzpk8LOUStP6jFAbSRi40W09DhoyUn+Mj7eyKICPqeYKybOjVFLVIAQzvu1bfIa7Q==}
     engines: {node: '>=20'}
     peerDependencies:
       hono: '>=4.12.12'
@@ -3556,6 +3568,10 @@ packages:
 
   hono@4.12.18:
     resolution: {integrity: sha512-RWzP96k/yv0PQfyXnWjs6zot20TqfpfsNXhOnev8d1InAxubW93L11/oNUc3tQqn2G0bSdAOBpX+2uDFHV7kdQ==}
+    engines: {node: '>=16.9.0'}
+
+  hono@4.13.13:
+    resolution: {integrity: sha512-CQ46U0ZkAGmbT/4UxdzzGJpacP2IeKgY4a5/tOI9AABbpOMfK739wfDXmv1usCk+3RkKj1hQy4/fjhiwa2xlrA==}
     engines: {node: '>=16.9.0'}
 
   hookable@5.5.3:
@@ -6059,6 +6075,10 @@ snapshots:
     dependencies:
       hono: 4.12.18
 
+  '@hono/node-server@2.1.5(hono@4.13.13)':
+    dependencies:
+      hono: 4.13.13
+
   '@hookform/devtools@4.4.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.2.14)(react@19.2.4)
@@ -8167,6 +8187,8 @@ snapshots:
       react-is: 16.13.1
 
   hono@4.12.18: {}
+
+  hono@4.13.13: {}
 
   hookable@5.5.3: {}
 

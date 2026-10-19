@@ -10,6 +10,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@hono/node-server": "^2.1.5",
     "@repo/database": "workspace:*",
     "@repo/placeholders": "workspace:*",
     "@repo/shared": "workspace:*",
@@ -19,6 +20,7 @@
     "discord.js": "^14.26.4",
     "dotenv": "^17.4.2",
     "drizzle-orm": "catalog:",
+    "hono": "^4.13.13",
     "pg": "catalog:",
     "picocolors": "^1.1.1",
     "sunar": "^0.7.3"
