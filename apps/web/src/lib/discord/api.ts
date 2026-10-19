@@ -1,16 +1,17 @@
 import 'server-only';
 
-import { type CreateFetchOption, createFetch } from '@better-fetch/fetch';
+import { createFetch } from '@better-fetch/fetch';
+import type {
+  InternalApiChannel,
+  InternalApiEmoji,
+  InternalApiGuild,
+  InternalApiMember,
+  InternalApiRole,
+} from '@repo/shared';
 import {
-  type APIGuild,
   PermissionFlagsBits,
   type RESTAPIPartialCurrentUserGuild,
   type RESTGetAPICurrentUserGuildsQuery,
-  type RESTGetAPIGuildChannelsResult,
-  type RESTGetAPIGuildEmojisResult,
-  type RESTGetAPIGuildMemberResult,
-  type RESTGetAPIGuildQuery,
-  type RESTGetAPIGuildRolesResult,
   type RESTPostAPIChannelMessageJSONBody,
   type RESTPostAPIChannelMessageResult,
   RouteBases,
@@ -20,19 +21,15 @@ import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
 import { auth } from '../auth';
-import { defaultRetryOption } from '../better-fetch';
+import { fetchWithRetryAfter } from '../better-fetch';
 import { db } from '../db';
-import { computeChannelPermissions } from './permissions';
 import { hasPermission } from './utils';
 
-const defaultFetchOptions: CreateFetchOption = {
-  baseURL: RouteBases.api,
-  retry: defaultRetryOption,
-};
-
-const botFetch = createFetch({
-  headers: { authorization: `Bot ${process.env.DISCORD_TOKEN}` },
-  ...defaultFetchOptions,
+const internalFetch = createFetch({
+  baseURL: process.env.INTERNAL_API_URL,
+  auth: { type: 'Bearer', token: process.env.INTERNAL_API_SECRET },
+  cache: 'no-store',
+  throw: true,
 });
 
 const oauth2UserFetch = createFetch({
@@ -49,7 +46,8 @@ const oauth2UserFetch = createFetch({
   onError: (context) => {
     if (context.error.status === 401) redirect('/login');
   },
-  ...defaultFetchOptions,
+  baseURL: RouteBases.api,
+  customFetchImpl: fetchWithRetryAfter,
 });
 
 /** @see https://discord.com/developers/docs/resources/user#get-current-user-guilds */
@@ -64,63 +62,40 @@ export async function getUserGuilds(
   });
 }
 
-/** @see https://discord.com/developers/docs/resources/guild#get-guild */
-export function getGuild(
-  guildId: string,
-  query?: RESTGetAPIGuildQuery,
-  next: NextFetchRequestConfig = { revalidate: 60 },
-) {
-  return botFetch<APIGuild, false>(Routes.guild(guildId), {
-    query,
-    next,
-    throw: true,
-  });
+export function getGuild(guildId: string) {
+  return internalFetch<InternalApiGuild, false>(`/guilds/${encodeURIComponent(guildId)}`);
+}
+export const getGuildMember = cache((guildId: string, userId: string) => {
+  return internalFetch<InternalApiMember, false>(
+    `/guilds/${encodeURIComponent(guildId)}/members/${encodeURIComponent(userId)}`,
+  );
+});
+export function getRoles(guildId: string) {
+  return internalFetch<InternalApiRole[], false>(`/guilds/${encodeURIComponent(guildId)}/roles`);
+}
+export function getChannels(guildId: string) {
+  return internalFetch<InternalApiChannel[], false>(
+    `/guilds/${encodeURIComponent(guildId)}/channels`,
+  );
+}
+export function getGuildEmojis(guildId: string) {
+  return internalFetch<InternalApiEmoji[], false>(`/guilds/${encodeURIComponent(guildId)}/emojis`);
 }
 
-/** @see https://discord.com/developers/docs/resources/guild#get-guild-member */
-export function getGuildMember(guildId: string, userId: string, next?: NextFetchRequestConfig) {
-  return botFetch<RESTGetAPIGuildMemberResult, false>(Routes.guildMember(guildId, userId), {
-    next,
-    throw: true,
-  });
-}
+/** Botが指定した権限を持っているチャンネルを取得 **/
+export const getChannelsWithBotPermission = cache((guildId: string, permission: bigint) => {
+  return internalFetch<InternalApiChannel[], false>(
+    `/guilds/${encodeURIComponent(guildId)}/channels`,
+    { query: { bot_permission: permission.toString() } },
+  );
+});
 
-/** Bot自身のサーバー内メンバー情報を取得 **/
-export function getBotMember(guildId: string) {
-  return getGuildMember(guildId, process.env.DISCORD_CLIENT_ID as string);
-}
-
-/** @see https://discord.com/developers/docs/resources/guild#get-guild-roles */
-export function getRoles(guildId: string, next: NextFetchRequestConfig = { revalidate: 60 }) {
-  return botFetch<RESTGetAPIGuildRolesResult, false>(Routes.guildRoles(guildId), {
-    next,
-    throw: true,
-  });
-}
-
-/** @see https://discord.com/developers/docs/resources/guild#get-guild-channels */
-export function getChannels(guildId: string, next: NextFetchRequestConfig = { revalidate: 60 }) {
-  return botFetch<RESTGetAPIGuildChannelsResult, false>(Routes.guildChannels(guildId), {
-    next,
-    throw: true,
-  });
-}
-
-/** @see https://discord.com/developers/docs/resources/message#create-message */
+/** Botとしてチャンネルにメッセージを送信 **/
 export function createChannelMessage(channelId: string, body: RESTPostAPIChannelMessageJSONBody) {
-  return botFetch<RESTPostAPIChannelMessageResult, false>(Routes.channelMessages(channelId), {
-    method: 'POST',
-    body,
-    throw: true,
-  });
-}
-
-/** @see https://discord.com/developers/docs/resources/emoji#list-guild-emojis */
-export function getGuildEmojis(guildId: string, next: NextFetchRequestConfig = { revalidate: 60 }) {
-  return botFetch<RESTGetAPIGuildEmojisResult, false>(Routes.guildEmojis(guildId), {
-    next,
-    throw: true,
-  });
+  return internalFetch<RESTPostAPIChannelMessageResult, false>(
+    `/channels/${encodeURIComponent(channelId)}/messages`,
+    { method: 'POST', body },
+  );
 }
 
 /** ログイン中のユーザーがどちらも参加しているサーバーを取得 **/
@@ -144,41 +119,5 @@ export const getManageableGuilds = cache(async () => {
   const guilds = await getMutualGuilds();
   return guilds.filter((guild) =>
     hasPermission(guild.permissions, PermissionFlagsBits.ManageGuild),
-  );
-});
-
-/** ユーザーのサーバー内での権限を取得 **/
-export const getGuildMemberPermissions = cache(async (guildId: string, userId: string) => {
-  const [member, roles] = await Promise.all([getGuildMember(guildId, userId), getRoles(guildId)]);
-
-  const currentMemberRoles = roles.filter(
-    (role) => member.roles.includes(role.id) || role.id === guildId,
-  );
-
-  let permissions = BigInt(0);
-  for (const role of currentMemberRoles) {
-    permissions |= BigInt(role.permissions);
-  }
-
-  return permissions.toString();
-});
-
-/** Botが指定した権限を持っているチャンネルを取得 **/
-export const getChannelsWithBotPermission = cache(async (guildId: string, permission: bigint) => {
-  const bot = await getBotMember(guildId);
-  const roles = await getRoles(guildId);
-  const channels = await getChannels(guildId);
-
-  return channels.filter((ch) =>
-    hasPermission(
-      computeChannelPermissions({
-        guildId,
-        memberId: bot.user.id,
-        memberRoleIds: bot.roles,
-        roles,
-        overwrites: 'permission_overwrites' in ch ? (ch.permission_overwrites ?? []) : [],
-      }),
-      permission,
-    ),
   );
 });

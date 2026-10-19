@@ -2,7 +2,8 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { autoCreateThreadRule } from '@repo/database';
-import { type APIGuildChannel, ChannelType, type GuildChannelType } from 'discord-api-types/v10';
+import type { InternalApiChannel } from '@repo/shared';
+import { ChannelType } from 'discord-api-types/v10';
 import type { InferSelectModel } from 'drizzle-orm';
 import { ArrowRightIcon, PlusIcon } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
@@ -33,7 +34,7 @@ import { RulesMaxSize } from '../constants';
 import { createRuleFormSchema } from '../schema';
 
 type CreateRuleDialogProps = {
-  channels: APIGuildChannel<GuildChannelType>[];
+  channels: InternalApiChannel[];
   rules: InferSelectModel<typeof autoCreateThreadRule>[];
 };
 

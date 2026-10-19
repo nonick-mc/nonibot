@@ -1,6 +1,6 @@
 'use client';
 
-import type { APIRole } from 'discord-api-types/v10';
+import type { InternalApiRole } from '@repo/shared';
 import { useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import {
@@ -19,10 +19,10 @@ import { InputGroupAddon } from '../ui/input-group';
 import { RoleColor } from './role-color';
 
 type RoleSelectCommonProps = {
-  items: APIRole[];
+  items: InternalApiRole[];
   name?: string;
   disabled?: boolean;
-  disabledItemFilter?: (value: APIRole) => boolean;
+  disabledItemFilter?: (value: InternalApiRole) => boolean;
   invalid?: boolean;
   className?: string;
 };
@@ -63,7 +63,7 @@ function RoleSelectMultiple({
   const anchor = useComboboxAnchor();
 
   return (
-    <Combobox<APIRole, true>
+    <Combobox<InternalApiRole, true>
       items={items}
       multiple
       value={selectedRoles}
@@ -118,7 +118,7 @@ function RoleSelectSingle({
   const anchor = useComboboxAnchor();
 
   return (
-    <Combobox<APIRole>
+    <Combobox<InternalApiRole>
       items={items}
       value={selectedRole}
       onValueChange={(role) => onChange?.(role?.id ?? null)}

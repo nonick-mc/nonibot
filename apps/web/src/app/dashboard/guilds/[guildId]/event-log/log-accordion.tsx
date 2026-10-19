@@ -1,6 +1,6 @@
 'use client';
 
-import type { APIGuildChannel, APIRole, GuildChannelType } from 'discord-api-types/v10';
+import type { InternalApiChannel, InternalApiRole } from '@repo/shared';
 import {
   BanIcon,
   ClockIcon,
@@ -68,8 +68,8 @@ const items: { key: Key; title: string; icon: LucideIcon }[] = [
 ];
 
 type LogAccordionProps = {
-  channels: APIGuildChannel<GuildChannelType>[];
-  roles: APIRole[];
+  channels: InternalApiChannel[];
+  roles: InternalApiRole[];
   defaultValues: Partial<Record<Key, LogFormValues>>;
 };
 

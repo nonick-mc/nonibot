@@ -2,6 +2,7 @@ import 'dotenv/config';
 
 import { AllowedMentionsTypes, GatewayIntentBits, Partials } from 'discord.js';
 import { Client, dirname, load } from 'sunar';
+import { assertApiEnv } from './api';
 
 export const client = new Client({
   intents: [
@@ -20,6 +21,8 @@ export const client = new Client({
 });
 
 const start = async () => {
+  assertApiEnv();
+
   const base = dirname(import.meta.url);
   const baseDir = base.split('/').at(-1);
 

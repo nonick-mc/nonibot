@@ -1,40 +1,31 @@
-import {
-  type APIGuildCategoryChannel,
-  type APIGuildChannel,
-  type APIRole,
-  type APISortableChannel,
-  ChannelType,
-  type GuildChannelType,
-} from 'discord-api-types/v10';
+import type { InternalApiChannel, InternalApiRole } from '@repo/shared';
+import { ChannelType, type GuildChannelType } from 'discord-api-types/v10';
 
 /** 特定の権限が含まれていれば`true`を返す */
 export function hasPermission(permissions: string, permission: bigint) {
   return (BigInt(permissions) & permission) === permission;
 }
 
-const byPosition = (a: APISortableChannel, b: APISortableChannel) => a.position - b.position;
+const byPosition = (a: InternalApiChannel, b: InternalApiChannel) => a.position - b.position;
 
 function isVoiceChannel(type: GuildChannelType) {
   return type === ChannelType.GuildVoice || type === ChannelType.GuildStageVoice;
 }
 
-function sortGroup(channels: (APIGuildChannel & APISortableChannel)[]) {
+function sortGroup(channels: InternalApiChannel[]) {
   const text = channels.filter((ch) => !isVoiceChannel(ch.type)).sort(byPosition);
   const voice = channels.filter((ch) => isVoiceChannel(ch.type)).sort(byPosition);
   return [...text, ...voice];
 }
 
 /** チャンネルをDiscord上の配置順に並べ替え */
-export function sortChannels(channels: APIGuildChannel<GuildChannelType>[]) {
-  const sortable = channels as (APIGuildChannel & APISortableChannel)[];
-  const categories = sortable
+export function sortChannels(channels: InternalApiChannel[]) {
+  const categories = channels
     .filter((ch) => ch.type === ChannelType.GuildCategory)
     .sort(byPosition);
-  const others = sortable.filter((ch) => ch.type !== ChannelType.GuildCategory);
+  const others = channels.filter((ch) => ch.type !== ChannelType.GuildCategory);
 
-  const result: (APIGuildChannel & APISortableChannel)[] = sortGroup(
-    others.filter((ch) => !ch.parent_id),
-  );
+  const result: InternalApiChannel[] = sortGroup(others.filter((ch) => !ch.parent_id));
 
   for (const category of categories) {
     result.push(category, ...sortGroup(others.filter((ch) => ch.parent_id === category.id)));
@@ -44,25 +35,22 @@ export function sortChannels(channels: APIGuildChannel<GuildChannelType>[]) {
 }
 
 /** ロールを`position`順に並べ替え */
-export function sortRoles(roles: APIRole[]) {
+export function sortRoles(roles: InternalApiRole[]) {
   return roles.sort((a, b) => b.position - a.position);
 }
 
 /** チャンネルをカテゴリごとに仕分け */
-export function groupChannelsByCategory(
-  channels: APIGuildChannel<GuildChannelType>[],
-  includeCategories = false,
-) {
+export function groupChannelsByCategory(channels: InternalApiChannel[], includeCategories = false) {
   const categories = channels
-    .filter((ch): ch is APIGuildCategoryChannel => ch.type === ChannelType.GuildCategory)
-    .sort((a, b) => a.position - b.position);
+    .filter((ch) => ch.type === ChannelType.GuildCategory)
+    .sort(byPosition);
 
   const selectableChannels = includeCategories
     ? channels
     : channels.filter((ch) => ch.type !== ChannelType.GuildCategory);
 
-  const groupedChannels = new Map<string, APIGuildChannel<GuildChannelType>[]>();
-  const uncategorized: APIGuildChannel<GuildChannelType>[] = [];
+  const groupedChannels = new Map<string, InternalApiChannel[]>();
+  const uncategorized: InternalApiChannel[] = [];
 
   for (const ch of selectableChannels) {
     if (ch.parent_id) {
@@ -92,7 +80,7 @@ export function countTotalComponents(components: AnyComponent[]): number {
 /** 配列からチャンネルまたはロールに存在するIDのみを返す */
 export function filterValidIds(
   ids: string[] | undefined,
-  channelOrRoles: APIGuildChannel<GuildChannelType>[] | APIRole[],
+  channelOrRoles: InternalApiChannel[] | InternalApiRole[],
 ) {
   return ids?.filter((id) => channelOrRoles.some((item) => item.id === id)) ?? [];
 }

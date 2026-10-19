@@ -1,11 +1,7 @@
 'use client';
 
-import {
-  type APIGuildCategoryChannel,
-  type APIGuildChannel,
-  ChannelType,
-  type GuildChannelType,
-} from 'discord-api-types/v10';
+import type { InternalApiChannel } from '@repo/shared';
+import { ChannelType } from 'discord-api-types/v10';
 import { Fragment, useMemo } from 'react';
 import { groupChannelsByCategory } from '@/lib/discord/utils';
 import {
@@ -25,12 +21,12 @@ import { InputGroupAddon } from '../ui/input-group';
 import { ChannelTypeIcon } from './channel-type-icon';
 
 type ChannelSelectProps = {
-  items: APIGuildChannel<GuildChannelType>[];
+  items: InternalApiChannel[];
   value?: string | null;
   onChange?: (value: string | null) => void;
   name?: string;
   disabled?: boolean;
-  disabledItemFilter?: (value: APIGuildChannel<GuildChannelType>) => boolean;
+  disabledItemFilter?: (value: InternalApiChannel) => boolean;
   invalid?: boolean;
   includeTypes?: ChannelType[];
   excludeTypes?: ChannelType[];
@@ -80,7 +76,7 @@ export function ChannelSelect({
   );
 
   return (
-    <Combobox<APIGuildChannel<GuildChannelType>>
+    <Combobox<InternalApiChannel>
       items={selectableItems}
       value={selectedChannel}
       onValueChange={(channel) => onChange?.(channel?.id ?? null)}
@@ -115,9 +111,9 @@ export function ChannelSelect({
 }
 
 type ChannelComboboxListProps = {
-  categories: APIGuildCategoryChannel[];
+  categories: InternalApiChannel[];
   isCategorySelectable: boolean;
-  disabledItemFilter?: (value: APIGuildChannel<GuildChannelType>) => boolean;
+  disabledItemFilter?: (value: InternalApiChannel) => boolean;
 };
 
 function ChannelComboboxList({
@@ -125,7 +121,7 @@ function ChannelComboboxList({
   isCategorySelectable,
   disabledItemFilter,
 }: ChannelComboboxListProps) {
-  const filteredItems = useComboboxFilteredItems<APIGuildChannel<GuildChannelType>>();
+  const filteredItems = useComboboxFilteredItems<InternalApiChannel>();
 
   const { groupedChannels, uncategorized } = useMemo(
     () => groupChannelsByCategory(filteredItems, isCategorySelectable),

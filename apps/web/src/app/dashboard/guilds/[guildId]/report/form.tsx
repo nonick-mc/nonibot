@@ -1,13 +1,8 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  type APIGuildChannel,
-  type APIGuildForumChannel,
-  type APIRole,
-  ChannelType,
-  type GuildChannelType,
-} from 'discord-api-types/v10';
+import type { InternalApiChannel, InternalApiRole } from '@repo/shared';
+import { ChannelType } from 'discord-api-types/v10';
 import {
   GripVerticalIcon,
   PlusIcon,
@@ -57,8 +52,8 @@ import { updateSettingAction } from './action';
 import { formSchema } from './schema';
 
 type FormProps = {
-  channels: APIGuildChannel<GuildChannelType>[];
-  roles: APIRole[];
+  channels: InternalApiChannel[];
+  roles: InternalApiRole[];
   defaultValues?: z.infer<typeof formSchema>;
 };
 
@@ -361,7 +356,7 @@ function CategoriesField({
   );
 }
 
-function ForumTagSettingFields({ channels }: { channels: APIGuildChannel<GuildChannelType>[] }) {
+function ForumTagSettingFields({ channels }: { channels: InternalApiChannel[] }) {
   const form = useFormContext<z.infer<typeof formSchema>>();
   const channelId = useWatch({ control: form.control, name: 'channel' });
   const enabled = useWatch({ control: form.control, name: 'enabled' });
@@ -377,7 +372,7 @@ function ForumTagSettingFields({ channels }: { channels: APIGuildChannel<GuildCh
   const selectedChannel = channels.find((ch) => ch.id === channelId);
   if (selectedChannel?.type !== ChannelType.GuildForum) return null;
 
-  const tags = (selectedChannel as APIGuildForumChannel).available_tags;
+  const tags = selectedChannel.available_tags;
 
   return (
     <>

@@ -1,6 +1,7 @@
 'use client';
 
-import { type APIEmoji, CDNRoutes, ImageFormat, RouteBases } from 'discord-api-types/v10';
+import type { InternalApiEmoji } from '@repo/shared';
+import { CDNRoutes, ImageFormat, RouteBases } from 'discord-api-types/v10';
 import { type ComponentProps, type ReactNode, type RefObject, useMemo } from 'react';
 import twemoji from 'twemoji';
 import {
@@ -12,7 +13,7 @@ import {
 import { cn } from '@/lib/utils';
 
 type DiscordEmojiPickerProps = {
-  guildEmojis?: APIEmoji[];
+  guildEmojis?: InternalApiEmoji[];
   onEmojiSelect?: (emoji: string) => void;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -45,7 +46,7 @@ export function DiscordEmojiPickerTrigger({
 
 const GuildCategory = 'guild';
 const CustomCategory = [{ id: GuildCategory, label: 'サーバー絵文字' }];
-const NoGuildEmojis: APIEmoji[] = [];
+const NoGuildEmojis: InternalApiEmoji[] = [];
 const CategoriesWithGuild = [GuildCategory, ...EMOJI_PICKER_CATEGORIES];
 
 const i18n = {

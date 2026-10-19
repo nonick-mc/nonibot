@@ -2,7 +2,8 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { leaveMessagePlaceholders } from '@repo/placeholders';
-import { type APIGuildChannel, ChannelType, type GuildChannelType } from 'discord-api-types/v10';
+import type { InternalApiChannel } from '@repo/shared';
+import { ChannelType } from 'discord-api-types/v10';
 import { PencilIcon } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { FormProvider, useForm, Watch } from 'react-hook-form';
@@ -26,7 +27,7 @@ import { updateSettingAction } from './action';
 import { formSchema } from './schema';
 
 type FormProps = {
-  channels: APIGuildChannel<GuildChannelType>[];
+  channels: InternalApiChannel[];
   defaultValues?: z.infer<typeof formSchema>;
 } & Pick<MessageResources, 'emojis' | 'roles'>;
 
