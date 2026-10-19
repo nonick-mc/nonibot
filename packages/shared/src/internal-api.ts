@@ -6,6 +6,7 @@ export type InternalApiGuild = {
   icon: string | null;
   owner_id: string;
   features: `${GuildFeature}`[];
+  bot_highest_role_position: number;
 };
 
 export type InternalApiRoleColors = {
@@ -35,6 +36,7 @@ type InternalApiBaseChannel = {
   name: string;
   position: number;
   parent_id: string | null;
+  bot_permissions: string;
 };
 
 //#region Channel

@@ -42,20 +42,11 @@ export function createApp(client: Client<true>, secret: string) {
   app.get('/guilds/:guildId/channels', (c) => {
     const guild = client.guilds.cache.get(c.req.param('guildId'));
     if (!guild) return c.json(notFound, 404);
-    // `bot_permission`が指定された場合は、Botがその権限を持つチャンネルのみ返す
-    const botPermission = c.req.query('bot_permission');
-    if (botPermission !== undefined && !/^\d+$/.test(botPermission)) {
-      return c.json({ error: 'Bad Request' } satisfies InternalApiError, 400);
-    }
-
     const me = guild.members.me;
     const channels = guild.channels.cache.filter(
-      (ch) =>
-        !ch.flags.has(ChannelFlags.ChannelObfuscated) &&
-        (botPermission === undefined ||
-          (me !== null && ch.permissionsFor(me).has(BigInt(botPermission)))),
+      (ch) => !ch.flags.has(ChannelFlags.ChannelObfuscated),
     );
-    return c.json(channels.map(serializeChannel));
+    return c.json(channels.map((ch) => serializeChannel(ch, me)));
   });
 
   app.get('/guilds/:guildId/emojis', (c) => {

@@ -82,14 +82,6 @@ export function getGuildEmojis(guildId: string) {
   return internalFetch<InternalApiEmoji[], false>(`/guilds/${encodeURIComponent(guildId)}/emojis`);
 }
 
-/** Botが指定した権限を持っているチャンネルを取得 **/
-export const getChannelsWithBotPermission = cache((guildId: string, permission: bigint) => {
-  return internalFetch<InternalApiChannel[], false>(
-    `/guilds/${encodeURIComponent(guildId)}/channels`,
-    { query: { bot_permission: permission.toString() } },
-  );
-});
-
 /** Botとしてチャンネルにメッセージを送信 **/
 export function createChannelMessage(channelId: string, body: RESTPostAPIChannelMessageJSONBody) {
   return internalFetch<RESTPostAPIChannelMessageResult, false>(
