@@ -47,7 +47,7 @@ export const Default = createEmojiMap('default', [
   'squarePen',
 ] as const);
 // #f39c0b
-export const Warning = createEmojiMap('warning', ['volume2'] as const);
+export const Warning = createEmojiMap('warning', ['volume2', 'triangleAlert'] as const);
 // #3b82f6
 export const Primary = createEmojiMap('primary', [
   'userRoundPen',
