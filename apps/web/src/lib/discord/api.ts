@@ -1,6 +1,6 @@
 import 'server-only';
 
-import { type CreateFetchOption, createFetch } from '@better-fetch/fetch';
+import { createFetch } from '@better-fetch/fetch';
 import type {
   InternalApiChannel,
   InternalApiEmoji,
@@ -19,14 +19,9 @@ import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
 import { auth } from '../auth';
-import { defaultRetryOption } from '../better-fetch';
+import { fetchWithRetryAfter } from '../better-fetch';
 import { db } from '../db';
 import { hasPermission } from './utils';
-
-const defaultFetchOptions: CreateFetchOption = {
-  baseURL: RouteBases.api,
-  retry: defaultRetryOption,
-};
 
 const internalFetch = createFetch({
   baseURL: process.env.INTERNAL_API_URL,
@@ -49,7 +44,8 @@ const oauth2UserFetch = createFetch({
   onError: (context) => {
     if (context.error.status === 401) redirect('/login');
   },
-  ...defaultFetchOptions,
+  baseURL: RouteBases.api,
+  customFetchImpl: fetchWithRetryAfter,
 });
 
 /** @see https://discord.com/developers/docs/resources/user#get-current-user-guilds */
