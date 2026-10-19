@@ -23,15 +23,9 @@ import { fetchWithRetryAfter } from '../better-fetch';
 import { db } from '../db';
 import { hasPermission } from './utils';
 
-function requireEnv(name: 'INTERNAL_API_URL' | 'INTERNAL_API_SECRET') {
-  const value = process.env[name];
-  if (!value) throw new Error(`${name} is not set`);
-  return value;
-}
-
 const internalFetch = createFetch({
-  baseURL: requireEnv('INTERNAL_API_URL'),
-  auth: { type: 'Bearer', token: requireEnv('INTERNAL_API_SECRET') },
+  baseURL: process.env.INTERNAL_API_URL,
+  auth: { type: 'Bearer', token: process.env.INTERNAL_API_SECRET },
   cache: 'no-store',
   throw: true,
 });
