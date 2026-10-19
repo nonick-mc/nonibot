@@ -1,6 +1,10 @@
+import { Links } from '@repo/shared';
 import {
+  ActionRowBuilder,
   AttachmentBuilder,
+  ButtonBuilder,
   type ButtonInteraction,
+  ButtonStyle,
   ContainerBuilder,
   HeadingLevel,
   heading,
@@ -60,8 +64,30 @@ execute(button, async (interaction) => {
     case 'image':
       return verifyByImage(interaction, role.id);
     case 'web':
-      // web側の認証ページ実装後に差し替える
-      return reply(errorMessage('Web認証は現在準備中です。'));
+      return interaction.reply({
+        components: [
+          new ContainerBuilder()
+            .addTextDisplayComponents(
+              new TextDisplayBuilder().setContent(
+                [
+                  heading('下のボタンから認証ページにアクセスしてください', HeadingLevel.Three),
+                  subtext(
+                    `${getAppEmoji(Warning.triangleAlert)} ${interaction.client.user}はパスワードの入力やQRコードの読み取りを要求することは決してありません。`,
+                  ),
+                ].join('\n'),
+              ),
+            )
+            .addActionRowComponents(
+              new ActionRowBuilder<ButtonBuilder>().addComponents(
+                new ButtonBuilder()
+                  .setLabel('クリックして認証を続行')
+                  .setURL(`${Links.Verify}/${interaction.guildId}`)
+                  .setStyle(ButtonStyle.Link),
+              ),
+            ),
+        ],
+        flags: [MessageFlags.IsComponentsV2, MessageFlags.Ephemeral],
+      });
   }
 });
 
