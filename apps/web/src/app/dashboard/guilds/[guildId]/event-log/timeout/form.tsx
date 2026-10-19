@@ -1,12 +1,8 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  type APIGuildChannel,
-  type APIRole,
-  ChannelType,
-  type GuildChannelType,
-} from 'discord-api-types/v10';
+import type { InternalApiChannel, InternalApiRole } from '@repo/shared';
+import { ChannelType } from 'discord-api-types/v10';
 import { useParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { FormProvider, type UseFormReturn, useForm, useFormState, Watch } from 'react-hook-form';
@@ -26,8 +22,8 @@ import { updateSettingAction } from './action';
 import { formSchema } from './schema';
 
 type FormProps = {
-  channels: APIGuildChannel<GuildChannelType>[];
-  roles: APIRole[];
+  channels: InternalApiChannel[];
+  roles: InternalApiRole[];
   defaultValues?: z.infer<typeof formSchema>;
   onFormReady?: (
     methods: UseFormReturn<z.input<typeof formSchema>, unknown, z.output<typeof formSchema>>,

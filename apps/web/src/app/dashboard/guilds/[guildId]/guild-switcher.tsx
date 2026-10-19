@@ -22,7 +22,7 @@ type GuildSwitcherProps = {
 };
 
 export async function GuildSwitcher({ currentGuildId }: GuildSwitcherProps) {
-  const currentGuild = await getGuild(currentGuildId, undefined, { revalidate: 60 * 60 * 24 });
+  const currentGuild = await getGuild(currentGuildId);
 
   return (
     <SidebarMenu>

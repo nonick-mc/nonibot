@@ -8,7 +8,7 @@ export default async function Page({
   const { guildId, channelId } = await params;
   await verifyDashboardAccessPermission(guildId);
 
-  const channels = await getChannels(guildId, { revalidate: 30 });
+  const channels = await getChannels(guildId);
   const channel = channels.find((channel) => channel.id === channelId);
 
   return (

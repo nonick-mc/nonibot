@@ -1,5 +1,5 @@
 import type { autoCreateThreadRule } from '@repo/database';
-import type { APIGuildChannel, GuildChannelType } from 'discord-api-types/v10';
+import type { InternalApiChannel } from '@repo/shared';
 import type { InferSelectModel } from 'drizzle-orm';
 import { ChevronRightIcon, HashIcon, ListIcon, TriangleAlertIcon } from 'lucide-react';
 import type { Route } from 'next';
@@ -10,7 +10,7 @@ import { Item, ItemActions, ItemContent, ItemMedia, ItemTitle } from '@/componen
 import { cn } from '@/lib/utils';
 
 type RuleListProps = {
-  channels: APIGuildChannel<GuildChannelType>[];
+  channels: InternalApiChannel[];
   rules: InferSelectModel<typeof autoCreateThreadRule>[];
 };
 

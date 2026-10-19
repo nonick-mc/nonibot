@@ -5,8 +5,9 @@ import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { auth } from './auth';
 import { db } from './db';
-import { getGuild, getGuildMemberPermissions } from './discord/api';
+import { getGuild, getGuildMember } from './discord/api';
 import { hasPermission } from './discord/utils';
+import { SnowflakeRegex } from './discord/zod';
 
 export const getCachedSession = cache(async () => {
   const session = await auth.api.getSession({
@@ -21,13 +22,15 @@ export const verifySession = cache(async () => {
 });
 
 export const canAccessDashboard = cache(async (guildId: string) => {
+  if (!SnowflakeRegex.test(guildId)) return false;
+
   try {
     const session = await getCachedSession();
     if (!session) return false;
 
-    const [guild, permissions, hasGuildSetting] = await Promise.all([
+    const [guild, member, hasGuildSetting] = await Promise.all([
       getGuild(guildId),
-      getGuildMemberPermissions(guildId, session.user.discordUserId),
+      getGuildMember(guildId, session.user.discordUserId),
       db.query.guild.findFirst({ where: (guild, { eq }) => eq(guild.id, guildId) }),
     ]);
 
@@ -35,8 +38,8 @@ export const canAccessDashboard = cache(async (guildId: string) => {
     if (guild.owner_id === session.user.discordUserId) return true;
 
     return (
-      hasPermission(permissions, PermissionFlagsBits.ManageGuild) ||
-      hasPermission(permissions, PermissionFlagsBits.Administrator)
+      hasPermission(member.permissions, PermissionFlagsBits.ManageGuild) ||
+      hasPermission(member.permissions, PermissionFlagsBits.Administrator)
     );
   } catch {
     return false;

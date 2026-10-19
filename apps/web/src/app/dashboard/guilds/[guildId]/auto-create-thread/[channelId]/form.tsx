@@ -6,16 +6,16 @@ import {
   autoCreateThreadMessagePlaceholders,
   autoCreateThreadNamePlaceholders,
 } from '@repo/placeholders';
+import type { InternalApiChannel, InternalApiRole } from '@repo/shared';
 import { autoCreateThreadActions } from '@repo/shared';
-import type { APIGuildChannel, APIRole, GuildChannelType } from 'discord-api-types/v10';
 import type { InferSelectModel } from 'drizzle-orm';
 import { PencilIcon } from 'lucide-react';
 import { useRef } from 'react';
 import { FormProvider, useForm, useWatch, Watch } from 'react-hook-form';
 import { toast } from 'sonner';
 import type { z } from 'zod';
-import type { MessageResources } from '@/components/discord/resources';
 import { DiscordMessage } from '@/components/discord/preview/message';
+import type { MessageResources } from '@/components/discord/resources';
 import { FormChangePublisher, FormDevTool } from '@/components/form';
 import { PlaceholderPickerButton } from '@/components/placeholder/placeholder-picker-button';
 import { Badge } from '@/components/reui/badge';
@@ -41,8 +41,8 @@ import { updateRuleFormSchema } from '../schema';
 
 type SettingFormProps = {
   targetChannelName: string;
-  roles: APIRole[];
-  channels: APIGuildChannel<GuildChannelType>[];
+  roles: InternalApiRole[];
+  channels: InternalApiChannel[];
   emojis: MessageResources['emojis'];
   rule: InferSelectModel<typeof autoCreateThreadRule>;
   defaultValues?: z.infer<typeof updateRuleFormSchema>;

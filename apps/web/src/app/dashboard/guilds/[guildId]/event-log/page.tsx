@@ -22,8 +22,8 @@ export default async function Page({ params }: PageProps<'/dashboard/guilds/[gui
 
   const [channels, roles, ban, kick, timeout, voice, messageDelete, messageEdit] =
     await Promise.all([
-      getChannels(guildId, { revalidate: 30 }),
-      getRoles(guildId, { revalidate: 30 }),
+      getChannels(guildId),
+      getRoles(guildId),
       db.query.banLogSetting.findFirst({
         where: (setting, { eq }) => eq(setting.guildId, guildId),
       }),
