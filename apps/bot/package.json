@@ -11,6 +11,7 @@
   "type": "module",
   "dependencies": {
     "@hono/node-server": "^2.1.5",
+    "@napi-rs/canvas": "0.1.59",
     "@repo/database": "workspace:*",
     "@repo/placeholders": "workspace:*",
     "@repo/shared": "workspace:*",
