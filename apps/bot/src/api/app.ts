@@ -1,7 +1,7 @@
 import { createHash, timingSafeEqual } from 'node:crypto';
 import type { InternalApiError } from '@repo/shared';
 import { SnowflakeRegex } from '@repo/shared';
-import { type Client, DiscordAPIError, RESTJSONErrorCodes } from 'discord.js';
+import { ChannelFlags, type Client, DiscordAPIError, RESTJSONErrorCodes } from 'discord.js';
 import { Hono } from 'hono';
 import {
   serializeChannel,
@@ -42,7 +42,10 @@ export function createApp(client: Client<true>, secret: string) {
   app.get('/guilds/:guildId/channels', (c) => {
     const guild = client.guilds.cache.get(c.req.param('guildId'));
     if (!guild) return c.json(notFound, 404);
-    return c.json(guild.channels.cache.map(serializeChannel));
+    const channels = guild.channels.cache.filter(
+      (ch) => !ch.flags.has(ChannelFlags.ChannelObfuscated),
+    );
+    return c.json(channels.map(serializeChannel));
   });
 
   app.get('/guilds/:guildId/emojis', (c) => {
