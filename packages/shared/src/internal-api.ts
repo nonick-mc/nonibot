@@ -5,7 +5,7 @@ export type InternalApiGuild = {
   name: string;
   icon: string | null;
   owner_id: string;
-  features: GuildFeature[];
+  features: `${GuildFeature}`[];
 };
 
 export type InternalApiRoleColors = {

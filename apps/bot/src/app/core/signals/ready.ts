@@ -2,6 +2,7 @@ import { Events, version } from 'discord.js';
 import pc from 'picocolors';
 import { execute, Signal } from 'sunar';
 import { registerCommands } from 'sunar/registry';
+import { startApi } from '@/src/api';
 
 export const signal = new Signal(Events.ClientReady, {
   once: true,
@@ -18,6 +19,8 @@ execute(signal, async (client) => {
     'Emojis fetched',
     pc.gray(`(${client.application.emojis.cache.size} emojis)`),
   );
+
+  startApi(client);
 
   if (process.argv.includes('--register')) {
     await registerCommands(client.application);
