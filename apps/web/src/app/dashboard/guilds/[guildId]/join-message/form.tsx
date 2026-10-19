@@ -2,7 +2,8 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { joinMessagePlaceholders } from '@repo/placeholders';
-import { type APIGuildChannel, ChannelType, type GuildChannelType } from 'discord-api-types/v10';
+import type { InternalApiChannel } from '@repo/shared';
+import { ChannelType } from 'discord-api-types/v10';
 import { PencilIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
@@ -30,7 +31,7 @@ import { formSchema } from './schema';
 import { SendTriggerSelect } from './send-trigger-select';
 
 type FormProps = {
-  channels: APIGuildChannel<GuildChannelType>[];
+  channels: InternalApiChannel[];
   setting?: z.infer<typeof formSchema>;
   enabledVerificationGate: boolean;
 } & Pick<MessageResources, 'emojis' | 'roles'>;

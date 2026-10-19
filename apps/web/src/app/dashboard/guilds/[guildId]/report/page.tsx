@@ -16,8 +16,8 @@ export default async function Page({ params }: PageProps<'/dashboard/guilds/[gui
   await verifyDashboardAccessPermission(guildId);
 
   const [channels, roles, setting] = await Promise.all([
-    getChannels(guildId, { revalidate: 30 }),
-    getRoles(guildId, { revalidate: 30 }),
+    getChannels(guildId),
+    getRoles(guildId),
     db.query.reportSetting.findFirst({
       where: (setting, { eq }) => eq(setting.guildId, guildId),
     }),

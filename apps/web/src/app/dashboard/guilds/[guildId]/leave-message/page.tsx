@@ -18,9 +18,9 @@ export default async function Page({
   await verifyDashboardAccessPermission(guildId);
 
   const [channels, emojis, roles, setting] = await Promise.all([
-    getChannels(guildId, { revalidate: 30 }),
-    getGuildEmojis(guildId, { revalidate: 30 }),
-    getRoles(guildId, { revalidate: 30 }),
+    getChannels(guildId),
+    getGuildEmojis(guildId),
+    getRoles(guildId),
     db.query.leaveMessageSetting.findFirst({
       where: (setting, { eq }) => eq(setting.guildId, guildId),
     }),

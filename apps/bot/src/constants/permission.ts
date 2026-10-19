@@ -37,6 +37,7 @@ export const permissionTexts: Record<keyof PermissionFlags, string> = {
   SendVoiceMessages: 'ボイスメッセージを送信',
   SendPolls: '投票を作成',
   BypassSlowmode: '低速モードをバイパス',
+  SetVoiceChannelStatus: 'ボイスチャンネルのステータスを設定',
 
   Connect: '接続',
   Speak: '発言',

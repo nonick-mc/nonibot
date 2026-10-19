@@ -1,16 +1,17 @@
 import 'server-only';
 
-import { type CreateFetchOption, createFetch } from '@better-fetch/fetch';
+import { createFetch } from '@better-fetch/fetch';
+import type {
+  InternalApiChannel,
+  InternalApiEmoji,
+  InternalApiGuild,
+  InternalApiMember,
+  InternalApiRole,
+} from '@repo/shared';
 import {
-  type APIGuild,
   PermissionFlagsBits,
   type RESTAPIPartialCurrentUserGuild,
   type RESTGetAPICurrentUserGuildsQuery,
-  type RESTGetAPIGuildChannelsResult,
-  type RESTGetAPIGuildEmojisResult,
-  type RESTGetAPIGuildMemberResult,
-  type RESTGetAPIGuildQuery,
-  type RESTGetAPIGuildRolesResult,
   RouteBases,
   Routes,
 } from 'discord-api-types/v10';
@@ -18,18 +19,15 @@ import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
 import { auth } from '../auth';
-import { defaultRetryOption } from '../better-fetch';
+import { fetchWithRetryAfter } from '../better-fetch';
 import { db } from '../db';
 import { hasPermission } from './utils';
 
-const defaultFetchOptions: CreateFetchOption = {
-  baseURL: RouteBases.api,
-  retry: defaultRetryOption,
-};
-
-const botFetch = createFetch({
-  headers: { authorization: `Bot ${process.env.DISCORD_TOKEN}` },
-  ...defaultFetchOptions,
+const internalFetch = createFetch({
+  baseURL: process.env.INTERNAL_API_URL,
+  auth: { type: 'Bearer', token: process.env.INTERNAL_API_SECRET },
+  cache: 'no-store',
+  throw: true,
 });
 
 const oauth2UserFetch = createFetch({
@@ -46,7 +44,8 @@ const oauth2UserFetch = createFetch({
   onError: (context) => {
     if (context.error.status === 401) redirect('/login');
   },
-  ...defaultFetchOptions,
+  baseURL: RouteBases.api,
+  customFetchImpl: fetchWithRetryAfter,
 });
 
 /** @see https://discord.com/developers/docs/resources/user#get-current-user-guilds */
@@ -61,53 +60,24 @@ export async function getUserGuilds(
   });
 }
 
-/** @see https://discord.com/developers/docs/resources/guild#get-guild */
-export function getGuild(
-  guildId: string,
-  query?: RESTGetAPIGuildQuery,
-  next?: NextFetchRequestConfig,
-) {
-  return botFetch<APIGuild, false>(Routes.guild(guildId), {
-    query,
-    next,
-    throw: true,
-  });
+export function getGuild(guildId: string) {
+  return internalFetch<InternalApiGuild, false>(`/guilds/${encodeURIComponent(guildId)}`);
 }
-
-/** @see https://discord.com/developers/docs/resources/guild#get-guild-member */
-export function getGuildMember(
-  guildId: string,
-  userId: string | '@me',
-  next?: NextFetchRequestConfig,
-) {
-  return botFetch<RESTGetAPIGuildMemberResult, false>(Routes.guildMember(guildId, userId), {
-    next,
-    throw: true,
-  });
+export const getGuildMember = cache((guildId: string, userId: string) => {
+  return internalFetch<InternalApiMember, false>(
+    `/guilds/${encodeURIComponent(guildId)}/members/${encodeURIComponent(userId)}`,
+  );
+});
+export function getRoles(guildId: string) {
+  return internalFetch<InternalApiRole[], false>(`/guilds/${encodeURIComponent(guildId)}/roles`);
 }
-
-/** @see https://discord.com/developers/docs/resources/guild#get-guild-roles */
-export function getRoles(guildId: string, next?: NextFetchRequestConfig) {
-  return botFetch<RESTGetAPIGuildRolesResult, false>(Routes.guildRoles(guildId), {
-    next,
-    throw: true,
-  });
+export function getChannels(guildId: string) {
+  return internalFetch<InternalApiChannel[], false>(
+    `/guilds/${encodeURIComponent(guildId)}/channels`,
+  );
 }
-
-/** @see https://discord.com/developers/docs/resources/guild#get-guild-channels */
-export function getChannels(guildId: string, next?: NextFetchRequestConfig) {
-  return botFetch<RESTGetAPIGuildChannelsResult, false>(Routes.guildChannels(guildId), {
-    next,
-    throw: true,
-  });
-}
-
-/** @see https://discord.com/developers/docs/resources/emoji#list-guild-emojis */
-export function getGuildEmojis(guildId: string, next?: NextFetchRequestConfig) {
-  return botFetch<RESTGetAPIGuildEmojisResult, false>(Routes.guildEmojis(guildId), {
-    next,
-    throw: true,
-  });
+export function getGuildEmojis(guildId: string) {
+  return internalFetch<InternalApiEmoji[], false>(`/guilds/${encodeURIComponent(guildId)}/emojis`);
 }
 
 /** ログイン中のユーザーがどちらも参加しているサーバーを取得 **/
@@ -132,20 +102,4 @@ export const getManageableGuilds = cache(async () => {
   return guilds.filter((guild) =>
     hasPermission(guild.permissions, PermissionFlagsBits.ManageGuild),
   );
-});
-
-/** ユーザーのサーバー内での権限を取得 **/
-export const getGuildMemberPermissions = cache(async (guildId: string, userId: string) => {
-  const [member, roles] = await Promise.all([getGuildMember(guildId, userId), getRoles(guildId)]);
-
-  const currentMemberRoles = roles.filter(
-    (role) => member.roles.includes(role.id) || role.id === guildId,
-  );
-
-  let permissions = BigInt(0);
-  for (const role of currentMemberRoles) {
-    permissions |= BigInt(role.permissions);
-  }
-
-  return permissions.toString();
 });

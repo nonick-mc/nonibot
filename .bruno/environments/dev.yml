@@ -1,0 +1,17 @@
+name: dev
+variables:
+  - name: baseUrl
+    value: http://localhost:3001
+    description: 内部APIサーバーのURL
+  - secret: true
+    name: secret
+    description: 内部APIサーバーのアクセスに使用するトークン
+  - secret: true
+    name: guild_id
+    description: 検証に使用するサーバーID
+  - secret: true
+    name: user_id
+    description: 検証に使用するユーザーID
+  - secret: true
+    name: role_id
+    description: 検証に使用するロールID

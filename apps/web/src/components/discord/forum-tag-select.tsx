@@ -1,6 +1,6 @@
 'use client';
 
-import type { APIGuildForumTag } from 'discord-api-types/v10';
+import type { InternalApiForumTag } from '@repo/shared';
 import { useMemo } from 'react';
 import {
   Combobox,
@@ -15,7 +15,7 @@ import { InputGroupAddon } from '../ui/input-group';
 import { Emoji, Twemoji } from './preview/markdown';
 
 type ForumTagSelectProps = {
-  items: APIGuildForumTag[];
+  items: InternalApiForumTag[];
   value?: string | null;
   onChange?: (value: string | null) => void;
   name?: string;
@@ -35,7 +35,7 @@ export function ForumTagSelect({
   const anchor = useComboboxAnchor();
 
   return (
-    <Combobox<APIGuildForumTag>
+    <Combobox<InternalApiForumTag>
       items={items}
       value={selectedTag}
       onValueChange={(tag) => onChange?.(tag?.id ?? null)}
@@ -73,7 +73,7 @@ export function ForumTagSelect({
   );
 }
 
-function ForumTagEmoji({ tag }: { tag: APIGuildForumTag }) {
+function ForumTagEmoji({ tag }: { tag: InternalApiForumTag }) {
   if (tag.emoji_name) return <Twemoji name={tag.emoji_name} />;
   if (tag.emoji_id) return <Emoji id={tag.emoji_id} name={tag.name} animated={false} />;
   return null;
