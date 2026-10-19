@@ -79,5 +79,6 @@ export function serializeEmoji(emoji: GuildEmoji): InternalApiEmoji {
 export function serializeMember(member: GuildMember): InternalApiMember {
   return {
     permissions: member.permissions.bitfield.toString(),
+    roles: [...member.roles.cache.keys()],
   };
 }

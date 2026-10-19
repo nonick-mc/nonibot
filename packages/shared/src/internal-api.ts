@@ -60,6 +60,7 @@ export type InternalApiEmoji = {
 
 export type InternalApiMember = {
   permissions: string;
+  roles: string[];
 };
 
 export type InternalApiError = {

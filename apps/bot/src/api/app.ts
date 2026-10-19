@@ -1,7 +1,14 @@
 import { createHash, timingSafeEqual } from 'node:crypto';
 import type { InternalApiError } from '@repo/shared';
 import { SnowflakeRegex } from '@repo/shared';
-import { ChannelFlags, type Client, DiscordAPIError, RESTJSONErrorCodes, Routes } from 'discord.js';
+import {
+  ChannelFlags,
+  type Client,
+  DiscordAPIError,
+  PermissionFlagsBits,
+  RESTJSONErrorCodes,
+  Routes,
+} from 'discord.js';
 import { Hono } from 'hono';
 import {
   serializeChannel,
@@ -68,6 +75,33 @@ export function createApp(client: Client<true>, secret: string) {
     });
     if (!member) return c.json(notFound, 404);
     return c.json(serializeMember(member));
+  });
+
+  app.put('/guilds/:guildId/members/:userId/roles/:roleId', async (c) => {
+    const { userId, roleId } = c.req.param();
+    const guild = client.guilds.cache.get(c.req.param('guildId'));
+    const role = guild?.roles.cache.get(roleId);
+    if (!guild || !role || !SnowflakeRegex.test(userId)) return c.json(notFound, 404);
+
+    const me = guild.members.me;
+    if (
+      !me?.permissions.has(PermissionFlagsBits.ManageRoles) ||
+      role.managed ||
+      role.comparePositionTo(me.roles.highest) >= 0
+    ) {
+      return c.json({ error: 'Forbidden' } satisfies InternalApiError, 403);
+    }
+
+    const member = await guild.members.fetch(userId).catch((error) => {
+      if (error instanceof DiscordAPIError && error.code === RESTJSONErrorCodes.UnknownMember) {
+        return null;
+      }
+      throw error;
+    });
+    if (!member) return c.json(notFound, 404);
+
+    await member.roles.add(role, '認証');
+    return c.body(null, 204);
   });
 
   app.post('/channels/:channelId/messages', async (c) => {
