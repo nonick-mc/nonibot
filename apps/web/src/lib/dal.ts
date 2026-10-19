@@ -1,3 +1,4 @@
+import { BetterFetchError } from '@better-fetch/fetch';
 import { cache } from 'react';
 import 'server-only';
 import { PermissionFlagsBits } from 'discord-api-types/v10';
@@ -41,8 +42,9 @@ export const canAccessDashboard = cache(async (guildId: string) => {
       hasPermission(member.permissions, PermissionFlagsBits.ManageGuild) ||
       hasPermission(member.permissions, PermissionFlagsBits.Administrator)
     );
-  } catch {
-    return false;
+  } catch (error) {
+    if (error instanceof BetterFetchError && error.status === 404) return false;
+    throw error;
   }
 });
 
