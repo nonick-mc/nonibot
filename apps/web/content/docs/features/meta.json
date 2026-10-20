@@ -4,6 +4,7 @@
     "leave-message",
     "report",
     "log",
-    "auto-create-thread"
+    "auto-create-thread",
+    "verification"
   ]
 }
