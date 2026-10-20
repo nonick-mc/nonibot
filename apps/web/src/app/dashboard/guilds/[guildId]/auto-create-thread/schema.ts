@@ -6,6 +6,7 @@ import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
 import {
   createMessageUserComponentsSchema,
+  messageComponentsWithDefault,
   SnowflakeRegex,
   snowflakeArraySchema,
 } from '@/lib/discord/zod';
@@ -18,21 +19,21 @@ const ruleSchema = createInsertSchema(autoCreateThreadRule, {
   autoArchiveDuration: (schema) => schema.pipe(z.enum(ThreadAutoArchiveDuration)),
   initialThreadState: (schema) => schema.default('open'),
   ignoreRoles: () => snowflakeArraySchema.max(20, 'ロールは最大20個まで設定できます。'),
-  messageComponents: createMessageUserComponentsSchema(
-    autoCreateThreadMessagePlaceholders,
-    autoCreateThreadActions,
-  ).default([
-    {
-      type: ComponentType.Container,
-      components: [
-        {
-          type: ComponentType.TextDisplay,
-          content: '**{{userDisplayName}}** さんのスレッドです。',
-        },
-      ],
-      accent_color: 5763719,
-    },
-  ]),
+  messageComponents: messageComponentsWithDefault(
+    createMessageUserComponentsSchema(autoCreateThreadMessagePlaceholders, autoCreateThreadActions),
+    [
+      {
+        type: ComponentType.Container,
+        components: [
+          {
+            type: ComponentType.TextDisplay,
+            content: '**{{userDisplayName}}** さんのスレッドです。',
+          },
+        ],
+        accent_color: 5763719,
+      },
+    ],
+  ),
 }).omit({ guildId: true, createdAt: true, updatedAt: true });
 
 export const createRuleFormSchema = ruleSchema.pick({ channelId: true });

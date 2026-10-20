@@ -12,6 +12,8 @@ import {
   PermissionFlagsBits,
   type RESTAPIPartialCurrentUserGuild,
   type RESTGetAPICurrentUserGuildsQuery,
+  type RESTPostAPIChannelMessageJSONBody,
+  type RESTPostAPIChannelMessageResult,
   RouteBases,
   Routes,
 } from 'discord-api-types/v10';
@@ -78,6 +80,26 @@ export function getChannels(guildId: string) {
 }
 export function getGuildEmojis(guildId: string) {
   return internalFetch<InternalApiEmoji[], false>(`/guilds/${encodeURIComponent(guildId)}/emojis`);
+}
+
+/** Botとしてメンバーにロールを付与 **/
+export function addGuildMemberRole(guildId: string, userId: string, roleId: string) {
+  return internalFetch<null, false>(
+    `/guilds/${encodeURIComponent(guildId)}/members/${encodeURIComponent(userId)}/roles/${encodeURIComponent(roleId)}`,
+    { method: 'PUT' },
+  );
+}
+
+/** Botとしてチャンネルにメッセージを送信 **/
+export function createChannelMessage(
+  guildId: string,
+  channelId: string,
+  body: RESTPostAPIChannelMessageJSONBody,
+) {
+  return internalFetch<RESTPostAPIChannelMessageResult, false>(
+    `/guilds/${encodeURIComponent(guildId)}/channels/${encodeURIComponent(channelId)}/messages`,
+    { method: 'POST', body },
+  );
 }
 
 /** ログイン中のユーザーがどちらも参加しているサーバーを取得 **/

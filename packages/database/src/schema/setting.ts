@@ -135,6 +135,10 @@ export const verificationSetting = settingSchema.table('verification', {
   enabled: boolean('enabled').notNull(),
   role: text('role'),
   captchaType: captchaTypeEnum('captcha_type').notNull(),
+  messageComponents: jsonb('message_components')
+    .array()
+    .$type<APIMessageTopLevelComponent[]>()
+    .notNull(),
   ...timestamps,
 });
 // #endregion

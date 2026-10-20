@@ -17,6 +17,7 @@
     "@hookform/devtools": "^4.4.0",
     "@hookform/resolvers": "^5.4.0",
     "@icons-pack/react-simple-icons": "^13.13.0",
+    "@marsidev/react-turnstile": "^1.6.2",
     "@repo/database": "workspace:*",
     "@repo/placeholders": "workspace:*",
     "@repo/shared": "workspace:*",

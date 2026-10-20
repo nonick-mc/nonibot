@@ -2,13 +2,12 @@ import { ComponentType } from 'discord-api-types/v10';
 
 /** メッセージへの設置を許可するインタラクティブコンポーネント */
 export type AllowedComponent = { type: ComponentType; customId: string };
-
 /** メッセージに設置できるインタラクティブコンポーネントの動作 */
 export type ComponentAction = AllowedComponent & { label: string };
 
 export const AutoCreateThreadCustomIdPrefix = 'auto-create-thread:';
+export const VerificationCustomIdPrefix = 'verification:';
 
-/** 自動作成したスレッドのメッセージに設置できるボタンの動作 */
 export const autoCreateThreadActions = [
   {
     type: ComponentType.Button,
@@ -24,6 +23,14 @@ export const autoCreateThreadActions = [
     type: ComponentType.Button,
     customId: `${AutoCreateThreadCustomIdPrefix}archive-lock`,
     label: 'スレッドをアーカイブ&ロックする',
+  },
+] satisfies ComponentAction[];
+
+export const verificationActions = [
+  {
+    type: ComponentType.Button,
+    customId: `${VerificationCustomIdPrefix}verify`,
+    label: 'メンバー認証を開始する',
   },
 ] satisfies ComponentAction[];
 

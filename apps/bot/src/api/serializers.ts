@@ -21,6 +21,7 @@ export function serializeGuild(guild: Guild): InternalApiGuild {
     icon: guild.icon,
     owner_id: guild.ownerId,
     features: guild.features,
+    bot_highest_role_position: guild.members.me?.roles.highest.rawPosition ?? 0,
   };
 }
 
@@ -38,12 +39,16 @@ export function serializeRole(role: Role): InternalApiRole {
   };
 }
 
-export function serializeChannel(channel: GuildBasedChannel): InternalApiChannel {
+export function serializeChannel(
+  channel: GuildBasedChannel,
+  me: GuildMember | null,
+): InternalApiChannel {
   const base = {
     id: channel.id,
     name: channel.name,
     position: 'rawPosition' in channel ? channel.rawPosition : 0,
     parent_id: 'parentId' in channel ? channel.parentId : null,
+    bot_permissions: (me && channel.permissionsFor(me)?.bitfield.toString()) || '0',
   };
 
   if (channel instanceof ThreadOnlyChannel) {
@@ -74,5 +79,6 @@ export function serializeEmoji(emoji: GuildEmoji): InternalApiEmoji {
 export function serializeMember(member: GuildMember): InternalApiMember {
   return {
     permissions: member.permissions.bitfield.toString(),
+    roles: [...member.roles.cache.keys()],
   };
 }

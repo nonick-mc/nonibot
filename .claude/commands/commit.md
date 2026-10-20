@@ -6,6 +6,7 @@ description: Create a git commit
 ## Context
 
 - Current git status: !`git status`
+- Current git diff (staged changes only): !`git diff --cached`
 - Current git diff (staged and unstaged changes): !`git diff HEAD`
 - Current branch: !`git branch --show-current`
 - Recent commits: !`git log --oneline -10`
@@ -15,6 +16,8 @@ description: Create a git commit
 変更内容を分析し、3つのコミットメッセージ候補を生成してユーザーに選択させます。
 
 1. **変更の分析**: diffとgit statusから変更の種類・影響範囲・目的を把握
+   - **ステージ済みの変更が1つでもある場合は、ステージ済みの変更（`git diff --cached`）のみを対象にし、未ステージ・未追跡の変更は分析・コミットメッセージ・スコープ判定に含めない**
+   - ステージ済みの変更がない場合のみ、全変更（`git diff HEAD`と未追跡ファイル）を対象にする
 2. **スコープの判定**: 変更されたファイルのパスから影響範囲を判定
    - 変更が `apps/<name>/` 配下のみ → スコープは `<name>`（例: `web`, `bot`）
    - 変更が `packages/<name>/` 配下のみ → スコープは `<name>`（例: `database`, `placeholders`, `shared`）
@@ -28,7 +31,9 @@ description: Create a git commit
 4. **ユーザー選択**: AskUserQuestionで3候補を提示し選択を受ける
    - 各選択肢の `label` に視点（例: `シンプル表現`）、`description` にコミットメッセージ全文を入れる
    - `preview` は使わない（左右分割の表示になり、メッセージが途中で切れるため）
-5. **コミット実行**: 必要に応じてgit addし、選択されたメッセージでコミット
+5. **コミット実行**: 選択されたメッセージでコミット
+   - ステージ済みの変更がある場合は追加の`git add`をせず、そのままコミットする
+   - ステージ済みの変更がない場合のみ、必要に応じて`git add`してからコミットする
 
 ## コミットメッセージの例
 

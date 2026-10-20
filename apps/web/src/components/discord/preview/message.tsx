@@ -50,7 +50,7 @@ export function DiscordMessage({
     <PreviewResourcesContext.Provider value={resources}>
       <div
         className={cn(
-          'flex flex-col max-sm:p-4 p-6 bg-discord-background border rounded-lg',
+          'flex flex-col max-sm:p-4 p-6 bg-discord-background border rounded-lg text-foreground',
           { 'opacity-50': disabled },
           className,
         )}

@@ -7,5 +7,6 @@ export default defineConfig({
   dts: false,
   minify: true,
   skipNodeModulesBundle: true,
+  external: [/^@repo\//],
   ignoreWatch: ['**/node_modules/**', '**/.git/**'],
 });

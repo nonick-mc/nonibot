@@ -52,3 +52,39 @@ export const verifyDashboardAccessPermission = cache(async (guildId: string) => 
   const isAccessible = await canAccessDashboard(guildId);
   if (!isAccessible) redirect('/dashboard');
 });
+
+export const getVerificationSetting = cache((guildId: string) =>
+  db.query.verificationSetting.findFirst({
+    where: (setting, { eq }) => eq(setting.guildId, guildId),
+  }),
+);
+
+/** Web認証が有効なサーバーかどうか */
+export const isAvailableVerifyPage = cache(async (guildId: string) => {
+  if (!SnowflakeRegex.test(guildId)) return false;
+
+  const setting = await getVerificationSetting(guildId);
+  if (!setting?.enabled || !setting.role || setting.captchaType !== 'web') return false;
+
+  return getGuild(guildId).then(
+    () => true,
+    (error) => {
+      if (error instanceof BetterFetchError && error.status === 404) return false;
+      throw error;
+    },
+  );
+});
+
+/** ログイン中のユーザーがWeb認証ページにアクセスできるかどうか */
+export const canAccessVerifyPage = cache(async (guildId: string) => {
+  const session = await getCachedSession();
+  if (!session || !(await isAvailableVerifyPage(guildId))) return false;
+
+  return getGuildMember(guildId, session.user.discordUserId).then(
+    () => true,
+    (error) => {
+      if (error instanceof BetterFetchError && error.status === 404) return false;
+      throw error;
+    },
+  );
+});
