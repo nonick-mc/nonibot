@@ -162,6 +162,7 @@ async function verifyByImage(interaction: ButtonInteraction<'cached'>, roleId: s
   });
 
   collector.on('collect', async (message) => {
+    if (collector.ended) return;
     if (message.content.trim().toUpperCase() === text) {
       collector.stop('success');
       const ok = await interaction.member.roles.add(roleId, '認証').then(
