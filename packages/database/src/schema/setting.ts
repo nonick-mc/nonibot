@@ -108,6 +108,9 @@ export const autoPublicSetting = settingSchema.table('auto_public', {
   guildId,
   enabled: boolean('enabled').notNull(),
   channels: text('channels').array().notNull(),
+  reactOnFailure: boolean('react_on_failure').notNull(),
+  ignoreRoles: text('ignore_roles').array().notNull(),
+  ignoreWebhooks: boolean('ignore_webhooks').notNull(),
   ...timestamps,
 });
 // #endregion
