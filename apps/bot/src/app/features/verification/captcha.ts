@@ -1,7 +1,9 @@
 import { resolve } from 'node:path';
 import { createCanvas, GlobalFonts } from '@napi-rs/canvas';
 
-GlobalFonts.registerFromPath(resolve(process.cwd(), 'assets/OpenSans-Regular.ttf'), 'Captcha');
+// 開発時(src)とビルド後(dist)のどちらでも、パッケージルートのassetsを参照する
+const root = import.meta.dirname.match(/^(.*)[/\\](?:src|dist)\b/)?.[1] ?? process.cwd();
+GlobalFonts.registerFromPath(resolve(root, 'assets/OpenSans-Regular.ttf'), 'Captcha');
 
 const W = 300;
 const H = 100;
