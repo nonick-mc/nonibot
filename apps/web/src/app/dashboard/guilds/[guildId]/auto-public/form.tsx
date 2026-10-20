@@ -159,7 +159,7 @@ export function SettingForm({ channels, roles, defaultValues }: FormProps) {
                     >
                       <FieldContent>
                         <ControlledFieldLabel>
-                          Webhookが送信したメッセージを自動公開しない<Badge>New</Badge>
+                          Webhookが送信したメッセージを除外する<Badge>New</Badge>
                         </ControlledFieldLabel>
                         <FieldDescription>
                           有効にすると、Webhookによる投稿を自動公開の対象から除外します。
