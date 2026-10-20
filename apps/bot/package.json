@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node dist/index.mjs",
     "dev": "tsx watch src",
-    "build": "tsdown",
+    "build": "tsc --noEmit && tsdown",
     "lint": "tsc --noEmit"
   },
   "type": "module",
