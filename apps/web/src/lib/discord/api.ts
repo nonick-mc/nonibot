@@ -91,9 +91,13 @@ export function addGuildMemberRole(guildId: string, userId: string, roleId: stri
 }
 
 /** Botとしてチャンネルにメッセージを送信 **/
-export function createChannelMessage(channelId: string, body: RESTPostAPIChannelMessageJSONBody) {
+export function createChannelMessage(
+  guildId: string,
+  channelId: string,
+  body: RESTPostAPIChannelMessageJSONBody,
+) {
   return internalFetch<RESTPostAPIChannelMessageResult, false>(
-    `/channels/${encodeURIComponent(channelId)}/messages`,
+    `/guilds/${encodeURIComponent(guildId)}/channels/${encodeURIComponent(channelId)}/messages`,
     { method: 'POST', body },
   );
 }

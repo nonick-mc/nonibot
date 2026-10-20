@@ -65,12 +65,16 @@ export const sendPanelAction = guildActionClient
         throw new ActionClientError('nonibotにこのチャンネルへの送信権限がありません。');
       }
 
-      await createChannelMessage(channelId, {
+      await createChannelMessage(guildId, channelId, {
         components: renderPlaceholders(setting.messageComponents, {
           role: `<@&${setting.role}>`,
         } satisfies PlaceholderParams<typeof verificationMessagePlaceholders>),
         flags: MessageFlags.IsComponentsV2,
         allowed_mentions: { parse: [] },
+      }).catch(() => {
+        throw new ActionClientError(
+          'メッセージを送信できませんでした。nonibotの権限を確認してください。',
+        );
       });
 
       await db.insert(auditLog).values({
