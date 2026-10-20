@@ -28,7 +28,7 @@ import { createCaptcha } from '../captcha';
 export const button = new Button({ id: /^(verification:verify|nonick-js:verify)$/ });
 
 const MaxAttempts = 3;
-const AnswerTime = 60_000;
+const AnswerTime = 3 * 60_000;
 const Cooldown = 5 * 60_000;
 
 const blockedUsers = new Set<string>();
