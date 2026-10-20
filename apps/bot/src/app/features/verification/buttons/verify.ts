@@ -102,6 +102,8 @@ async function verifyByImage(interaction: ButtonInteraction<'cached'>, roleId: s
     });
   }
 
+  // 連打による二重起動を防ぐため、awaitの前に同期的にブロックする
+  blockedUsers.add(user.id);
   await interaction.deferReply({ flags: [MessageFlags.Ephemeral] });
 
   const { image, text } = createCaptcha();
@@ -145,12 +147,12 @@ async function verifyByImage(interaction: ButtonInteraction<'cached'>, roleId: s
     .catch(() => null);
 
   if (!sent) {
+    blockedUsers.delete(user.id);
     return interaction.editReply(
       errorMessage('この認証を行うにはBOTからDMを受け取れるように設定する必要があります。'),
     );
   }
 
-  blockedUsers.add(user.id);
   await interaction.editReply(successMessage('DMで認証を続けてください。'));
 
   let attempts = 0;
