@@ -13,7 +13,12 @@ export const verifyAction = memberActionClient
     if (!(await canAccessVerifyPage(guildId))) {
       throw new ActionClientError('認証を行うことができません。');
     }
-    if (!(await verifyTurnstileToken(parsedInput.turnstileToken))) {
+    const isHuman = await verifyTurnstileToken(parsedInput.turnstileToken).catch(() => {
+      throw new ActionClientError(
+        '人間であることを確認できませんでした。時間をおいて再度お試しください。',
+      );
+    });
+    if (!isHuman) {
       throw new ActionClientError('人間であることを確認できませんでした。');
     }
 
