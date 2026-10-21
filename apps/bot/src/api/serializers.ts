@@ -22,6 +22,7 @@ export function serializeGuild(guild: Guild): InternalApiGuild {
     owner_id: guild.ownerId,
     features: guild.features,
     bot_highest_role_position: guild.members.me?.roles.highest.rawPosition ?? 0,
+    verification_level: guild.verificationLevel,
   };
 }
 

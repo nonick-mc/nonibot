@@ -7,6 +7,7 @@ export type InternalApiGuild = {
   owner_id: string;
   features: `${GuildFeature}`[];
   bot_highest_role_position: number;
+  verification_level: number;
 };
 
 export type InternalApiRoleColors = {
