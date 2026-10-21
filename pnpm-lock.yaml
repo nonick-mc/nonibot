@@ -89,6 +89,9 @@ importers:
       hono:
         specifier: ^4.13.13
         version: 4.13.13
+      node-cron:
+        specifier: ^4.6.0
+        version: 4.6.0
       pg:
         specifier: 'catalog:'
         version: 8.20.0
@@ -4279,6 +4282,10 @@ packages:
       next: '>= 6.0.0'
       react: '>= 16.0.0'
       react-dom: '>= 16.0.0'
+
+  node-cron@4.6.0:
+    resolution: {integrity: sha512-Si/bzYiKRHOB8/a99T2+SDGN582ONDMSTlJr5oCkT6GtnqPjZ2s10eoQRYkW9ZHwjVxONL+W8Fb+qR0AHMQsdg==}
+    engines: {node: '>=20'}
 
   node-domexception@1.0.0:
     resolution: {integrity: sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==}
@@ -9111,6 +9118,8 @@ snapshots:
       prop-types: 15.8.1
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
+
+  node-cron@4.6.0: {}
 
   node-domexception@1.0.0: {}
 
