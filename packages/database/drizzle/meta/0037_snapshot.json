@@ -737,7 +737,7 @@
           "name": "default_level",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "enable_log": {
           "name": "enable_log",
