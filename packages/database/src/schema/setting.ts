@@ -97,6 +97,7 @@ export const autoChangeVerifyLevelSetting = settingSchema.table('auto_change_ver
   startHour: integer('start_hour').notNull(),
   endHour: integer('end_hour').notNull(),
   level: integer('level').notNull(),
+  defaultLevel: integer('default_level').notNull(),
   enableLog: boolean('enable_log').notNull(),
   logChannel: text('log_channel'),
   ...timestamps,
