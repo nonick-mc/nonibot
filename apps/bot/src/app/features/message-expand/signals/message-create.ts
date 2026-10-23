@@ -21,7 +21,14 @@ execute(signal, async (message) => {
   if (
     !message.channel
       .permissionsFor(message.client.user)
-      ?.has([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages])
+      ?.has([
+        PermissionFlagsBits.ViewChannel,
+        message.channel.isThread()
+          ? PermissionFlagsBits.SendMessagesInThreads
+          : PermissionFlagsBits.SendMessages,
+        PermissionFlagsBits.EmbedLinks,
+        PermissionFlagsBits.ReadMessageHistory,
+      ])
   )
     return;
 
