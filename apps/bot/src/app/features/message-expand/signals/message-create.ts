@@ -14,7 +14,7 @@ export const signal = new Signal(Events.MessageCreate);
 
 const MaxExpands = 3;
 const urlRegex =
-  /(?<startPattern>.)?https?:\/\/(?:.+\.)?discord(?:.+)?.com\/channels\/(?<guildId>\d+)\/(?<channelId>\d+)\/(?<messageId>\d+)(?<endPattern>.)?/g;
+  /(?<startPattern>.)?https?:\/\/(?:(?:ptb|canary)\.)?discord(?:app)?\.com\/channels\/(?<guildId>\d+)\/(?<channelId>\d+)\/(?<messageId>\d+)(?<endPattern>.)?/g;
 
 execute(signal, async (message) => {
   if (!message.inGuild() || message.author.bot || message.system) return;
