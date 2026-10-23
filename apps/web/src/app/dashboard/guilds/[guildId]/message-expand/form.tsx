@@ -107,7 +107,7 @@ export function SettingForm({ channels, defaultValues }: FormProps) {
                     >
                       <FieldContent>
                         <ControlledFieldLabel>
-                          このサーバーでは他のサーバーのメッセージを展開しない<Badge>New</Badge>
+                          他のサーバーのメッセージを展開しない<Badge>New</Badge>
                         </ControlledFieldLabel>
                         <FieldDescription>
                           有効にすると、他のサーバーのメッセージURLが展開されなくなります。
