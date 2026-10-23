@@ -1,7 +1,14 @@
 import { Events, PermissionFlagsBits } from 'discord.js';
 import { execute, Signal } from 'sunar';
 import { db } from '@/src/lib/db';
-import { buildComponents, buildPages, canViewChannel, fetchSource, isNsfwChannel } from '../expand';
+import {
+  buildComponents,
+  buildPages,
+  canViewChannel,
+  fetchSource,
+  isNsfwChannel,
+  type SourceIds,
+} from '../expand';
 
 export const signal = new Signal(Events.MessageCreate);
 
@@ -28,15 +35,16 @@ execute(signal, async (message) => {
   )
     return;
 
-  const seen = new Set<string>();
+  const targets = new Map<string, SourceIds>();
   for (const match of message.content.matchAll(urlRegex)) {
-    if (seen.size >= MaxExpands) break;
-
     const { startPattern, endPattern, guildId, channelId, messageId } = match.groups ?? {};
-    if (!(guildId && channelId && messageId) || seen.has(messageId)) continue;
+    if (!(guildId && channelId && messageId)) continue;
     if (startPattern && setting.ignorePrefixes.includes(startPattern)) continue;
     if (startPattern === '<' && endPattern === '>') continue;
+    targets.set(`${channelId}:${messageId}`, { guildId, channelId, messageId });
+  }
 
+  for (const { guildId, channelId, messageId } of [...targets.values()].slice(0, MaxExpands)) {
     if (guildId !== message.guildId) {
       if (setting.onlyOwnGuild) continue;
       const external = await db.query.msgExpandSetting.findFirst({
@@ -51,7 +59,6 @@ execute(signal, async (message) => {
       if (!(await canViewChannel(source.guild, source.channel, message.author.id))) continue;
       if (isNsfwChannel(source.channel) && !isNsfwChannel(message.channel)) continue;
 
-      seen.add(messageId);
       const pages = buildPages(source.message);
       const [first] = pages;
       if (!first) continue;
