@@ -6,7 +6,7 @@ import { snowflakeIdSchema } from '@/lib/discord/zod';
 z.config(z.locales.ja());
 
 const hourSchema = (label: string, defaultValue: number) => {
-  const message = `${label}: 0以上23の数値で入力してください`;
+  const message = `${label}: 0〜23の数値で入力してください`;
   return z
     .number({ error: message })
     .int(message)
