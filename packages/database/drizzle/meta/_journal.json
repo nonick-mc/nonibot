@@ -260,6 +260,13 @@
       "when": 1792477592784,
       "tag": "0036_lyrical_norman_osborn",
       "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "7",
+      "when": 1792564768266,
+      "tag": "0037_tired_thor_girl",
+      "breakpoints": true
     }
   ]
 }

@@ -97,6 +97,8 @@ export const autoChangeVerifyLevelSetting = settingSchema.table('auto_change_ver
   startHour: integer('start_hour').notNull(),
   endHour: integer('end_hour').notNull(),
   level: integer('level').notNull(),
+  // 期間内のみ、期間外に戻すべき認証レベルを一時的に保存する(期間外はnull)
+  defaultLevel: integer('default_level'),
   enableLog: boolean('enable_log').notNull(),
   logChannel: text('log_channel'),
   ...timestamps,
