@@ -1,10 +1,12 @@
 import {
   ActionRowBuilder,
+  type Attachment,
   ButtonBuilder,
   ButtonStyle,
   type Client,
   Colors,
   EmbedBuilder,
+  escapeMarkdown,
   type Guild,
   type GuildBasedChannel,
   type Message,
@@ -35,29 +37,50 @@ export async function canViewChannel(guild: Guild, channel: GuildBasedChannel, u
   return !!member && channel.permissionsFor(member).has(['ViewChannel', 'ReadMessageHistory']);
 }
 
+// embedのdescriptionの文字数上限
+const DescriptionMaxLength = 4096;
+
 export function buildPages(msg: Message) {
+  const author = {
+    name: msg.member?.displayName ?? msg.author.tag,
+    iconURL: msg.member?.displayAvatarURL() ?? msg.author.displayAvatarURL(),
+  };
   const info = new EmbedBuilder()
     .setTitle('メッセージ展開')
     .setURL(msg.url)
     .setColor(Colors.White)
-    .setAuthor({
-      name: msg.member?.displayName ?? msg.author.tag,
-      iconURL: msg.member?.displayAvatarURL() ?? msg.author.displayAvatarURL(),
-    })
+    .setAuthor(author)
     .addFields({ name: '送信時刻', value: time(msg.createdAt), inline: true });
+  const createPage = () => new EmbedBuilder(info.toJSON());
 
-  const contentPages = (msg.content.match(/.{1,1024}/gs) ?? []).map((content) =>
-    new EmbedBuilder(info.toJSON()).setDescription(content),
-  );
-  const attachmentPages = msg.attachments.map((attachment) =>
-    new EmbedBuilder(info.toJSON()).setImage(attachment.url),
-  );
-  const pages = [
-    ...contentPages,
-    ...attachmentPages,
-    ...msg.embeds.map((embed) => EmbedBuilder.from(embed)),
-  ];
-  // Discordの1メッセージあたりのembed数制限は10だが、ページは1つずつ表示する
+  const contentPages = (
+    msg.content.match(new RegExp(`.{1,${DescriptionMaxLength}}`, 'gs')) ?? []
+  ).map((content) => createPage().setDescription(content));
+
+  // 画像はそのまま表示し、それ以外の添付ファイルはリンクとして1ページにまとめる
+  const isImage = (attachment: Attachment) => attachment.contentType?.startsWith('image/');
+  const imagePages = msg.attachments
+    .filter(isImage)
+    .map((attachment) => createPage().setImage(attachment.url));
+  const files = msg.attachments.filter((attachment) => !isImage(attachment));
+  const filePages = files.size
+    ? [
+        createPage().setDescription(
+          files
+            .map((file) => `[${escapeMarkdown(file.name)}](${file.url})`)
+            .join('\n')
+            .slice(0, DescriptionMaxLength),
+        ),
+      ]
+    : [];
+
+  // 元のembedにも送信者が分かるように、authorが未設定の場合は補う
+  const embedPages = msg.embeds.map((embed) => {
+    const page = EmbedBuilder.from(embed);
+    return page.data.author ? page : page.setAuthor(author);
+  });
+
+  const pages = [...contentPages, ...imagePages, ...filePages, ...embedPages];
   return pages.length ? pages : [info];
 }
 
