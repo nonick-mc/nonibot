@@ -83,6 +83,7 @@ export const msgExpandSetting = settingSchema.table('message_expand', {
   guildId,
   enabled: boolean('enabled').notNull(),
   allowExternalGuild: boolean('allow_external_guild').notNull(),
+  onlyOwnGuild: boolean('only_own_guild').notNull(),
   ignoreChannels: text('ignore_channels').array().notNull(),
   ignoreChannelTypes: integer('ignore_channel_types').array().notNull(),
   ignorePrefixes: text('ignore_prefixes').array().notNull(),
