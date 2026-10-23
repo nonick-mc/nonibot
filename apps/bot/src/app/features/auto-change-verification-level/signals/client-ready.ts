@@ -59,12 +59,14 @@ async function reconcile(client: Client<true>) {
 
     if (active) {
       if (current === setting.level) continue;
-      // 変更前に現在の認証レベルを保存
       target = setting.level;
-      await db
-        .update(autoChangeVerifyLevelSetting)
-        .set({ defaultLevel: current })
-        .where(eq(autoChangeVerifyLevelSetting.guildId, setting.guildId));
+      // 変更前に現在の認証レベルを保存
+      if (setting.defaultLevel === null) {
+        await db
+          .update(autoChangeVerifyLevelSetting)
+          .set({ defaultLevel: current })
+          .where(eq(autoChangeVerifyLevelSetting.guildId, setting.guildId));
+      }
     } else {
       if (setting.defaultLevel === null) continue;
       target = setting.defaultLevel;

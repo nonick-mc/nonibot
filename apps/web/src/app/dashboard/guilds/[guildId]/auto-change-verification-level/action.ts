@@ -14,10 +14,13 @@ export const updateSettingAction = guildActionClient
       where: (setting, { eq }) => eq(setting.guildId, guildId),
     });
 
+    // 無効化された場合、期間外に戻すために保存していた認証レベルは破棄
+    const values = parsedInput.enabled ? parsedInput : { ...parsedInput, defaultLevel: null };
+
     const [after] = await db
       .insert(autoChangeVerifyLevelSetting)
-      .values({ guildId, ...parsedInput })
-      .onConflictDoUpdate({ target: autoChangeVerifyLevelSetting.guildId, set: parsedInput })
+      .values({ guildId, ...values })
+      .onConflictDoUpdate({ target: autoChangeVerifyLevelSetting.guildId, set: values })
       .returning();
 
     await insertSettingAuditLog({
