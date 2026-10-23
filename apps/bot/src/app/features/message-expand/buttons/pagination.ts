@@ -1,7 +1,14 @@
 import { MessageFlags, PermissionFlagsBits } from 'discord.js';
 import { Button, execute } from 'sunar';
 import { errorMessage } from '@/src/lib/format';
-import { buildComponents, buildPages, fetchSource, MessageExpandCustomIdPrefix } from '../expand';
+import {
+  buildComponents,
+  buildPages,
+  canViewChannel,
+  fetchSource,
+  isNsfwChannel,
+  MessageExpandCustomIdPrefix,
+} from '../expand';
 
 export const button = new Button({ id: new RegExp(`^${MessageExpandCustomIdPrefix}(?!page$)`) });
 
@@ -33,6 +40,17 @@ execute(button, async (interaction) => {
   if (!source) {
     return interaction.reply({
       content: errorMessage('展開元のメッセージを取得できませんでした。'),
+      flags: [MessageFlags.Ephemeral],
+    });
+  }
+
+  // ページ切り替え時に権限やチャンネル制限を再検証
+  const canView = await canViewChannel(source.guild, source.channel, interaction.user.id);
+  const nsfwMismatch =
+    interaction.channel && isNsfwChannel(source.channel) && !isNsfwChannel(interaction.channel);
+  if (!canView || nsfwMismatch) {
+    return interaction.reply({
+      content: errorMessage('このメッセージを表示する権限がありません。'),
       flags: [MessageFlags.Ephemeral],
     });
   }
