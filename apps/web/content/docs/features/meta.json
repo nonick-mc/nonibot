@@ -4,6 +4,7 @@
     "leave-message",
     "report",
     "log",
+    "message-expand",
     "auto-change-verification-level",
     "auto-public",
     "auto-create-thread",
