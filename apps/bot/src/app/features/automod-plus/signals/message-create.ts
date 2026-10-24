@@ -1,0 +1,145 @@
+import {
+  ContainerBuilder,
+  Events,
+  HeadingLevel,
+  heading,
+  type Message,
+  MessageFlags,
+  PermissionFlagsBits,
+  SectionBuilder,
+  SeparatorBuilder,
+  SeparatorSpacingSize,
+  subtext,
+  TextDisplayBuilder,
+  ThumbnailBuilder,
+  unorderedList,
+} from 'discord.js';
+import { execute, Signal } from 'sunar';
+import { markAutoModDeleted, unmarkAutoModDeleted } from '@/src/app/shared/automod-deleted';
+import { addMessageContent } from '@/src/app/shared/message-content';
+import { Default, Destructive, getAppEmoji } from '@/src/constants/emoji';
+import { db } from '@/src/lib/db';
+import { baseField, channelField, timeField, userField } from '@/src/lib/format';
+import { sendViaWebhook } from '@/src/lib/webhook';
+
+export const signal = new Signal(Events.MessageCreate);
+
+const inviteRegex = /(?:discord(?:app)?\.com\/invite|discord\.gg)\/([a-z0-9-]+)/gi;
+const tokenRegexes = [
+  /mfa\.[a-z0-9_-]{20,}/i,
+  /[a-z0-9_-]{23,28}\.[a-z0-9_-]{6,7}\.[a-z0-9_-]{27}/i,
+];
+
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+execute(signal, async (message) => {
+  if (
+    !message.inGuild() ||
+    !message.member ||
+    message.author.bot ||
+    message.system ||
+    !message.content ||
+    message.member.permissions.has(PermissionFlagsBits.ManageGuild)
+  )
+    return;
+
+  const setting = await db.query.autoModSetting.findFirst({
+    where: (setting, { eq }) => eq(setting.guildId, message.guildId),
+  });
+  if (
+    !setting?.enabled ||
+    setting.ignoreChannels.includes(message.channelId) ||
+    (message.channel.isThread() &&
+      message.channel.parentId &&
+      setting.ignoreChannels.includes(message.channel.parentId)) ||
+    message.member.roles.cache.hasAny(...setting.ignoreRoles)
+  )
+    return;
+
+  const rule = await detectRule(message, setting);
+  if (!rule || !message.deletable) return;
+
+  markAutoModDeleted(message.id);
+  const deleted = await message.delete().then(
+    () => true,
+    () => false,
+  );
+  if (!deleted) unmarkAutoModDeleted(message.id);
+  if (!deleted || !setting.enableLog || !setting.logChannel) return;
+
+  const container = new ContainerBuilder()
+    .addSectionComponents(
+      new SectionBuilder()
+        .setThumbnailAccessory(new ThumbnailBuilder().setURL(message.author.displayAvatarURL()))
+        .addTextDisplayComponents(
+          new TextDisplayBuilder().setContent(
+            heading(
+              `${getAppEmoji(Destructive.shieldAlert)} メッセージブロック`,
+              HeadingLevel.Three,
+            ),
+          ),
+          new TextDisplayBuilder().setContent(
+            unorderedList([
+              userField(Default.userRound, '送信者', message.author),
+              channelField(Default.hash, 'チャンネル', message.channel),
+              timeField(Default.calendarClock, '送信時刻', message.createdAt),
+              baseField(Default.shieldAlert, 'ルール', rule),
+            ]),
+          ),
+        ),
+    )
+    .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Large))
+    .addTextDisplayComponents(new TextDisplayBuilder().setContent(subtext('メッセージの内容')));
+
+  const files = await addMessageContent(container, message);
+
+  await sendViaWebhook(message.guild, setting.logChannel, {
+    components: [container],
+    files,
+    flags: MessageFlags.IsComponentsV2,
+    allowedMentions: { parse: [] },
+  });
+});
+
+// 最初に一致したルール名を返す
+async function detectRule(
+  message: Message<true>,
+  setting: {
+    enableInviteUrlFilter: boolean;
+    enableTokenFilter: boolean;
+    enableDomainFilter: boolean;
+    domainList: string[];
+  },
+) {
+  const { content } = message;
+
+  if (setting.enableInviteUrlFilter) {
+    const codes = new Set([...content.matchAll(inviteRegex)].map((m) => m[1] as string));
+    if (codes.size > 0) {
+      // 招待リンク一覧の取得には「サーバー管理」権限が必要。取得できない場合は判定できないため通す
+      const invites = await message.guild.invites.fetch().catch(() => null);
+      if (invites) {
+        // バニティURLのコードは招待リンク一覧に含まれず、Guildオブジェクトから権限不要で取得できる(大文字小文字は区別されない)
+        const vanity = message.guild.vanityURLCode?.toLowerCase();
+        for (const code of codes) {
+          if (!invites.has(code) && code.toLowerCase() !== vanity) return 'サーバー招待リンク';
+        }
+      }
+    }
+  }
+
+  if (setting.enableTokenFilter && tokenRegexes.some((r) => r.test(content)))
+    return 'Discordアカウントのトークン';
+
+  if (
+    setting.enableDomainFilter &&
+    setting.domainList.some((domain) =>
+      new RegExp(`(?:^|[^a-z0-9-])${escapeRegExp(domain)}(?:$|[^a-z0-9-])`, 'i').test(content),
+    )
+  )
+    return 'ドメイン';
+
+  return null;
+}

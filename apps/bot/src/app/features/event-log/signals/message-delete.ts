@@ -17,6 +17,7 @@ import {
   unorderedList,
 } from 'discord.js';
 import { execute, Signal } from 'sunar';
+import { consumeAutoModDeleted } from '@/src/app/shared/automod-deleted';
 import { addMessageContent } from '@/src/app/shared/message-content';
 import { Default, Destructive, getAppEmoji, Primary } from '@/src/constants/emoji';
 import { db } from '@/src/lib/db';
@@ -29,6 +30,8 @@ execute(signal, async (message) => {
   const guild = message.guild;
   if (!guild) return;
   if (message.partial || message.flags.has(MessageFlags.Ephemeral)) return;
+  // AutoMod Plusによる削除は、AutoMod Plus側のログで通知される
+  if (consumeAutoModDeleted(message.id)) return;
 
   const setting = await db.query.msgDeleteLogSetting.findFirst({
     where: (setting, { eq }) => eq(setting.guildId, guild.id),
