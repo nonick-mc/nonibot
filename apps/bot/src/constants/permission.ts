@@ -22,7 +22,7 @@ export const permissionTexts: Record<keyof PermissionFlags, string> = {
   SendMessages: 'メッセージの送信',
   SendMessagesInThreads: 'スレッドでメッセージを送信',
   CreatePublicThreads: '公開スレッドの作成',
-  CreatePrivateThreads: 'プレイべーとスレッドの作成',
+  CreatePrivateThreads: 'プライベートスレッドの作成',
   EmbedLinks: '埋め込みリンク',
   AttachFiles: 'ファイルを添付',
   AddReactions: 'リアクションの追加',
@@ -41,7 +41,7 @@ export const permissionTexts: Record<keyof PermissionFlags, string> = {
 
   Connect: '接続',
   Speak: '発言',
-  Stream: 'WEBカカメラ',
+  Stream: 'WEBカメラ',
   UseSoundboard: 'サウンドボードを使用',
   UseExternalSounds: '外部のサウンドの使用',
   UseVAD: '音声検出を使用',
