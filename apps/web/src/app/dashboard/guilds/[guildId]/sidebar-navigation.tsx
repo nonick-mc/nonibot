@@ -19,7 +19,11 @@ import {
 } from '@/components/ui/sidebar';
 import { SidebarNavigationItems } from './sidebar-navigation-items';
 
-export function SidebarNavigation() {
+type SidebarNavigationProps = {
+  featureStatuses: Record<string, boolean>;
+};
+
+export function SidebarNavigation({ featureStatuses }: SidebarNavigationProps) {
   const params = useParams<{ guildId: string }>();
   const segments = useSelectedLayoutSegments().filter((s) => !s.startsWith('('));
 
@@ -80,6 +84,16 @@ export function SidebarNavigation() {
                         }
                       />
                       {item.badge && <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>}
+                      {item.key && item.key in featureStatuses && (
+                        <SidebarMenuBadge title={featureStatuses[item.key] ? '有効' : '無効'}>
+                          <span
+                            className={`size-1.5 rounded-full ${featureStatuses[item.key] ? 'bg-success' : 'bg-muted-foreground/40'}`}
+                          />
+                          <span className='sr-only'>
+                            {featureStatuses[item.key] ? '有効' : '無効'}
+                          </span>
+                        </SidebarMenuBadge>
+                      )}
                     </>
                   )}
                 </SidebarMenuItem>

@@ -8,9 +8,10 @@ import { SidebarNavigation } from './sidebar-navigation';
 
 type AppSidebarProps = {
   guildId: string;
+  featureStatuses: Record<string, boolean>;
 };
 
-export function AppSidebar({ guildId }: AppSidebarProps) {
+export function AppSidebar({ guildId, featureStatuses }: AppSidebarProps) {
   return (
     <Sidebar>
       <SidebarHeader className='pt-0'>
@@ -24,7 +25,7 @@ export function AppSidebar({ guildId }: AppSidebarProps) {
         </Suspense>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarNavigation />
+        <SidebarNavigation featureStatuses={featureStatuses} />
       </SidebarContent>
     </Sidebar>
   );
