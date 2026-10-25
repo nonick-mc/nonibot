@@ -1,0 +1,22 @@
+---
+title: /bulkdelete
+icon: SquareSlash
+---
+
+チャンネルに送信されたメッセージを一括削除します。
+
+## 概要
+
+コマンドを実行したチャンネルのメッセージを、最新順に指定した数だけ削除するコマンドです。
+
+![](https://cdn.nonick.net/nonibot/commands/bulkdelete/overview.png)
+
+<Callout>APIの仕様上、このコマンドでは**2週間以内に投稿したメッセージのみ**を削除することができます。</Callout>
+
+---
+
+## 引数
+
+引数 | 説明
+--- | ---
+`messages` | 削除するメッセージの数 （`2`～`100`まで）
