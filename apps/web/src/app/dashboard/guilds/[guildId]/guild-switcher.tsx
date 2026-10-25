@@ -16,6 +16,7 @@ import {
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getGuild, getManageableGuilds } from '@/lib/discord/api';
+import { getInviteUrl } from '@/lib/discord/invite';
 
 type GuildSwitcherProps = {
   currentGuildId: string;
@@ -77,7 +78,7 @@ export async function GuildSwitcher({ currentGuildId }: GuildSwitcherProps) {
             <DropdownMenuSeparator />
             <DropdownMenuItem
               render={
-                <a href='/api/invite'>
+                <a href={getInviteUrl()}>
                   <PlusIcon />
                   サーバーを追加
                 </a>

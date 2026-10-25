@@ -17,6 +17,7 @@ import { GuildCard } from './guild-card';
 
 type GuildCardContainerProps = {
   guilds: RESTAPIPartialCurrentUserGuild[];
+  inviteUrl: string;
 };
 
 function StackedCardsIllustration() {
@@ -40,7 +41,7 @@ function StackedCardsIllustration() {
   );
 }
 
-export function GuildCardContainer({ guilds }: GuildCardContainerProps) {
+export function GuildCardContainer({ guilds, inviteUrl }: GuildCardContainerProps) {
   const [query] = useQueryState('q');
   const [debouncedQuery] = useDebounceValue(query, 300);
 
@@ -57,7 +58,7 @@ export function GuildCardContainer({ guilds }: GuildCardContainerProps) {
         <EmptyContent>
           <Button
             render={
-              <a href='/api/invite'>
+              <a href={inviteUrl}>
                 <PlusIcon />
                 サーバーを追加
               </a>
