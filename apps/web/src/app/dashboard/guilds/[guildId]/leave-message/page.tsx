@@ -1,4 +1,6 @@
+import { featurePermissions } from '@repo/shared/constants';
 import type { Metadata } from 'next';
+import { MissingPermissionAlert } from '@/components/discord/missing-permission-alert';
 import { Header } from '@/components/header';
 import { verifyDashboardAccessPermission } from '@/lib/dal';
 import { db } from '@/lib/db';
@@ -32,6 +34,7 @@ export default async function Page({
         title='退室メッセージ'
         description='サーバーからユーザーが退室した際にメッセージを送信します。'
       />
+      <MissingPermissionAlert guildId={guildId} permissions={featurePermissions.leaveMessage} />
       <SettingForm
         channels={sortChannels(channels)}
         emojis={emojis}

@@ -1,6 +1,6 @@
 'use client';
 
-import type { InternalApiRole } from '@repo/shared';
+import type { InternalApiRole } from '@repo/shared/types';
 import { useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import {

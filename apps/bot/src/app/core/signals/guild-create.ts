@@ -1,5 +1,5 @@
 import { guild as guildTable } from '@repo/database';
-import { Links } from '@repo/shared';
+import { Links } from '@repo/shared/constants';
 import { stripIndents } from 'common-tags';
 import {
   ActionRowBuilder,

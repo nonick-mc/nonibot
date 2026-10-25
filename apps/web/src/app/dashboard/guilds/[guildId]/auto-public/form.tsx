@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import type { InternalApiChannel, InternalApiRole } from '@repo/shared';
+import type { InternalApiChannel, InternalApiRole } from '@repo/shared/types';
 import { ChannelType, PermissionFlagsBits } from 'discord-api-types/v10';
 import { useParams } from 'next/navigation';
 import { FormProvider, useForm, Watch } from 'react-hook-form';
@@ -19,14 +19,8 @@ import { ControlledRoleSelect } from '@/components/rhf/role-select';
 import { ControlledSwitch } from '@/components/rhf/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FieldContent, FieldDescription, FieldGroup, FieldSeparator } from '@/components/ui/field';
-import { hasPermission } from '@/lib/discord/utils';
 import { updateSettingAction } from './action';
 import { formSchema } from './schema';
-
-const publishPermission =
-  PermissionFlagsBits.ViewChannel |
-  PermissionFlagsBits.SendMessages |
-  PermissionFlagsBits.ManageMessages;
 
 type FormProps = {
   channels: InternalApiChannel[];
@@ -95,9 +89,10 @@ export function SettingForm({ channels, roles, defaultValues }: FormProps) {
                         className='sm:min-w-sm sm:max-w-sm'
                         items={channels}
                         includeTypes={[ChannelType.GuildAnnouncement]}
-                        disabledItemFilter={(channel) =>
-                          !hasPermission(channel.bot_permissions, publishPermission)
-                        }
+                        requirePermissions={[
+                          PermissionFlagsBits.SendMessages,
+                          PermissionFlagsBits.ManageMessages,
+                        ]}
                         multiple
                       />
                     </ControlledField>

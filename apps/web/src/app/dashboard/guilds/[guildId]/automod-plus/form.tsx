@@ -1,8 +1,8 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import type { InternalApiChannel, InternalApiRole } from '@repo/shared';
-import { ChannelType } from 'discord-api-types/v10';
+import type { InternalApiChannel, InternalApiRole } from '@repo/shared/types';
+import { ChannelType, PermissionFlagsBits } from 'discord-api-types/v10';
 import { CircleAlertIcon } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { FormProvider, useForm, Watch } from 'react-hook-form';
@@ -272,6 +272,7 @@ export function SettingForm({ channels, roles, defaultValues }: FormProps) {
                           <ControlledChannelSelect
                             items={channels}
                             includeTypes={[ChannelType.GuildText]}
+                            requirePermissions={[PermissionFlagsBits.ManageWebhooks]}
                             className='sm:min-w-xs'
                           />
                         </ControlledField>

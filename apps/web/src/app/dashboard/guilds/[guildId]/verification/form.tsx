@@ -2,7 +2,8 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { verificationMessagePlaceholders } from '@repo/placeholders';
-import { type InternalApiChannel, verificationActions } from '@repo/shared';
+import { verificationActions } from '@repo/shared';
+import type { InternalApiChannel } from '@repo/shared/types';
 import { CheckCircle2Icon, PencilIcon } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { FormProvider, useForm, Watch } from 'react-hook-form';

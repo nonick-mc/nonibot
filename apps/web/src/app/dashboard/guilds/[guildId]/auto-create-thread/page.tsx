@@ -1,4 +1,6 @@
+import { featurePermissions } from '@repo/shared/constants';
 import type { Metadata } from 'next';
+import { MissingPermissionAlert } from '@/components/discord/missing-permission-alert';
 import { Header } from '@/components/header';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { verifyDashboardAccessPermission } from '@/lib/dal';
@@ -35,6 +37,7 @@ export default async function Page({
         title='自動スレッド作成'
         description='指定したチャンネルにメッセージが投稿された際、自動でスレッドを作成します。'
       />
+      <MissingPermissionAlert guildId={guildId} permissions={featurePermissions.autoCreateThread} />
       <Card className='bg-card/50'>
         <CardHeader className='flex flex-col sm:flex-row sm:items-center justify-between gap-4'>
           <div className='w-full flex flex-col gap-1.5'>

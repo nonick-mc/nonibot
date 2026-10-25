@@ -2,8 +2,8 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { autoCreateThreadRule } from '@repo/database';
-import type { InternalApiChannel } from '@repo/shared';
-import { ChannelType } from 'discord-api-types/v10';
+import type { InternalApiChannel } from '@repo/shared/types';
+import { ChannelType, PermissionFlagsBits } from 'discord-api-types/v10';
 import type { InferSelectModel } from 'drizzle-orm';
 import { ArrowRightIcon, PlusIcon } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
@@ -95,6 +95,11 @@ export function CreateRuleDialog({ channels, rules }: CreateRuleDialogProps) {
                 <ControlledChannelSelect
                   items={channels}
                   includeTypes={[ChannelType.GuildText, ChannelType.GuildAnnouncement]}
+                  requirePermissions={[
+                    PermissionFlagsBits.CreatePublicThreads,
+                    PermissionFlagsBits.SendMessagesInThreads,
+                    PermissionFlagsBits.ManageThreads,
+                  ]}
                   disabledItemFilter={(channel) =>
                     rules.some((rule) => rule.channelId === channel.id)
                   }

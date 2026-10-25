@@ -1,6 +1,8 @@
-import type { PermissionFlags } from 'discord.js';
+import { PermissionFlagsBits } from 'discord-api-types/v10';
 
-export const permissionTexts: Record<keyof PermissionFlags, string> = {
+type PermissionName = keyof typeof PermissionFlagsBits;
+
+export const permissionTexts: Record<PermissionName, string> = {
   ViewChannel: 'チャンネルを見る',
   ManageChannels: 'チャンネルの管理',
   ManageRoles: 'ロールの管理',
@@ -22,7 +24,7 @@ export const permissionTexts: Record<keyof PermissionFlags, string> = {
   SendMessages: 'メッセージの送信',
   SendMessagesInThreads: 'スレッドでメッセージを送信',
   CreatePublicThreads: '公開スレッドの作成',
-  CreatePrivateThreads: 'プレイべーとスレッドの作成',
+  CreatePrivateThreads: 'プライベートスレッドの作成',
   EmbedLinks: '埋め込みリンク',
   AttachFiles: 'ファイルを添付',
   AddReactions: 'リアクションの追加',
@@ -41,7 +43,7 @@ export const permissionTexts: Record<keyof PermissionFlags, string> = {
 
   Connect: '接続',
   Speak: '発言',
-  Stream: 'WEBカカメラ',
+  Stream: 'WEBカメラ',
   UseSoundboard: 'サウンドボードを使用',
   UseExternalSounds: '外部のサウンドの使用',
   UseVAD: '音声検出を使用',
@@ -64,6 +66,42 @@ export const permissionTexts: Record<keyof PermissionFlags, string> = {
   ViewCreatorMonetizationAnalytics: '収益情報を表示',
 };
 
-export function permToText(...perms: (keyof PermissionFlags)[]) {
+export function permToText(...perms: PermissionName[]) {
   return perms.map((v) => permissionTexts[v]);
 }
+
+/** 各機能がBotに要求する権限(ViewChannel・SendMessagesを除く) */
+export const featurePermissions = {
+  joinMessage: [] as bigint[],
+  leaveMessage: [] as bigint[],
+  report: [
+    PermissionFlagsBits.CreatePublicThreads,
+    PermissionFlagsBits.ManageThreads,
+    PermissionFlagsBits.SendMessagesInThreads,
+    PermissionFlagsBits.ViewAuditLog,
+  ],
+  eventLog: [PermissionFlagsBits.ManageWebhooks, PermissionFlagsBits.ViewAuditLog],
+  verification: [PermissionFlagsBits.ManageRoles],
+  autoPublic: [
+    PermissionFlagsBits.ManageMessages,
+    PermissionFlagsBits.AddReactions,
+    PermissionFlagsBits.ReadMessageHistory,
+    PermissionFlagsBits.UseExternalEmojis,
+  ],
+  autoCreateThread: [
+    PermissionFlagsBits.CreatePublicThreads,
+    PermissionFlagsBits.SendMessagesInThreads,
+    PermissionFlagsBits.ManageThreads,
+  ],
+  autoChangeVerificationLevel: [PermissionFlagsBits.ManageGuild],
+  automodPlus: [
+    PermissionFlagsBits.ManageMessages,
+    PermissionFlagsBits.ManageWebhooks,
+    PermissionFlagsBits.ManageGuild,
+  ],
+  messageExpand: [
+    PermissionFlagsBits.SendMessagesInThreads,
+    PermissionFlagsBits.EmbedLinks,
+    PermissionFlagsBits.ReadMessageHistory,
+  ],
+};

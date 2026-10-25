@@ -1,4 +1,6 @@
+import { featurePermissions } from '@repo/shared/constants';
 import type { Metadata } from 'next';
+import { MissingPermissionAlert } from '@/components/discord/missing-permission-alert';
 import { Header } from '@/components/header';
 import { verifyDashboardAccessPermission } from '@/lib/dal';
 import { db } from '@/lib/db';
@@ -30,6 +32,7 @@ export default async function Page({
         title='メッセージURL展開'
         description='DiscordのメッセージURLが送信された際に、そのメッセージの内容を追加で送信します。'
       />
+      <MissingPermissionAlert guildId={guildId} permissions={featurePermissions.messageExpand} />
       <SettingForm
         channels={sortChannels(channels)}
         defaultValues={formSchema.safeParse(setting ?? {}).data}

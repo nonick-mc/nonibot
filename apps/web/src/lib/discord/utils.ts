@@ -1,4 +1,4 @@
-import type { InternalApiChannel, InternalApiRole } from '@repo/shared';
+import type { InternalApiChannel, InternalApiRole } from '@repo/shared/types';
 import { ChannelType, type GuildChannelType } from 'discord-api-types/v10';
 
 /** 特定の権限が含まれていれば`true`を返す */

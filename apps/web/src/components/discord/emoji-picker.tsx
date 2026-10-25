@@ -1,6 +1,6 @@
 'use client';
 
-import type { InternalApiEmoji } from '@repo/shared';
+import type { InternalApiEmoji } from '@repo/shared/types';
 import { CDNRoutes, ImageFormat, RouteBases } from 'discord-api-types/v10';
 import { type ComponentProps, type ReactNode, type RefObject, useMemo } from 'react';
 import twemoji from 'twemoji';

@@ -1,6 +1,6 @@
 'use client';
 
-import type { InternalApiChannel, InternalApiRole } from '@repo/shared';
+import type { InternalApiChannel, InternalApiRole } from '@repo/shared/types';
 import {
   BanIcon,
   ClockIcon,
