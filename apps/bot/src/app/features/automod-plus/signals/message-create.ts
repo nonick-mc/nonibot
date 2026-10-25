@@ -74,7 +74,7 @@ execute(signal, async (message) => {
     !message.member ||
     message.author.bot ||
     message.system ||
-    !message.content ||
+    (!message.content && message.messageSnapshots.size === 0) ||
     message.member.permissions.has(PermissionFlagsBits.ManageGuild)
   )
     return;
@@ -127,6 +127,10 @@ execute(signal, async (message) => {
     .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Large))
     .addTextDisplayComponents(new TextDisplayBuilder().setContent(subtext('メッセージの内容')));
 
+  for (const snapshot of message.messageSnapshots.values()) {
+    if (snapshot.content)
+      container.addTextDisplayComponents(new TextDisplayBuilder().setContent(snapshot.content));
+  }
   const files = await addMessageContent(container, message);
 
   await sendViaWebhook(message.guild, setting.logChannel, {
@@ -147,20 +151,17 @@ async function detectRule(
     domainList: string[];
   },
 ) {
-  const { content } = message;
+  // 転送されたメッセージの本文も検査対象にする
+  const content = [message.content, ...message.messageSnapshots.map((s) => s.content)].join('\n');
 
   if (setting.enableInviteUrlFilter) {
     const codes = new Set([...content.matchAll(inviteRegex)].map((m) => m[1] as string));
-    if (codes.size > 0) {
-      // 招待リンク一覧の取得には「サーバー管理」権限が必要。取得できない場合は判定できないため通す
-      const invites = await message.guild.invites.fetch().catch(() => null);
-      if (invites) {
-        // バニティURLのコードは招待リンク一覧に含まれず、Guildオブジェクトから権限不要で取得できる(大文字小文字は区別されない)
-        const vanity = message.guild.vanityURLCode?.toLowerCase();
-        for (const code of codes) {
-          if (!invites.has(code) && code.toLowerCase() !== vanity) return 'サーバー招待リンク';
-        }
-      }
+    // 招待リンクの判定には「サーバー管理」権限が必要。取得できない場合は判定できないため通す
+    // バニティURLのコードは招待リンク一覧に含まれず、Guildオブジェクトから取得できる
+    const vanity = message.guild.vanityURLCode?.toLowerCase();
+    for (const code of codes) {
+      if (code.toLowerCase() === vanity) continue;
+      if ((await isOwnInviteCode(message.guild, code)) === false) return 'サーバー招待リンク';
     }
   }
 
