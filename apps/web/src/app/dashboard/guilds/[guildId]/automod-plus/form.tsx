@@ -234,7 +234,7 @@ export function SettingForm({ channels, roles, defaultValues }: FormProps) {
               </Card>
               <Card className='bg-card/50'>
                 <CardHeader>
-                  <CardTitle>ログ</CardTitle>
+                  <CardTitle>ログ設定</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <FieldGroup>
@@ -253,6 +253,7 @@ export function SettingForm({ channels, roles, defaultValues }: FormProps) {
                       </FieldContent>
                       <ControlledSwitch />
                     </ControlledField>
+                    <FieldSeparator />
                     <Watch
                       control={form.control}
                       name='enableLog'
