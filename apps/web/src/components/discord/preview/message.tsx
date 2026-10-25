@@ -1,4 +1,4 @@
-import { Links } from '@repo/shared';
+import { Links } from '@repo/shared/constants';
 import { ComponentType } from 'discord-api-types/v10';
 import { CheckIcon } from 'lucide-react';
 import { useState } from 'react';

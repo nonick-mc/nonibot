@@ -1,6 +1,6 @@
 import { createHash, timingSafeEqual } from 'node:crypto';
 import type { InternalApiError } from '@repo/shared';
-import { SnowflakeRegex } from '@repo/shared';
+import { SnowflakeRegex } from '@repo/shared/constants';
 import {
   ChannelFlags,
   type Client,

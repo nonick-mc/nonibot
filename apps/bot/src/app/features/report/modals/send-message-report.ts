@@ -1,5 +1,5 @@
 import { report } from '@repo/database';
-import { SnowflakeRegex } from '@repo/shared';
+import { SnowflakeRegex } from '@repo/shared/constants';
 import {
   ActionRowBuilder,
   ButtonBuilder,

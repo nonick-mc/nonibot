@@ -1,4 +1,4 @@
-import { Links } from '@repo/shared';
+import { Links } from '@repo/shared/constants';
 import {
   ActionRowBuilder,
   AttachmentBuilder,
