@@ -1,6 +1,6 @@
 'use client';
 
-import type { InternalApiChannel } from '@repo/shared';
+import type { InternalApiChannel } from '@repo/shared/types';
 import { ChannelType } from 'discord-api-types/v10';
 import { Fragment, useMemo } from 'react';
 import { groupChannelsByCategory } from '@/lib/discord/utils';

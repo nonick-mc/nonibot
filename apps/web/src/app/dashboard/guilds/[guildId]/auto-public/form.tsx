@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import type { InternalApiChannel, InternalApiRole } from '@repo/shared';
+import type { InternalApiChannel, InternalApiRole } from '@repo/shared/types';
 import { ChannelType, PermissionFlagsBits } from 'discord-api-types/v10';
 import { useParams } from 'next/navigation';
 import { FormProvider, useForm, Watch } from 'react-hook-form';

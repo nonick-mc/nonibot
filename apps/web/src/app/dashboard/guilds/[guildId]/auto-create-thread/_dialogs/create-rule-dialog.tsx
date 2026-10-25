@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { autoCreateThreadRule } from '@repo/database';
-import type { InternalApiChannel } from '@repo/shared';
+import type { InternalApiChannel } from '@repo/shared/types';
 import { ChannelType } from 'discord-api-types/v10';
 import type { InferSelectModel } from 'drizzle-orm';
 import { ArrowRightIcon, PlusIcon } from 'lucide-react';

@@ -4,7 +4,7 @@ import type {
   InternalApiGuild,
   InternalApiMember,
   InternalApiRole,
-} from '@repo/shared';
+} from '@repo/shared/types';
 import {
   type Guild,
   type GuildBasedChannel,

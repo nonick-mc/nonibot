@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import type { InternalApiChannel, InternalApiRole } from '@repo/shared';
+import type { InternalApiChannel, InternalApiRole } from '@repo/shared/types';
 import { ChannelType } from 'discord-api-types/v10';
 import {
   GripVerticalIcon,

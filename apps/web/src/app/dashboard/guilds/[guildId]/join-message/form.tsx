@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { joinMessagePlaceholders } from '@repo/placeholders';
-import type { InternalApiChannel } from '@repo/shared';
+import type { InternalApiChannel } from '@repo/shared/types';
 import { ChannelType } from 'discord-api-types/v10';
 import { PencilIcon } from 'lucide-react';
 import Link from 'next/link';

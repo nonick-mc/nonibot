@@ -1,7 +1,7 @@
 'use client';
 
 import { Turnstile } from '@marsidev/react-turnstile';
-import type { InternalApiGuild } from '@repo/shared';
+import type { InternalApiGuild } from '@repo/shared/types';
 import { CDNRoutes, ImageFormat, RouteBases } from 'discord-api-types/v10';
 import { domAnimation, LazyMotion, m } from 'framer-motion';
 import { ArrowRightIcon, CheckCircle2Icon } from 'lucide-react';

@@ -7,7 +7,7 @@ import type {
   InternalApiGuild,
   InternalApiMember,
   InternalApiRole,
-} from '@repo/shared';
+} from '@repo/shared/types';
 import {
   PermissionFlagsBits,
   type RESTAPIPartialCurrentUserGuild,

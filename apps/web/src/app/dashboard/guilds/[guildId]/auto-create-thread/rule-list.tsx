@@ -1,5 +1,5 @@
 import type { autoCreateThreadRule } from '@repo/database';
-import type { InternalApiChannel } from '@repo/shared';
+import type { InternalApiChannel } from '@repo/shared/types';
 import type { InferSelectModel } from 'drizzle-orm';
 import { ChevronRightIcon, HashIcon, ListIcon, TriangleAlertIcon } from 'lucide-react';
 import type { Route } from 'next';

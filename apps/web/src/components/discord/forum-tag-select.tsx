@@ -1,6 +1,6 @@
 'use client';
 
-import type { InternalApiForumTag } from '@repo/shared';
+import type { InternalApiForumTag } from '@repo/shared/types';
 import { useMemo } from 'react';
 import {
   Combobox,

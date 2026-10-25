@@ -6,8 +6,8 @@ import {
   autoCreateThreadMessagePlaceholders,
   autoCreateThreadNamePlaceholders,
 } from '@repo/placeholders';
-import type { InternalApiChannel, InternalApiRole } from '@repo/shared';
 import { autoCreateThreadActions } from '@repo/shared';
+import type { InternalApiChannel, InternalApiRole } from '@repo/shared/types';
 import type { InferSelectModel } from 'drizzle-orm';
 import { PencilIcon } from 'lucide-react';
 import { useRef } from 'react';
