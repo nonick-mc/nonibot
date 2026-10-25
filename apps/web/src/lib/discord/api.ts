@@ -51,36 +51,35 @@ const oauth2UserFetch = createFetch({
 });
 
 /** @see https://discord.com/developers/docs/resources/user#get-current-user-guilds */
-export async function getUserGuilds(
-  query?: RESTGetAPICurrentUserGuildsQuery,
-  next?: NextFetchRequestConfig,
-) {
-  return oauth2UserFetch<RESTAPIPartialCurrentUserGuild[], false>(Routes.userGuilds(), {
-    query,
-    next,
-    throw: true,
-  });
-}
+export const getUserGuilds = cache(
+  async (query?: RESTGetAPICurrentUserGuildsQuery, next?: NextFetchRequestConfig) => {
+    return oauth2UserFetch<RESTAPIPartialCurrentUserGuild[], false>(Routes.userGuilds(), {
+      query,
+      next,
+      throw: true,
+    });
+  },
+);
 
-export function getGuild(guildId: string) {
+export const getGuild = cache((guildId: string) => {
   return internalFetch<InternalApiGuild, false>(`/guilds/${encodeURIComponent(guildId)}`);
-}
+});
 export const getGuildMember = cache((guildId: string, userId: string) => {
   return internalFetch<InternalApiMember, false>(
     `/guilds/${encodeURIComponent(guildId)}/members/${encodeURIComponent(userId)}`,
   );
 });
-export function getRoles(guildId: string) {
+export const getRoles = cache((guildId: string) => {
   return internalFetch<InternalApiRole[], false>(`/guilds/${encodeURIComponent(guildId)}/roles`);
-}
-export function getChannels(guildId: string) {
+});
+export const getChannels = cache((guildId: string) => {
   return internalFetch<InternalApiChannel[], false>(
     `/guilds/${encodeURIComponent(guildId)}/channels`,
   );
-}
-export function getGuildEmojis(guildId: string) {
+});
+export const getGuildEmojis = cache((guildId: string) => {
   return internalFetch<InternalApiEmoji[], false>(`/guilds/${encodeURIComponent(guildId)}/emojis`);
-}
+});
 
 /** Botとしてメンバーにロールを付与 **/
 export function addGuildMemberRole(guildId: string, userId: string, roleId: string) {
