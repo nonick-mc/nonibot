@@ -45,6 +45,7 @@ export const Default = createEmojiMap('default', [
   'userRound',
   'calendarClock',
   'squarePen',
+  'shieldAlert',
 ] as const);
 // #f39c0b
 export const Warning = createEmojiMap('warning', ['volume2', 'triangleAlert'] as const);
