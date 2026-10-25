@@ -1,6 +1,7 @@
 import {
   ContainerBuilder,
   Events,
+  type Guild,
   HeadingLevel,
   heading,
   type Message,
@@ -29,6 +30,39 @@ const tokenRegexes = [
   /mfa\.[a-z0-9_-]{20,}/i,
   /[a-z0-9_-]{23,28}\.[a-z0-9_-]{6,7}\.[a-z0-9_-]{27}/i,
 ];
+
+// 招待コードのキャッシュ。ヒットした場合のみ信頼し、ミスの場合は再取得して確認する
+const InviteCacheTtl = 30_000;
+const InviteRefetchMinAge = 5_000;
+const inviteCache = new Map<string, { codes: Set<string>; fetchedAt: number }>();
+
+// 期限切れのキャッシュを定期的に破棄する
+setInterval(() => {
+  for (const [guildId, { fetchedAt }] of inviteCache) {
+    if (Date.now() - fetchedAt > InviteCacheTtl) inviteCache.delete(guildId);
+  }
+}, InviteCacheTtl).unref();
+
+async function fetchInviteCodes(guild: Guild) {
+  const invites = await guild.invites.fetch().catch(() => null);
+  if (!invites) return null;
+  const entry = { codes: new Set(invites.keys()), fetchedAt: Date.now() };
+  inviteCache.set(guild.id, entry);
+  return entry;
+}
+
+async function isOwnInviteCode(guild: Guild, code: string) {
+  let entry = inviteCache.get(guild.id);
+  if (!entry || Date.now() - entry.fetchedAt > InviteCacheTtl)
+    entry = (await fetchInviteCodes(guild)) ?? undefined;
+  if (!entry) return null;
+  if (entry.codes.has(code)) return true;
+
+  // 作成直後の招待を誤ってブロックしないよう、キャッシュが古ければ再取得して確認する
+  if (Date.now() - entry.fetchedAt >= InviteRefetchMinAge)
+    entry = (await fetchInviteCodes(guild)) ?? entry;
+  return entry.codes.has(code);
+}
 
 function escapeRegExp(value: string) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
