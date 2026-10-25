@@ -2,8 +2,9 @@
 
 import type { InternalApiChannel } from '@repo/shared/types';
 import { ChannelType } from 'discord-api-types/v10';
+import { TriangleAlertIcon } from 'lucide-react';
 import { Fragment, useMemo } from 'react';
-import { groupChannelsByCategory } from '@/lib/discord/utils';
+import { groupChannelsByCategory, hasPermission } from '@/lib/discord/utils';
 import { cn } from '@/lib/utils';
 import {
   Combobox,
@@ -22,6 +23,7 @@ import {
   useComboboxFilteredItems,
 } from '../ui/combobox';
 import { InputGroupAddon } from '../ui/input-group';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 import { ChannelTypeIcon } from './channel-type-icon';
 
 type ChannelSelectCommonProps = {
@@ -29,6 +31,8 @@ type ChannelSelectCommonProps = {
   name?: string;
   disabled?: boolean;
   disabledItemFilter?: (value: InternalApiChannel) => boolean;
+  /** Botにこれらの権限が不足しているチャンネルは選択できなくなる */
+  requirePermissions?: bigint[];
   invalid?: boolean;
   includeTypes?: ChannelType[];
   excludeTypes?: ChannelType[];
@@ -52,6 +56,26 @@ type ChannelSelectProps = ChannelSelectMultipleProps | ChannelSelectSingleProps;
 export function ChannelSelect(props: ChannelSelectProps) {
   if (props.multiple) return <ChannelSelectMultiple {...props} />;
   return <ChannelSelectSingle {...props} />;
+}
+
+function lacksPermissions(channel: InternalApiChannel, requirePermissions?: bigint[]) {
+  return !!requirePermissions?.some(
+    (permission) => !hasPermission(channel.bot_permissions, permission),
+  );
+}
+
+function MissingPermissionIcon({ className }: { className?: string }) {
+  return (
+    <Tooltip>
+      <TooltipTrigger render={<span className='flex' />}>
+        <TriangleAlertIcon
+          className={cn('text-warning', className)}
+          aria-label='権限が不足しています'
+        />
+      </TooltipTrigger>
+      <TooltipContent>権限が不足しています</TooltipContent>
+    </Tooltip>
+  );
 }
 
 function useSelectableChannels(
@@ -93,6 +117,7 @@ function ChannelSelectMultiple({
   name,
   disabled,
   disabledItemFilter,
+  requirePermissions,
   invalid,
   includeTypes,
   excludeTypes,
@@ -124,6 +149,9 @@ function ChannelSelectMultiple({
           <ComboboxChip key={ch.id} aria-label={ch.name}>
             <ChannelTypeIcon className='size-4' type={ch.type} />
             <span className='truncate'>{ch.name}</span>
+            {lacksPermissions(ch, requirePermissions) && (
+              <MissingPermissionIcon className='size-4' />
+            )}
           </ComboboxChip>
         ))}
         <ComboboxChipsInput
@@ -139,6 +167,7 @@ function ChannelSelectMultiple({
           categories={categories}
           isCategorySelectable={isCategorySelectable}
           disabledItemFilter={disabledItemFilter}
+          requirePermissions={requirePermissions}
         />
       </ComboboxContent>
     </Combobox>
@@ -152,6 +181,7 @@ function ChannelSelectSingle({
   name,
   disabled,
   disabledItemFilter,
+  requirePermissions,
   invalid,
   includeTypes,
   excludeTypes,
@@ -189,6 +219,11 @@ function ChannelSelectSingle({
               <ChannelTypeIcon type={selectedChannel.type} />
             </InputGroupAddon>
           )}
+          {selectedChannel && lacksPermissions(selectedChannel, requirePermissions) && (
+            <InputGroupAddon align='inline-end' className='order-9998'>
+              <MissingPermissionIcon className='size-5' />
+            </InputGroupAddon>
+          )}
         </ComboboxInput>
       </div>
       <ComboboxContent anchor={anchor}>
@@ -197,6 +232,7 @@ function ChannelSelectSingle({
           categories={categories}
           isCategorySelectable={isCategorySelectable}
           disabledItemFilter={disabledItemFilter}
+          requirePermissions={requirePermissions}
         />
       </ComboboxContent>
     </Combobox>
@@ -207,12 +243,14 @@ type ChannelComboboxListProps = {
   categories: InternalApiChannel[];
   isCategorySelectable: boolean;
   disabledItemFilter?: (value: InternalApiChannel) => boolean;
+  requirePermissions?: bigint[];
 };
 
 function ChannelComboboxList({
   categories,
   isCategorySelectable,
   disabledItemFilter,
+  requirePermissions,
 }: ChannelComboboxListProps) {
   const filteredItems = useComboboxFilteredItems<InternalApiChannel>();
 
@@ -221,10 +259,13 @@ function ChannelComboboxList({
     [filteredItems, isCategorySelectable],
   );
 
+  const isDisabled = (ch: InternalApiChannel) =>
+    !!disabledItemFilter?.(ch) || lacksPermissions(ch, requirePermissions);
+
   return (
     <ComboboxList>
       {uncategorized.map((ch) => (
-        <ComboboxItem key={ch.id} value={ch} disabled={disabledItemFilter?.(ch)}>
+        <ComboboxItem key={ch.id} value={ch} disabled={isDisabled(ch)}>
           <ChannelTypeIcon type={ch.type} />
           {ch.name}
         </ComboboxItem>
@@ -238,7 +279,7 @@ function ChannelComboboxList({
             <ComboboxGroup>
               <ComboboxLabel>{category.name}</ComboboxLabel>
               {channels.map((ch) => (
-                <ComboboxItem key={ch.id} value={ch} disabled={disabledItemFilter?.(ch)}>
+                <ComboboxItem key={ch.id} value={ch} disabled={isDisabled(ch)}>
                   <ChannelTypeIcon type={ch.type} />
                   {ch.name}
                 </ComboboxItem>

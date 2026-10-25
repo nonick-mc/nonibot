@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { InternalApiChannel } from '@repo/shared/types';
-import { ChannelType, GuildVerificationLevel } from 'discord-api-types/v10';
+import { ChannelType, GuildVerificationLevel, PermissionFlagsBits } from 'discord-api-types/v10';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { Fragment } from 'react';
@@ -277,6 +277,7 @@ export function SettingForm({ channels, defaultValues }: FormProps) {
                           <ControlledChannelSelect
                             items={channels}
                             includeTypes={[ChannelType.GuildText]}
+                            requirePermissions={[PermissionFlagsBits.SendMessages]}
                             className='sm:min-w-xs'
                           />
                         </ControlledField>

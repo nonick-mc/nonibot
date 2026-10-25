@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { InternalApiChannel, InternalApiRole } from '@repo/shared/types';
-import { ChannelType } from 'discord-api-types/v10';
+import { ChannelType, PermissionFlagsBits } from 'discord-api-types/v10';
 import {
   GripVerticalIcon,
   PlusIcon,
@@ -117,6 +117,12 @@ export function SettingForm({ channels, roles, defaultValues }: FormProps) {
                     <ControlledChannelSelect
                       items={channels}
                       includeTypes={[ChannelType.GuildText, ChannelType.GuildForum]}
+                      requirePermissions={[
+                        PermissionFlagsBits.SendMessages,
+                        PermissionFlagsBits.CreatePublicThreads,
+                        PermissionFlagsBits.ManageThreads,
+                        PermissionFlagsBits.SendMessagesInThreads,
+                      ]}
                       className='sm:min-w-xs'
                     />
                   </ControlledField>

@@ -27,11 +27,8 @@ import {
 import { FieldContent, FieldDescription, FieldGroup } from '@/components/ui/field';
 import { Spinner } from '@/components/ui/spinner';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { hasPermission } from '@/lib/discord/utils';
 import { sendPanelAction } from './action';
 import { sendPanelFormSchema } from './schema';
-
-const sendPermission = PermissionFlagsBits.ViewChannel | PermissionFlagsBits.SendMessages;
 
 type SendPanelDialogProps = {
   channels: InternalApiChannel[];
@@ -98,9 +95,7 @@ export function SendPanelDialog({ channels }: SendPanelDialogProps) {
                 <ControlledChannelSelect
                   items={channels}
                   includeTypes={[ChannelType.GuildText]}
-                  disabledItemFilter={(channel) =>
-                    !hasPermission(channel.bot_permissions, sendPermission)
-                  }
+                  requirePermissions={[PermissionFlagsBits.SendMessages]}
                 />
               </ControlledField>
             </FieldGroup>
