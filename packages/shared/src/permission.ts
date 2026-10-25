@@ -1,6 +1,8 @@
-import type { PermissionFlags } from 'discord.js';
+import type { PermissionFlagsBits } from 'discord-api-types/v10';
 
-export const permissionTexts: Record<keyof PermissionFlags, string> = {
+type PermissionName = keyof typeof PermissionFlagsBits;
+
+export const permissionTexts: Record<PermissionName, string> = {
   ViewChannel: 'チャンネルを見る',
   ManageChannels: 'チャンネルの管理',
   ManageRoles: 'ロールの管理',
@@ -64,6 +66,6 @@ export const permissionTexts: Record<keyof PermissionFlags, string> = {
   ViewCreatorMonetizationAnalytics: '収益情報を表示',
 };
 
-export function permToText(...perms: (keyof PermissionFlags)[]) {
+export function permToText(...perms: PermissionName[]) {
   return perms.map((v) => permissionTexts[v]);
 }
