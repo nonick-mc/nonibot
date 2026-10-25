@@ -70,7 +70,38 @@ export function permToText(...perms: PermissionName[]) {
   return perms.map((v) => permissionTexts[v]);
 }
 
-/** 各機能がBotに要求する権限 */
+/** 各機能がBotに要求する権限(ViewChannel・SendMessagesを除く) */
 export const featurePermissions = {
-  joinMessage: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages],
+  joinMessage: [] as bigint[],
+  leaveMessage: [] as bigint[],
+  report: [
+    PermissionFlagsBits.CreatePublicThreads,
+    PermissionFlagsBits.ManageThreads,
+    PermissionFlagsBits.SendMessagesInThreads,
+    PermissionFlagsBits.ViewAuditLog,
+  ],
+  eventLog: [PermissionFlagsBits.ManageWebhooks, PermissionFlagsBits.ViewAuditLog],
+  verification: [PermissionFlagsBits.ManageRoles],
+  autoPublic: [
+    PermissionFlagsBits.ManageMessages,
+    PermissionFlagsBits.AddReactions,
+    PermissionFlagsBits.ReadMessageHistory,
+    PermissionFlagsBits.UseExternalEmojis,
+  ],
+  autoCreateThread: [
+    PermissionFlagsBits.CreatePublicThreads,
+    PermissionFlagsBits.SendMessagesInThreads,
+    PermissionFlagsBits.ManageThreads,
+  ],
+  autoChangeVerificationLevel: [PermissionFlagsBits.ManageGuild],
+  automodPlus: [
+    PermissionFlagsBits.ManageMessages,
+    PermissionFlagsBits.ManageWebhooks,
+    PermissionFlagsBits.ManageGuild,
+  ],
+  messageExpand: [
+    PermissionFlagsBits.SendMessagesInThreads,
+    PermissionFlagsBits.EmbedLinks,
+    PermissionFlagsBits.ReadMessageHistory,
+  ],
 };

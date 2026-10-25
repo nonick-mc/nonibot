@@ -1,4 +1,6 @@
+import { featurePermissions } from '@repo/shared/constants';
 import type { Metadata } from 'next';
+import { MissingPermissionAlert } from '@/components/discord/missing-permission-alert';
 import { Header } from '@/components/header';
 import { verifyDashboardAccessPermission } from '@/lib/dal';
 import { db } from '@/lib/db';
@@ -29,6 +31,7 @@ export default async function Page({ params }: PageProps<'/dashboard/guilds/[gui
         title='サーバー内通報'
         description='不適切なメッセージやユーザーをメンバーが通報できるようにします。'
       />
+      <MissingPermissionAlert guildId={guildId} permissions={featurePermissions.report} />
       <SettingForm
         channels={sortChannels(channels)}
         roles={sortRoles(roles)}

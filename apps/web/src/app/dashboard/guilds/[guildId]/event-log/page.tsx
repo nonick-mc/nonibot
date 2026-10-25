@@ -1,4 +1,6 @@
+import { featurePermissions } from '@repo/shared/constants';
 import type { Metadata } from 'next';
+import { MissingPermissionAlert } from '@/components/discord/missing-permission-alert';
 import { Header } from '@/components/header';
 import { verifyDashboardAccessPermission } from '@/lib/dal';
 import { db } from '@/lib/db';
@@ -52,6 +54,7 @@ export default async function Page({ params }: PageProps<'/dashboard/guilds/[gui
         title='イベントログ'
         description='サーバー内の出来事をチャンネルにログとして送信します。'
       />
+      <MissingPermissionAlert guildId={guildId} permissions={featurePermissions.eventLog} />
       <LogAccordion
         channels={sorted}
         roles={sortRoles(roles)}

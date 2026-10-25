@@ -1,4 +1,6 @@
+import { featurePermissions } from '@repo/shared/constants';
 import type { Metadata } from 'next';
+import { MissingPermissionAlert } from '@/components/discord/missing-permission-alert';
 import { Header } from '@/components/header';
 import { verifyDashboardAccessPermission } from '@/lib/dal';
 import { db } from '@/lib/db';
@@ -31,6 +33,7 @@ export default async function Page({
         title='自動アナウンス公開'
         description='アナウンスチャンネルに投稿されたメッセージを自動で公開します。'
       />
+      <MissingPermissionAlert guildId={guildId} permissions={featurePermissions.autoPublic} />
       <SettingForm
         channels={sortChannels(channels)}
         roles={sortRoles(roles)}

@@ -1,4 +1,6 @@
+import { featurePermissions } from '@repo/shared/constants';
 import type { Metadata } from 'next';
+import { MissingPermissionAlert } from '@/components/discord/missing-permission-alert';
 import { Header } from '@/components/header';
 import { verifyDashboardAccessPermission } from '@/lib/dal';
 import { db } from '@/lib/db';
@@ -29,6 +31,10 @@ export default async function Page({
       <Header
         title='自動認証レベル変更'
         description='サーバーの認証レベルを特定の時間帯だけ変更します。'
+      />
+      <MissingPermissionAlert
+        guildId={guildId}
+        permissions={featurePermissions.autoChangeVerificationLevel}
       />
       <SettingForm
         channels={sortChannels(channels)}

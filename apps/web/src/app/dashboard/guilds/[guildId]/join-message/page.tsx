@@ -1,5 +1,7 @@
+import { featurePermissions } from '@repo/shared/constants';
 import { GuildFeature } from 'discord-api-types/v10';
 import type { Metadata } from 'next';
+import { MissingPermissionAlert } from '@/components/discord/missing-permission-alert';
 import { Header } from '@/components/header';
 import { verifyDashboardAccessPermission } from '@/lib/dal';
 import { db } from '@/lib/db';
@@ -34,6 +36,7 @@ export default async function Page({
         title='入室メッセージ'
         description='サーバーにユーザーが参加した際にメッセージを送信します。'
       />
+      <MissingPermissionAlert guildId={guildId} permissions={featurePermissions.joinMessage} />
       <SettingForm
         channels={sortChannels(channels)}
         emojis={emojis}

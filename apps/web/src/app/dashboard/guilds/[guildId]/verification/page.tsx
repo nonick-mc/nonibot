@@ -1,4 +1,6 @@
+import { featurePermissions } from '@repo/shared/constants';
 import type { Metadata } from 'next';
+import { MissingPermissionAlert } from '@/components/discord/missing-permission-alert';
 import { Header } from '@/components/header';
 import { verifyDashboardAccessPermission } from '@/lib/dal';
 import { db } from '@/lib/db';
@@ -30,6 +32,7 @@ export default async function Page({
   return (
     <>
       <Header title='メンバー認証' description='特定の認証を行ったユーザーにロールを付与します。' />
+      <MissingPermissionAlert guildId={guildId} permissions={featurePermissions.verification} />
       <SettingForm
         channels={sortChannels(channels)}
         emojis={emojis}
