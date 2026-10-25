@@ -38,8 +38,8 @@ export const formSchema = createInsertSchema(autoModSetting, {
       )
       .default([]),
   ignoreChannels: () =>
-    snowflakeArraySchema.max(50, 'チャンネルは最大50個まで設定できます。').default([]),
-  ignoreRoles: () => snowflakeArraySchema.max(50, 'ロールは最大50個まで設定できます。').default([]),
+    snowflakeArraySchema.max(20, 'チャンネルは最大20個まで設定できます。').default([]),
+  ignoreRoles: () => snowflakeArraySchema.max(20, 'ロールは最大20個まで設定できます。').default([]),
   logChannel: (schema) => schema.regex(SnowflakeRegex, '無効なIDです。').nullable().default(null),
 })
   .omit({ guildId: true, createdAt: true, updatedAt: true })
