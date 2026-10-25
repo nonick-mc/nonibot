@@ -1,4 +1,4 @@
-import type { PermissionFlagsBits } from 'discord-api-types/v10';
+import { PermissionFlagsBits } from 'discord-api-types/v10';
 
 type PermissionName = keyof typeof PermissionFlagsBits;
 
@@ -69,3 +69,8 @@ export const permissionTexts: Record<PermissionName, string> = {
 export function permToText(...perms: PermissionName[]) {
   return perms.map((v) => permissionTexts[v]);
 }
+
+/** 各機能がBotに要求する権限 */
+export const featurePermissions = {
+  joinMessage: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages],
+};
