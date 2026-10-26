@@ -11,6 +11,8 @@ const actionType = [
   'delete_rule',
   'send_verification_panel',
   'send_custom_message',
+  'update_custom_message',
+  'delete_custom_message',
 ] as const;
 
 const targetName = [

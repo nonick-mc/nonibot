@@ -281,6 +281,13 @@
       "when": 1792996908270,
       "tag": "0039_nebulous_luckman",
       "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "7",
+      "when": 1793003700715,
+      "tag": "0040_harsh_polaris",
+      "breakpoints": true
     }
   ]
 }
