@@ -24,9 +24,9 @@ export const slash = new Slash({
       type: ApplicationCommandOptionType.User,
       required: true,
     },
-    { name: 'date', description: '日', type: ApplicationCommandOptionType.Number },
-    { name: 'hour', description: '時', type: ApplicationCommandOptionType.Number },
-    { name: 'minute', description: '分', type: ApplicationCommandOptionType.Number },
+    { name: 'date', description: '日', type: ApplicationCommandOptionType.Number, minValue: 0 },
+    { name: 'hour', description: '時', type: ApplicationCommandOptionType.Number, minValue: 0 },
+    { name: 'minute', description: '分', type: ApplicationCommandOptionType.Number, minValue: 0 },
     { name: 'reason', description: '理由', type: ApplicationCommandOptionType.String },
   ],
   integrationTypes: [ApplicationIntegrationType.GuildInstall],
@@ -51,14 +51,14 @@ execute(slash, async (interaction) => {
   if (duration < Minute)
     return reply(interaction, errorMessage('合計時間は1分以上から設定できます'));
   if (duration > MaxDuration)
-    return reply(interaction, errorMessage('28日以上のタイムアウトはできません'));
+    return reply(interaction, errorMessage('28日を超えるタイムアウトはできません'));
   if (!member) return reply(interaction, errorMessage('このユーザーはサーバーにいません'));
   if (member.user.equals(interaction.user))
     return reply(interaction, errorMessage('自分自身を対象にすることはできません'));
   if (
     !member.moderatable ||
     (interaction.guild.ownerId !== interaction.user.id &&
-      interaction.member.roles.highest.position < member.roles.highest.position)
+      interaction.member.roles.highest.position <= member.roles.highest.position)
   )
     return reply(interaction, errorMessage('このユーザーをタイムアウトする権限がありません'));
 
