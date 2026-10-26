@@ -10,6 +10,7 @@ const actionType = [
   'update_rule',
   'delete_rule',
   'send_verification_panel',
+  'send_custom_message',
 ] as const;
 
 const targetName = [
@@ -31,6 +32,7 @@ const targetName = [
   'auto_create_thread',
   'auto_mod',
   'verification',
+  'custom_message',
 ] as const;
 
 export const actionTypeEnum = pgEnum('action_type', actionType);
