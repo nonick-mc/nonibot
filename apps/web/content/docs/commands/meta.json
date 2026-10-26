@@ -1,3 +1,10 @@
 {
-  "pages": ["bulkdelete", "firstmessage", "help", "pauseinvite", "ratelimit"]
+  "pages": [
+    "bulkdelete",
+    "firstmessage",
+    "help",
+    "pauseinvite",
+    "ratelimit",
+    "timeout"
+  ]
 }
