@@ -8,7 +8,7 @@ import {
 import { ContextMenu, execute } from 'sunar';
 import { getMemberInfoContainers, getUserInfoContainer } from '@/src/app/shared/user-info';
 
-const context = new ContextMenu({
+export const context = new ContextMenu({
   name: 'このユーザーの情報',
   type: ApplicationCommandType.User,
   integrationTypes: [ApplicationIntegrationType.GuildInstall],
