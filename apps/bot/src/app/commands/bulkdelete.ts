@@ -33,7 +33,12 @@ export const slash = new Slash({
 protect(slash, [appPerms(PermissionFlagsBits.ManageMessages)]);
 
 execute(slash, async (interaction) => {
-  if (!interaction.inGuild() || !interaction.channel || interaction.channel.isDMBased()) return;
+  if (!interaction.inGuild()) return;
+  if (!interaction.channel || interaction.channel.isDMBased())
+    return interaction.reply({
+      content: errorMessage('このチャンネルではメッセージを削除できません'),
+      flags: [MessageFlags.Ephemeral],
+    });
 
   const count = interaction.options.getInteger('messages', true);
   const deleted = await interaction.channel.bulkDelete(count, true).catch(() => null);

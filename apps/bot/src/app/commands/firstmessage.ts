@@ -40,7 +40,12 @@ export const slash = new Slash({
 protect(slash, [appPerms(PermissionFlagsBits.ViewChannel, PermissionFlagsBits.ReadMessageHistory)]);
 
 execute(slash, async (interaction) => {
-  if (!interaction.inGuild() || !interaction.channel) return;
+  if (!interaction.inGuild()) return;
+  if (!interaction.channel)
+    return interaction.reply({
+      content: errorMessage('メッセージを取得できませんでした'),
+      flags: [MessageFlags.Ephemeral],
+    });
 
   const messages = await interaction.channel.messages
     .fetch({ after: '0', limit: 1 })
