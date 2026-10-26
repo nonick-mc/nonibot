@@ -12,6 +12,8 @@ import {
   PermissionFlagsBits,
   type RESTAPIPartialCurrentUserGuild,
   type RESTGetAPICurrentUserGuildsQuery,
+  type RESTPatchAPIChannelMessageJSONBody,
+  type RESTPatchAPIChannelMessageResult,
   type RESTPostAPIChannelMessageJSONBody,
   type RESTPostAPIChannelMessageResult,
   RouteBases,
@@ -98,6 +100,19 @@ export function createChannelMessage(
   return internalFetch<RESTPostAPIChannelMessageResult, false>(
     `/guilds/${encodeURIComponent(guildId)}/channels/${encodeURIComponent(channelId)}/messages`,
     { method: 'POST', body },
+  );
+}
+
+/** Botが送信したメッセージを編集 **/
+export function editChannelMessage(
+  guildId: string,
+  channelId: string,
+  messageId: string,
+  body: RESTPatchAPIChannelMessageJSONBody,
+) {
+  return internalFetch<RESTPatchAPIChannelMessageResult, false>(
+    `/guilds/${encodeURIComponent(guildId)}/channels/${encodeURIComponent(channelId)}/messages/${encodeURIComponent(messageId)}`,
+    { method: 'PATCH', body },
   );
 }
 
