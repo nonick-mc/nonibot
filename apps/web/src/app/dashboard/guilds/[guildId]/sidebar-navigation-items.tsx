@@ -9,10 +9,10 @@ import {
   LogsIcon,
   type LucideIcon,
   MegaphoneIcon,
-  MessagesSquareIcon,
   ScanQrCodeIcon,
   ShieldCheckIcon,
   SpoolIcon,
+  SquarePenIcon,
 } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { Badge } from '@/components/reui/badge';
@@ -117,6 +117,17 @@ export const SidebarNavigationItems: SidebarGroupItem<string>[] = [
         title: 'メンバー認証',
         url: (guildId) => `/dashboard/guilds/${guildId}/verification`,
         icon: ScanQrCodeIcon,
+      },
+    ],
+  },
+  {
+    title: 'ツール',
+    items: [
+      {
+        key: 'custom-message',
+        title: 'カスタムメッセージ',
+        url: (guildId) => `/dashboard/guilds/${guildId}/custom-message`,
+        icon: SquarePenIcon,
       },
     ],
   },
