@@ -126,6 +126,30 @@ export function createApp(client: Client<true>, secret: string) {
     return c.json(message as object);
   });
 
+  app.patch('/guilds/:guildId/channels/:channelId/messages/:messageId', async (c) => {
+    const { guildId, channelId, messageId } = c.req.param();
+    const channel = client.channels.cache.get(channelId);
+    if (
+      !channel?.isSendable() ||
+      channel.isDMBased() ||
+      channel.guildId !== guildId ||
+      !SnowflakeRegex.test(messageId)
+    ) {
+      return c.json(notFound, 404);
+    }
+
+    const body = await c.req.json().catch(() => null);
+    if (typeof body !== 'object' || body === null) {
+      return c.json({ error: 'Bad Request' } satisfies InternalApiError, 400);
+    }
+
+    const { components, flags } = body;
+    const message = await client.rest.patch(Routes.channelMessage(channel.id, messageId), {
+      body: { components, flags },
+    });
+    return c.json(message as object);
+  });
+
   app.onError((error, c) => {
     if (error instanceof DiscordAPIError && (error.status === 403 || error.status === 404)) {
       return c.json(
