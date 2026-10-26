@@ -1,4 +1,5 @@
 import {
+  CalendarClockIcon,
   ClipboardListIcon,
   FlagIcon,
   HammerIcon,
@@ -29,12 +30,14 @@ type SidebarItem<T> = {
   badge?: ReactNode;
   icon: LucideIcon;
   subitems?: SidebarSubItem[];
+  disabled?: boolean;
 };
 
 type SidebarSubItem = {
   title: string;
   key?: string;
   badge?: ReactNode;
+  disabled?: boolean;
 };
 
 export const SidebarNavigationItems: SidebarGroupItem<string>[] = [
@@ -128,6 +131,14 @@ export const SidebarNavigationItems: SidebarGroupItem<string>[] = [
         title: 'カスタムメッセージ',
         url: (guildId) => `/dashboard/guilds/${guildId}/custom-message`,
         icon: SquarePenIcon,
+      },
+      {
+        key: 'scheduled-post',
+        title: '予約投稿',
+        url: (guildId) => `/dashboard/guilds/${guildId}/scheduled-post`,
+        icon: CalendarClockIcon,
+        badge: <Badge variant='outline'>近日公開</Badge>,
+        disabled: true,
       },
     ],
   },
