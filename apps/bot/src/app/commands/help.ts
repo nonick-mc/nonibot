@@ -23,7 +23,7 @@ export const slash = new Slash({
   contexts: [InteractionContextType.Guild],
 });
 
-execute(slash, async (interaction) => {
+execute(slash, (interaction) => {
   return interaction.reply({
     components: [
       new ContainerBuilder()
