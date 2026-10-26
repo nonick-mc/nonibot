@@ -31,8 +31,12 @@ export const slash = new Slash({
 protect(slash, [appPerms(PermissionFlagsBits.ManageChannels)]);
 
 execute(slash, async (interaction) => {
-  if (!interaction.inCachedGuild() || !interaction.channel) return;
-  if (!('setRateLimitPerUser' in interaction.channel)) return;
+  if (!interaction.inCachedGuild()) return;
+  if (!interaction.channel || !('setRateLimitPerUser' in interaction.channel))
+    return interaction.reply({
+      content: errorMessage('このチャンネルでは低速モードを設定できません'),
+      flags: [MessageFlags.Ephemeral],
+    });
 
   const duration = interaction.options.getInteger('duration', true);
   const result = await interaction.channel
