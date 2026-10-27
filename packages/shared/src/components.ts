@@ -1,9 +1,11 @@
 import { ComponentType } from 'discord-api-types/v10';
 
-/** メッセージへの設置を許可するインタラクティブコンポーネント */
-export type AllowedComponent = { type: ComponentType; customId: string };
+/** メッセージへの設置を許可するインタラクティブコンポーネント。 */
+export type AllowedComponent =
+  | { type: ComponentType; customId: string }
+  | { type: ComponentType; customIdPattern: RegExp };
 /** メッセージに設置できるインタラクティブコンポーネントの動作 */
-export type ComponentAction = AllowedComponent & { label: string };
+export type ComponentAction = { type: ComponentType; customId: string; label: string };
 
 export const AutoCreateThreadCustomIdPrefix = 'auto-create-thread:';
 export const VerificationCustomIdPrefix = 'verification:';
@@ -62,5 +64,11 @@ export function isAllowedComponent(
   allowed: readonly AllowedComponent[],
   { type, customId }: Pick<InteractiveComponent, 'type' | 'customId'>,
 ) {
-  return allowed.some((c) => c.type === type && c.customId === customId);
+  return allowed.some(
+    (c) =>
+      c.type === type &&
+      ('customId' in c
+        ? c.customId === customId
+        : typeof customId === 'string' && c.customIdPattern.test(customId)),
+  );
 }
