@@ -7,11 +7,26 @@ export type BaseAllowedComponent =
   | { type: ComponentType; customId: string }
   | { type: ComponentType; customIdPattern: RegExp };
 /** エディタの選択肢にもなる、完全一致の`customId`を持つ許可コンポーネント */
-export type AllowedComponent = { type: ComponentType; customId: string; label: string };
+export type AllowedComponent = Extract<BaseAllowedComponent, { customId: string }> & {
+  label: string;
+};
 
+export const RoleButtonCustomIdPrefix = 'custom-message:role-button:';
+const roleButtonCustomIdRegex = new RegExp(`^${RoleButtonCustomIdPrefix}(\\d{17,19})$`);
+
+// #region ロール付与・解除ボタン
+export const createRoleButtonCustomId = (roleId: string) => `${RoleButtonCustomIdPrefix}${roleId}`;
+export const parseRoleButtonCustomId = (customId: unknown) =>
+  (typeof customId === 'string' && roleButtonCustomIdRegex.exec(customId)?.[1]) || null;
+
+export const roleButtonAllowedComponent = {
+  type: ComponentType.Button,
+  customIdPattern: roleButtonCustomIdRegex,
+} satisfies BaseAllowedComponent;
+// #endregion
+
+// #region 自動スレッド作成
 export const AutoCreateThreadCustomIdPrefix = 'auto-create-thread:';
-export const VerificationCustomIdPrefix = 'verification:';
-
 export const autoCreateThreadAllowedComponents = [
   {
     type: ComponentType.Button,
@@ -29,7 +44,10 @@ export const autoCreateThreadAllowedComponents = [
     label: 'スレッドをアーカイブ&ロックする',
   },
 ] satisfies AllowedComponent[];
+// #endregion
 
+// #region メンバー認証
+export const VerificationCustomIdPrefix = 'verification:';
 export const verificationAllowedComponents = [
   {
     type: ComponentType.Button,
@@ -37,6 +55,7 @@ export const verificationAllowedComponents = [
     label: 'メンバー認証を開始する',
   },
 ] satisfies AllowedComponent[];
+// #endregion
 
 export type InteractiveComponent = {
   type: unknown;
