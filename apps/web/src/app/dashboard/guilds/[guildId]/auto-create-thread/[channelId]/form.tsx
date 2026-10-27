@@ -6,7 +6,7 @@ import {
   autoCreateThreadMessagePlaceholders,
   autoCreateThreadNamePlaceholders,
 } from '@repo/placeholders';
-import { autoCreateThreadActions } from '@repo/shared';
+import { autoCreateThreadAllowedComponents } from '@repo/shared';
 import type { InternalApiChannel, InternalApiRole } from '@repo/shared/types';
 import type { InferSelectModel } from 'drizzle-orm';
 import { PencilIcon } from 'lucide-react';
@@ -84,7 +84,7 @@ export function SettingForm({
     roles: roles.filter((role) => role.id !== rule.guildId),
     channels,
     emojis,
-    componentActions: autoCreateThreadActions,
+    allowedComponents: autoCreateThreadAllowedComponents,
     placeholders: autoCreateThreadMessagePlaceholders,
   };
 

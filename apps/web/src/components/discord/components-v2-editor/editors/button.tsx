@@ -1,6 +1,6 @@
 'use client';
 
-import type { ComponentAction } from '@repo/shared';
+import type { AllowedComponent } from '@repo/shared';
 import { ButtonStyle, ComponentType } from 'discord-api-types/v10';
 import {
   LinkIcon,
@@ -35,10 +35,9 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { SelectContent, SelectGroup, SelectItem, SelectValue } from '@/components/ui/select';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { DiscordButtonEmoji } from '../../preview/button';
-import { ComponentEditorContext } from '../context';
+import { ComponentEditorContext, useEditorResources } from '../context';
 import { EditorCard } from '../editor-card';
 import { EditorPlaceholderPicker } from '../placeholder-picker';
-import { useEditorResources } from '../context';
 
 const ButtonStyleOptions = [
   { label: 'Primary', value: '#5865f2', style: ButtonStyle.Primary },
@@ -71,9 +70,9 @@ function ButtonStylePicker() {
   );
 }
 
-export function useButtonActions() {
-  const { componentActions = [] } = useEditorResources();
-  return componentActions.filter((action) => action.type === ComponentType.Button);
+export function useAllowedButtons() {
+  const { allowedComponents = [] } = useEditorResources();
+  return allowedComponents.filter((allowed) => allowed.type === ComponentType.Button);
 }
 
 export function createDefaultUrlButton() {
@@ -86,11 +85,11 @@ export function createDefaultUrlButton() {
   } as const;
 }
 
-export function createDefaultButton(action: ComponentAction) {
+export function createDefaultButton(allowed: AllowedComponent) {
   return {
     type: ComponentType.Button,
     style: ButtonStyle.Secondary,
-    custom_id: action.customId,
+    custom_id: allowed.customId,
     label: '',
     emoji: null,
   } as const;
@@ -206,7 +205,7 @@ export function UserActionButtonEditor({
   withSortableItemHandle,
 }: ButtonEditorProps) {
   const { control } = useFormContext();
-  const buttonActions = useButtonActions();
+  const allowedButtons = useAllowedButtons();
 
   return (
     <ComponentEditorContext.Provider value={{ basePath, onRemove }}>
@@ -257,14 +256,14 @@ export function UserActionButtonEditor({
             <ControlledSelect<string>>
               <ControlledSelectTrigger className='sm:min-w-2xs'>
                 <SelectValue>
-                  {(value: string) => buttonActions.find((a) => a.customId === value)?.label}
+                  {(value: string) => allowedButtons.find((a) => a.customId === value)?.label}
                 </SelectValue>
               </ControlledSelectTrigger>
               <SelectContent alignItemWithTrigger={false}>
                 <SelectGroup>
-                  {buttonActions.map((action) => (
-                    <SelectItem key={action.customId} value={action.customId}>
-                      {action.label}
+                  {allowedButtons.map((allowed) => (
+                    <SelectItem key={allowed.customId} value={allowed.customId}>
+                      {allowed.label}
                     </SelectItem>
                   ))}
                 </SelectGroup>

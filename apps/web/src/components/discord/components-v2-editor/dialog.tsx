@@ -40,14 +40,14 @@ export function ComponentsV2EditorDialog({
   children,
 }: ComponentsV2EditorModalProps) {
   const [open, setOpen] = useState(false);
-  const { componentActions, placeholders } = resources;
+  const { allowedComponents, placeholders } = resources;
 
   const schema = useMemo(
     () =>
       z.object({
-        components: createMessageUserComponentsSchema(placeholders, componentActions),
+        components: createMessageUserComponentsSchema(placeholders, allowedComponents),
       }),
-    [placeholders, componentActions],
+    [placeholders, allowedComponents],
   );
 
   const form = useForm({

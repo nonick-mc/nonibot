@@ -1,16 +1,18 @@
 import { ComponentType } from 'discord-api-types/v10';
 
-/** メッセージへの設置を許可するインタラクティブコンポーネント。 */
-export type AllowedComponent =
+/**
+ * 許可リストの要素。`customId`は完全一致、`customIdPattern`は正規表現で判定する。
+ */
+export type BaseAllowedComponent =
   | { type: ComponentType; customId: string }
   | { type: ComponentType; customIdPattern: RegExp };
-/** メッセージに設置できるインタラクティブコンポーネントの動作 */
-export type ComponentAction = { type: ComponentType; customId: string; label: string };
+/** エディタの選択肢にもなる、完全一致の`customId`を持つ許可コンポーネント */
+export type AllowedComponent = { type: ComponentType; customId: string; label: string };
 
 export const AutoCreateThreadCustomIdPrefix = 'auto-create-thread:';
 export const VerificationCustomIdPrefix = 'verification:';
 
-export const autoCreateThreadActions = [
+export const autoCreateThreadAllowedComponents = [
   {
     type: ComponentType.Button,
     customId: `${AutoCreateThreadCustomIdPrefix}archive`,
@@ -26,15 +28,15 @@ export const autoCreateThreadActions = [
     customId: `${AutoCreateThreadCustomIdPrefix}archive-lock`,
     label: 'スレッドをアーカイブ&ロックする',
   },
-] satisfies ComponentAction[];
+] satisfies AllowedComponent[];
 
-export const verificationActions = [
+export const verificationAllowedComponents = [
   {
     type: ComponentType.Button,
     customId: `${VerificationCustomIdPrefix}verify`,
     label: 'メンバー認証を開始する',
   },
-] satisfies ComponentAction[];
+] satisfies AllowedComponent[];
 
 export type InteractiveComponent = {
   type: unknown;
@@ -61,7 +63,7 @@ export function collectInteractiveComponents(
 
 /** `type`と`custom_id`の組が許可されているかどうか */
 export function isAllowedComponent(
-  allowed: readonly AllowedComponent[],
+  allowed: readonly BaseAllowedComponent[],
   { type, customId }: Pick<InteractiveComponent, 'type' | 'customId'>,
 ) {
   return allowed.some(

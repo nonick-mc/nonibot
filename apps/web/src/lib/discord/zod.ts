@@ -1,6 +1,6 @@
 import type { Placeholder } from '@repo/placeholders';
 import {
-  type AllowedComponent,
+  type BaseAllowedComponent,
   collectInteractiveComponents,
   isAllowedComponent,
 } from '@repo/shared';
@@ -36,7 +36,7 @@ function createUrlOrPlaceholderSchema(placeholders?: Placeholder) {
 
 function createUserComponentV2Schema(
   placeholders: Placeholder | undefined,
-  allowedComponents: readonly AllowedComponent[],
+  allowedComponents: readonly BaseAllowedComponent[],
 ) {
   const UnfurledMediaItem = z.object({
     url: createUrlOrPlaceholderSchema(placeholders),
@@ -206,7 +206,7 @@ function createUserComponentV2Schema(
  */
 export function createMessageUserComponentsSchema(
   placeholders?: Placeholder,
-  allowedComponents: readonly AllowedComponent[] = [],
+  allowedComponents: readonly BaseAllowedComponent[] = [],
 ) {
   const { TopLevelComponent } = createUserComponentV2Schema(placeholders, allowedComponents);
 

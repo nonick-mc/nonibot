@@ -1,6 +1,6 @@
 import { verificationSetting } from '@repo/database';
 import { verificationMessagePlaceholders } from '@repo/placeholders';
-import { collectInteractiveComponents, verificationActions } from '@repo/shared';
+import { collectInteractiveComponents, verificationAllowedComponents } from '@repo/shared';
 import { ButtonStyle, ComponentType } from 'discord-api-types/v10';
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
@@ -13,7 +13,7 @@ import {
 
 z.config(z.locales.ja());
 
-const [{ customId: verifyButtonCustomId }] = verificationActions;
+const [{ customId: verifyButtonCustomId }] = verificationAllowedComponents;
 
 export const defaultMessageComponents: z.infer<MessageUserComponentsSchema> = [
   {
@@ -47,7 +47,10 @@ export const formSchema = createInsertSchema(verificationSetting, {
   role: (schema) => schema.regex(SnowflakeRegex, '無効なIDです。').nullable().default(null),
   captchaType: (schema) => schema.default('web'),
   messageComponents: messageComponentsWithDefault(
-    createMessageUserComponentsSchema(verificationMessagePlaceholders, verificationActions),
+    createMessageUserComponentsSchema(
+      verificationMessagePlaceholders,
+      verificationAllowedComponents,
+    ),
     defaultMessageComponents,
   ),
 })
