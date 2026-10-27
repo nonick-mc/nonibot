@@ -105,3 +105,25 @@ export const featurePermissions = {
     PermissionFlagsBits.ReadMessageHistory,
   ],
 };
+
+/** 付与されるとサーバーの運営に影響する権限。ロールボタンでこれらを持つロールを選ぶと警告する */
+export const dangerPermissions = [
+  'Administrator',
+  'KickMembers',
+  'BanMembers',
+  'ManageChannels',
+  'ManageGuild',
+  'ManageMessages',
+  'ManageRoles',
+  'ManageWebhooks',
+  'ManageGuildExpressions',
+  'ManageEvents',
+  'ManageThreads',
+  'ModerateMembers',
+] satisfies PermissionName[];
+
+/** ロールが持つ危険な権限を返す */
+export function getDangerPermissions(permissions: string) {
+  const bitfield = BigInt(permissions);
+  return dangerPermissions.filter((name) => (bitfield & PermissionFlagsBits[name]) !== 0n);
+}
