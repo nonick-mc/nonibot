@@ -1,19 +1,40 @@
 'use server';
 
-import { auditLog } from '@repo/database';
+import { auditLog, customMessage } from '@repo/database';
 import { ChannelType, MessageFlags, PermissionFlagsBits } from 'discord-api-types/v10';
+import { and, count, eq } from 'drizzle-orm';
+import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/db';
-import { createChannelMessage, getChannels } from '@/lib/discord/api';
+import {
+  createChannelMessage,
+  deleteChannelMessage,
+  editChannelMessage,
+  getChannels,
+} from '@/lib/discord/api';
 import { hasPermission } from '@/lib/discord/utils';
 import { guildActionClient } from '@/lib/safe-action/client';
 import { ActionClientError } from '@/lib/safe-action/error';
-import { sendFormSchema } from './schema';
+import {
+  deleteFormSchema,
+  editFormSchema,
+  maxSavedMessages,
+  renameFormSchema,
+  sendFormSchema,
+} from './schema';
+
+const findSavedMessage = async (guildId: string, id: string) => {
+  const saved = await db.query.customMessage.findFirst({
+    where: and(eq(customMessage.id, id), eq(customMessage.guildId, guildId)),
+  });
+  if (!saved) throw new ActionClientError('保存されたメッセージが見つかりません。');
+  return saved;
+};
 
 export const sendMessageAction = guildActionClient
   .inputSchema(sendFormSchema)
   .action(
     async ({
-      parsedInput: { channelId, components },
+      parsedInput: { channelId, components, name },
       bindArgsParsedInputs: [guildId],
       ctx: { session },
     }) => {
@@ -29,7 +50,19 @@ export const sendMessageAction = guildActionClient
         throw new ActionClientError('nonibotにこのチャンネルへの送信権限がありません。');
       }
 
-      await createChannelMessage(guildId, channelId, {
+      if (name) {
+        const [{ total }] = await db
+          .select({ total: count() })
+          .from(customMessage)
+          .where(eq(customMessage.guildId, guildId));
+        if (total >= maxSavedMessages) {
+          throw new ActionClientError(
+            `保存できるメッセージは${maxSavedMessages}件までです。不要なメッセージを削除してください。`,
+          );
+        }
+      }
+
+      const message = await createChannelMessage(guildId, channelId, {
         components,
         flags: MessageFlags.IsComponentsV2,
       }).catch(() => {
@@ -38,12 +71,124 @@ export const sendMessageAction = guildActionClient
         );
       });
 
+      if (name) {
+        await db.insert(customMessage).values({
+          guildId,
+          channelId,
+          messageId: message.id,
+          name,
+          components,
+        });
+      }
+
       await db.insert(auditLog).values({
         guildId,
         authorId: session.user.id,
         targetName: 'custom_message',
         actionType: 'send_custom_message',
-        after: { channelId, components },
+        after: { channelId, messageId: message.id, components },
       });
+
+      revalidatePath('/');
+    },
+  );
+
+export const editMessageAction = guildActionClient
+  .inputSchema(editFormSchema)
+  .action(
+    async ({
+      parsedInput: { id, components },
+      bindArgsParsedInputs: [guildId],
+      ctx: { session },
+    }) => {
+      const saved = await findSavedMessage(guildId, id);
+
+      await editChannelMessage(guildId, saved.channelId, saved.messageId, {
+        components,
+        flags: MessageFlags.IsComponentsV2,
+      }).catch((e) => {
+        if (e?.status === 404) {
+          throw new ActionClientError(
+            '元のメッセージが見つかりません。削除された場合は、保存したメッセージを削除してください。',
+          );
+        }
+        throw new ActionClientError('メッセージを編集できませんでした。');
+      });
+
+      await db.update(customMessage).set({ components }).where(eq(customMessage.id, id));
+
+      const target = {
+        channelId: saved.channelId,
+        messageId: saved.messageId,
+        name: saved.name,
+      };
+      await db.insert(auditLog).values({
+        guildId,
+        authorId: session.user.id,
+        targetName: 'custom_message',
+        actionType: 'update_custom_message',
+        before: { ...target, components: saved.components },
+        after: { ...target, components },
+      });
+
+      revalidatePath('/');
+    },
+  );
+
+export const renameMessageAction = guildActionClient
+  .inputSchema(renameFormSchema)
+  .action(
+    async ({ parsedInput: { id, name }, bindArgsParsedInputs: [guildId], ctx: { session } }) => {
+      const saved = await findSavedMessage(guildId, id);
+      await db.update(customMessage).set({ name }).where(eq(customMessage.id, id));
+
+      const target = {
+        channelId: saved.channelId,
+        messageId: saved.messageId,
+        components: saved.components,
+      };
+      await db.insert(auditLog).values({
+        guildId,
+        authorId: session.user.id,
+        targetName: 'custom_message',
+        actionType: 'update_custom_message',
+        before: { ...target, name: saved.name },
+        after: { ...target, name },
+      });
+
+      revalidatePath('/');
+    },
+  );
+
+export const deleteSavedMessageAction = guildActionClient
+  .inputSchema(deleteFormSchema)
+  .action(
+    async ({
+      parsedInput: { id, deleteDiscordMessage },
+      bindArgsParsedInputs: [guildId],
+      ctx: { session },
+    }) => {
+      const saved = await findSavedMessage(guildId, id);
+      await db.delete(customMessage).where(eq(customMessage.id, id));
+
+      // 既に削除されている等で失敗しても、エラーにはしない
+      if (deleteDiscordMessage) {
+        await deleteChannelMessage(guildId, saved.channelId, saved.messageId).catch(() => {});
+      }
+
+      await db.insert(auditLog).values({
+        guildId,
+        authorId: session.user.id,
+        targetName: 'custom_message',
+        actionType: 'delete_custom_message',
+        before: {
+          channelId: saved.channelId,
+          messageId: saved.messageId,
+          name: saved.name,
+          components: saved.components,
+        },
+      });
+
+      revalidatePath('/');
     },
   );
