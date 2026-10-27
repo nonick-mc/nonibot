@@ -116,6 +116,14 @@ export function editChannelMessage(
   );
 }
 
+/** Botが送信したメッセージを削除 **/
+export function deleteChannelMessage(guildId: string, channelId: string, messageId: string) {
+  return internalFetch<null, false>(
+    `/guilds/${encodeURIComponent(guildId)}/channels/${encodeURIComponent(channelId)}/messages/${encodeURIComponent(messageId)}`,
+    { method: 'DELETE' },
+  );
+}
+
 /** ログイン中のユーザーがどちらも参加しているサーバーを取得 **/
 export const getMutualGuilds = cache(async () => {
   const userGuilds = await getUserGuilds();

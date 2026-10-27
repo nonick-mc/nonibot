@@ -150,6 +150,28 @@ export function createApp(client: Client<true>, secret: string) {
     return c.json(message as object);
   });
 
+  app.delete('/guilds/:guildId/channels/:channelId/messages/:messageId', async (c) => {
+    const { guildId, channelId, messageId } = c.req.param();
+    const channel = client.channels.cache.get(channelId);
+    if (
+      !channel?.isSendable() ||
+      channel.isDMBased() ||
+      channel.guildId !== guildId ||
+      !SnowflakeRegex.test(messageId)
+    ) {
+      return c.json(notFound, 404);
+    }
+
+    // 「メッセージの管理」権限があると他人のメッセージも消せてしまうため、Bot自身が送信したものだけを対象にする
+    const message = await channel.messages.fetch(messageId);
+    if (message.author.id !== client.user.id) {
+      return c.json({ error: 'Forbidden' } satisfies InternalApiError, 403);
+    }
+
+    await client.rest.delete(Routes.channelMessage(channel.id, messageId));
+    return c.body(null, 204);
+  });
+
   app.onError((error, c) => {
     if (error instanceof DiscordAPIError && (error.status === 403 || error.status === 404)) {
       return c.json(
