@@ -22,6 +22,7 @@ export type InternalApiRole = {
   position: number;
   colors: InternalApiRoleColors;
   managed: boolean;
+  permissions: string;
 };
 
 export type InternalApiForumTag = {

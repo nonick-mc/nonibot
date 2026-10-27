@@ -37,6 +37,7 @@ export function serializeRole(role: Role): InternalApiRole {
       tertiary_color: role.colors.tertiaryColor,
     },
     managed: role.managed,
+    permissions: role.permissions.bitfield.toString(),
   };
 }
 
