@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SaveIcon } from 'lucide-react';
-import { type ComponentProps, useEffect, useMemo, useState } from 'react';
+import { type ComponentProps, type ReactNode, useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import z from 'zod';
 import { FormDevTool } from '@/components/form';
@@ -23,8 +23,11 @@ import { ComponentsV2EditorPanel } from './panel';
 
 type ComponentsV2EditorModalProps = {
   defaultValues: z.input<MessageUserComponentsSchema>;
-  onSubmit: (values: z.infer<MessageUserComponentsSchema>) => void | Promise<void>;
+  /** `false` を返すとダイアログを閉じない */
+  onSubmit: (values: z.infer<MessageUserComponentsSchema>) => boolean | Promise<boolean>;
   resources?: MessageResources;
+  title?: string;
+  submitLabel?: ReactNode;
   children: ComponentProps<typeof DialogTrigger>['render'];
 };
 
@@ -32,6 +35,8 @@ export function ComponentsV2EditorDialog({
   defaultValues,
   onSubmit,
   resources = {},
+  title = 'メッセージを編集',
+  submitLabel,
   children,
 }: ComponentsV2EditorModalProps) {
   const [open, setOpen] = useState(false);
@@ -50,14 +55,15 @@ export function ComponentsV2EditorDialog({
     defaultValues: { components: defaultValues },
   });
 
+  const { isDirty, isSubmitting } = form.formState;
+
   // biome-ignore lint/correctness/useExhaustiveDependencies: openのみに依存している
   useEffect(() => {
     if (open) form.reset({ components: defaultValues });
   }, [open]);
 
   const handleSubmit = form.handleSubmit(async (values) => {
-    await onSubmit(values.components);
-    setOpen(false);
+    if ((await onSubmit(values.components)) !== false) setOpen(false);
   });
 
   return (
@@ -67,7 +73,7 @@ export function ComponentsV2EditorDialog({
         <DialogContent className='flex flex-col max-h-[97vh] h-full sm:max-w-[98vw]'>
           <FormDevTool />
           <DialogHeader className='flex flex-col md:flex-row md:items-center'>
-            <DialogTitle>メッセージを編集</DialogTitle>
+            <DialogTitle>{title}</DialogTitle>
             <ControlledFieldProvider control={form.control} name='components'>
               <ControlledFieldError />
             </ControlledFieldProvider>
@@ -85,9 +91,17 @@ export function ComponentsV2EditorDialog({
                   >
                     キャンセル
                   </Button>
-                  <Button className='max-sm:flex-1' onClick={handleSubmit}>
-                    <SaveIcon />
-                    保存
+                  <Button
+                    className='max-sm:flex-1'
+                    onClick={handleSubmit}
+                    disabled={!isDirty || isSubmitting}
+                  >
+                    {submitLabel ?? (
+                      <>
+                        <SaveIcon />
+                        保存
+                      </>
+                    )}
                   </Button>
                 </div>
               </DialogFooter>
