@@ -62,6 +62,7 @@ export function MessageList({ channels, emojis, roles, messages }: MessageListPr
   const { guildId } = useParams<{ guildId: string }>();
   const bindEditAction = editMessageAction.bind(null, guildId);
   const bindDeleteAction = deleteSavedMessageAction.bind(null, guildId);
+  const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleting, setDeleting] = useState<SavedMessage | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteDiscordMessage, setDeleteDiscordMessage] = useState(false);
@@ -85,8 +86,7 @@ export function MessageList({ channels, emojis, roles, messages }: MessageListPr
       return toast.error(res.serverError ?? 'メッセージの削除中に問題が発生しました。');
     }
     toast.success('保存したメッセージを削除しました。');
-    setDeleting(null);
-    setDeleteDiscordMessage(false);
+    setDeleteOpen(false);
   }
 
   if (!messages.length) {
@@ -152,7 +152,11 @@ export function MessageList({ channels, emojis, roles, messages }: MessageListPr
                   variant='outline'
                   size='icon'
                   aria-label={`${message.name}を削除`}
-                  onClick={() => setDeleting(message)}
+                  onClick={() => {
+                    setDeleting(message);
+                    setDeleteDiscordMessage(false);
+                    setDeleteOpen(true);
+                  }}
                 >
                   <Trash2Icon className='text-destructive' />
                 </Button>
@@ -161,14 +165,7 @@ export function MessageList({ channels, emojis, roles, messages }: MessageListPr
           );
         })}
       </div>
-      <AlertDialog
-        open={!!deleting}
-        onOpenChange={(open) => {
-          if (open) return;
-          setDeleting(null);
-          setDeleteDiscordMessage(false);
-        }}
-      >
+      <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>保存済みのメッセージを削除しますか？</AlertDialogTitle>
