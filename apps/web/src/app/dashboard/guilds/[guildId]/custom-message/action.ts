@@ -7,7 +7,7 @@ import {
   parseRoleButtonCustomId,
 } from '@repo/shared';
 import { ChannelType, MessageFlags, PermissionFlagsBits } from 'discord-api-types/v10';
-import { and, count, eq } from 'drizzle-orm';
+import { and, count, eq, sql } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/db';
 import {
@@ -30,8 +30,8 @@ import {
 } from './schema';
 
 /**
- * ロールボタンにロールを指定できる権限があるか検証
- * `previous`を指定すると、そこに含まれていないボタンだけを検証する。
+ * ロールボタンのロールが、設定できるものか検証する。
+ * `previous`を指定すると、そこに含まれていないボタン(新しく追加・変更されたボタン)だけを検証する。
  */
 async function assertAssignableRoleButtons(
   guildId: string,
@@ -57,6 +57,19 @@ async function assertAssignableRoleButtons(
     return role && isAssignableRole(role, rules);
   });
   if (!isValid) throw new ActionClientError('ロールボタンに設定できないロールが含まれています。');
+}
+
+/** 保存できる件数に空きがあるか確認する */
+async function assertSavableMessage(guildId: string, executor: Pick<typeof db, 'select'> = db) {
+  const [{ total }] = await executor
+    .select({ total: count() })
+    .from(customMessage)
+    .where(eq(customMessage.guildId, guildId));
+  if (total >= maxSavedMessages) {
+    throw new ActionClientError(
+      `保存できるメッセージは${maxSavedMessages}件までです。不要なメッセージを削除してください。`,
+    );
+  }
 }
 
 const findSavedMessage = async (guildId: string, id: string) => {
@@ -89,17 +102,7 @@ export const sendMessageAction = guildActionClient
         throw new ActionClientError('nonibotにこのチャンネルへの送信権限がありません。');
       }
 
-      if (name) {
-        const [{ total }] = await db
-          .select({ total: count() })
-          .from(customMessage)
-          .where(eq(customMessage.guildId, guildId));
-        if (total >= maxSavedMessages) {
-          throw new ActionClientError(
-            `保存できるメッセージは${maxSavedMessages}件までです。不要なメッセージを削除してください。`,
-          );
-        }
-      }
+      if (name) await assertSavableMessage(guildId);
 
       const message = await createChannelMessage(guildId, channelId, {
         components,
@@ -111,13 +114,22 @@ export const sendMessageAction = guildActionClient
       });
 
       if (name) {
-        await db.insert(customMessage).values({
-          guildId,
-          channelId,
-          messageId: message.id,
-          name,
-          components,
-        });
+        await db
+          .transaction(async (tx) => {
+            await tx.execute(sql`select pg_advisory_xact_lock(hashtext(${guildId}))`);
+            await assertSavableMessage(guildId, tx);
+            await tx.insert(customMessage).values({
+              guildId,
+              channelId,
+              messageId: message.id,
+              name,
+              components,
+            });
+          })
+          .catch(async (error) => {
+            await deleteChannelMessage(guildId, channelId, message.id).catch(() => {});
+            throw error;
+          });
       }
 
       await db.insert(auditLog).values({
