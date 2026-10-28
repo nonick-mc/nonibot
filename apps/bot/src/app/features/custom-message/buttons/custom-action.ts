@@ -5,6 +5,7 @@ import { and, eq } from 'drizzle-orm';
 import { Button, execute } from 'sunar';
 import { db } from '@/src/lib/db';
 import { errorMessage } from '@/src/lib/format';
+import { getCustomActionPlaceholderParams } from '@/src/lib/placeholder';
 import { runStep } from '../custom-action-steps';
 
 export const button = new Button({ id: new RegExp(`^${CustomActionCustomIdPrefix}`) });
@@ -26,9 +27,15 @@ execute(button, async (interaction) => {
     });
   }
 
+  // 処理の結果は、後に続く処理がプレースホルダーとして使えるよう溜めていく
+  const params: Record<string, string> = getCustomActionPlaceholderParams(interaction);
+
   for (const step of action.steps) {
-    const result = await runStep(step, interaction);
-    if (result.ok) continue;
+    const result = await runStep(step, interaction, params);
+    if (result.ok) {
+      Object.assign(params, result.outputs);
+      continue;
+    }
 
     const error = {
       content: result.error,

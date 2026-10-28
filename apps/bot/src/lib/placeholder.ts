@@ -1,11 +1,12 @@
 import type {
   autoCreateThreadMessagePlaceholders,
   autoCreateThreadNamePlaceholders,
+  customActionBasePlaceholders,
   joinMessagePlaceholders,
   leaveMessagePlaceholders,
   PlaceholderParams,
 } from '@repo/placeholders';
-import type { GuildMember, Message, PartialGuildMember } from 'discord.js';
+import type { ButtonInteraction, GuildMember, Message, PartialGuildMember } from 'discord.js';
 import { pad } from './utils';
 
 export function getJoinMessagePlaceholderParams(
@@ -58,5 +59,18 @@ export function getAutoCreateThreadMessagePlaceholderParams(
     ...getAutoCreateThreadNamePlaceholderParams(message),
     user: `${message.author}`,
     userAvatar: message.author.displayAvatarURL(),
+  };
+}
+
+export function getCustomActionPlaceholderParams(
+  interaction: ButtonInteraction<'cached'>,
+): PlaceholderParams<typeof customActionBasePlaceholders> {
+  const { member, guild } = interaction;
+  return {
+    serverName: guild.name,
+    memberCount: guild.memberCount.toString(),
+    user: `${member}`,
+    userName: member.user.username,
+    userAvatar: member.user.displayAvatarURL(),
   };
 }
