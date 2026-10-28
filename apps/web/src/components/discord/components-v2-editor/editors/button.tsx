@@ -11,6 +11,7 @@ import { getDangerPermissions, permToText } from '@repo/shared/constants';
 import { ButtonStyle, ComponentType } from 'discord-api-types/v10';
 import {
   LinkIcon,
+  type LucideIcon,
   MousePointerClickIcon,
   PaletteIcon,
   ShieldPlusIcon,
@@ -19,7 +20,7 @@ import {
   Trash2Icon,
   TriangleAlertIcon,
 } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { type ReactNode, useRef, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { DiscordEmojiPicker, DiscordEmojiPickerTrigger } from '@/components/discord/emoji-picker';
 import { Alert, AlertDescription, AlertTitle } from '@/components/reui/alert';
@@ -150,7 +151,7 @@ function RoleButtonFields({ basePath }: { basePath: string }) {
           <AlertTitle>このロールには強力な権限が含まれています</AlertTitle>
           <AlertDescription>
             ボタンを押したメンバーは誰でも、次の権限を得られます:{' '}
-            {permToText(...dangerPermissions).join('、')}
+            {permToText(...dangerPermissions).join(' ')}
           </AlertDescription>
         </Alert>
       )}
@@ -244,7 +245,7 @@ export function ButtonEditor(props: ButtonEditorProps) {
   const customId = useWatch({ name: `${props.basePath}.custom_id` });
   if (style === ButtonStyle.Link) return <URLButtonEditor {...props} />;
   if (typeof customId === 'string' && customId.startsWith(RoleButtonCustomIdPrefix))
-    return <UserActionButtonEditor {...props} kind='role' />;
+    return <RoleButtonEditor {...props} />;
   return <UserActionButtonEditor {...props} />;
 }
 
@@ -272,20 +273,21 @@ function ButtonLabelField({ basePath }: { basePath: string }) {
   );
 }
 
-export function UserActionButtonEditor({
+function InteractiveButtonCard({
   basePath,
   onRemove,
   withSortableItemHandle,
-  kind = 'action',
-}: ButtonEditorProps & { kind?: 'action' | 'role' }) {
+  icon,
+  title,
+  children,
+}: ButtonEditorProps & { icon: LucideIcon; title: string; children: ReactNode }) {
   const { control } = useFormContext();
-  const allowedButtons = useAllowedButtons();
 
   return (
     <ComponentEditorContext.Provider value={{ basePath, onRemove }}>
       <EditorCard
-        icon={kind === 'role' ? ShieldPlusIcon : MousePointerClickIcon}
-        title={kind === 'role' ? 'ロールボタン' : 'ボタン'}
+        icon={icon}
+        title={title}
         headerActions={
           <Popover>
             <PopoverTrigger render={<Button variant='ghost' size='icon-sm' />}>
@@ -317,40 +319,55 @@ export function UserActionButtonEditor({
         <FieldGroup className='gap-5'>
           <ButtonLabelField basePath={basePath} />
           <FieldSeparator />
-          {kind === 'role' ? (
-            <RoleButtonFields basePath={basePath} />
-          ) : (
-            <ControlledField
-              control={control}
-              name={`${basePath}.custom_id`}
-              orientation='responsive'
-              align='center'
-            >
-              <FieldContent>
-                <ControlledFieldLabel>ボタンを押した際のアクション</ControlledFieldLabel>
-                <ControlledFieldError />
-              </FieldContent>
-              <ControlledSelect<string>>
-                <ControlledSelectTrigger className='@md/field-group:w-2xs'>
-                  <SelectValue>
-                    {(value: string) => allowedButtons.find((a) => a.customId === value)?.label}
-                  </SelectValue>
-                </ControlledSelectTrigger>
-                <SelectContent alignItemWithTrigger={false}>
-                  <SelectGroup>
-                    {allowedButtons.map((allowed) => (
-                      <SelectItem key={allowed.customId} value={allowed.customId}>
-                        {allowed.label}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </ControlledSelect>
-            </ControlledField>
-          )}
+          {children}
         </FieldGroup>
       </EditorCard>
     </ComponentEditorContext.Provider>
+  );
+}
+
+export function UserActionButtonEditor(props: ButtonEditorProps) {
+  const { control } = useFormContext();
+  const allowedButtons = useAllowedButtons();
+
+  return (
+    <InteractiveButtonCard {...props} icon={MousePointerClickIcon} title='ボタン'>
+      <ControlledField
+        control={control}
+        name={`${props.basePath}.custom_id`}
+        orientation='responsive'
+        align='center'
+      >
+        <FieldContent>
+          <ControlledFieldLabel>ボタンを押した際のアクション</ControlledFieldLabel>
+          <ControlledFieldError />
+        </FieldContent>
+        <ControlledSelect<string>>
+          <ControlledSelectTrigger className='@md/field-group:w-2xs'>
+            <SelectValue>
+              {(value: string) => allowedButtons.find((a) => a.customId === value)?.label}
+            </SelectValue>
+          </ControlledSelectTrigger>
+          <SelectContent alignItemWithTrigger={false}>
+            <SelectGroup>
+              {allowedButtons.map((allowed) => (
+                <SelectItem key={allowed.customId} value={allowed.customId}>
+                  {allowed.label}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </ControlledSelect>
+      </ControlledField>
+    </InteractiveButtonCard>
+  );
+}
+
+export function RoleButtonEditor(props: ButtonEditorProps) {
+  return (
+    <InteractiveButtonCard {...props} icon={ShieldPlusIcon} title='ロールボタン'>
+      <RoleButtonFields basePath={props.basePath} />
+    </InteractiveButtonCard>
   );
 }
 
