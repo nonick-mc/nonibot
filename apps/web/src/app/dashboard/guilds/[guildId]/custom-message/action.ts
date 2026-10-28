@@ -214,11 +214,17 @@ export const deleteSavedMessageAction = guildActionClient
       ctx: { session },
     }) => {
       const saved = await findSavedMessage(guildId, id);
-      await db.delete(customMessage).where(eq(customMessage.id, id));
 
       if (deleteDiscordMessage) {
-        await deleteChannelMessage(guildId, saved.channelId, saved.messageId).catch(() => {});
+        await deleteChannelMessage(guildId, saved.channelId, saved.messageId).catch((e) => {
+          if (e?.status === 404) return;
+          throw new ActionClientError(
+            'Discordのメッセージを削除できませんでした。nonibotの権限を確認してください。',
+          );
+        });
       }
+
+      await db.delete(customMessage).where(eq(customMessage.id, id));
 
       await db.insert(auditLog).values({
         guildId,
