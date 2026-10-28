@@ -288,6 +288,13 @@
       "when": 1793003700715,
       "tag": "0040_harsh_polaris",
       "breakpoints": true
+    },
+    {
+      "idx": 41,
+      "version": "7",
+      "when": 1793160959875,
+      "tag": "0041_worthless_captain_universe",
+      "breakpoints": true
     }
   ]
 }

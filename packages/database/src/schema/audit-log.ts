@@ -13,6 +13,9 @@ const actionType = [
   'send_custom_message',
   'update_custom_message',
   'delete_custom_message',
+  'create_custom_action',
+  'update_custom_action',
+  'delete_custom_action',
 ] as const;
 
 const targetName = [
@@ -35,6 +38,7 @@ const targetName = [
   'auto_mod',
   'verification',
   'custom_message',
+  'custom_action',
 ] as const;
 
 export const actionTypeEnum = pgEnum('action_type', actionType);
