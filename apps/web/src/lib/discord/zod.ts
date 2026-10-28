@@ -3,7 +3,6 @@ import {
   type BaseAllowedComponent,
   collectInteractiveComponents,
   isAllowedComponent,
-  RoleButtonCustomIdPrefix,
 } from '@repo/shared';
 import { ButtonStyle, ComponentType, SeparatorSpacingSize } from 'discord-api-types/v10';
 import z from 'zod';
@@ -120,12 +119,7 @@ function createUserComponentV2Schema(
       .refine(
         (customId) =>
           isAllowedComponent(allowedComponents, { type: ComponentType.Button, customId }),
-        {
-          error: (issue) =>
-            typeof issue.input === 'string' && issue.input.startsWith(RoleButtonCustomIdPrefix)
-              ? 'ロールを選択してください。'
-              : '許可されていないボタンです。',
-        },
+        { error: '許可されていないボタンです。' },
       ),
   }).refine(hasLabelOrEmoji, hasLabelOrEmojiParams);
 

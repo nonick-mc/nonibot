@@ -1,29 +1,19 @@
 'use client';
 
-import {
-  type AllowedComponent,
-  createRoleButtonCustomId,
-  isAssignableRole,
-  parseRoleButtonCustomId,
-  RoleButtonCustomIdPrefix,
-} from '@repo/shared';
-import { getDangerPermissions, permToText } from '@repo/shared/constants';
+import type { AllowedComponent } from '@repo/shared';
 import { ButtonStyle, ComponentType } from 'discord-api-types/v10';
 import {
   LinkIcon,
   type LucideIcon,
   MousePointerClickIcon,
   PaletteIcon,
-  ShieldPlusIcon,
   SmileIcon,
   SmilePlusIcon,
   Trash2Icon,
-  TriangleAlertIcon,
 } from 'lucide-react';
 import { type ReactNode, useRef, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { DiscordEmojiPicker, DiscordEmojiPickerTrigger } from '@/components/discord/emoji-picker';
-import { Alert, AlertDescription, AlertTitle } from '@/components/reui/alert';
 import { ColorPicker, ColorPickerSwatches } from '@/components/reui/color-picker';
 import {
   ControlledField,
@@ -95,68 +85,6 @@ export function createDefaultUrlButton() {
     label: '',
     emoji: null,
   } as const;
-}
-
-export function createDefaultRoleButton() {
-  return {
-    type: ComponentType.Button,
-    style: ButtonStyle.Secondary,
-    custom_id: RoleButtonCustomIdPrefix,
-    label: '',
-    emoji: null,
-  } as const;
-}
-
-function RoleButtonFields({ basePath }: { basePath: string }) {
-  const { control, setValue } = useFormContext();
-  const { roles = [], roleButton } = useEditorResources();
-  const customId = useWatch({ control, name: `${basePath}.custom_id` });
-  const roleId = parseRoleButtonCustomId(customId);
-  const dangerPermissions = getDangerPermissions(
-    roles.find((role) => role.id === roleId)?.permissions ?? '0',
-  );
-
-  return (
-    <>
-      <ControlledField
-        control={control}
-        name={`${basePath}.custom_id`}
-        orientation='responsive'
-        align='center'
-      >
-        <FieldContent>
-          <ControlledFieldLabel>付与・解除するロール</ControlledFieldLabel>
-          <FieldDescription>
-            nonibotとあなたのロールより低い位置にあるロールを選択できます。
-          </FieldDescription>
-          <ControlledFieldError />
-        </FieldContent>
-        <ControlledRoleSelect
-          className='@md/field-group:w-2xs'
-          items={roles}
-          value={roleId}
-          onChange={(id) =>
-            setValue(
-              `${basePath}.custom_id`,
-              id ? createRoleButtonCustomId(id) : RoleButtonCustomIdPrefix,
-              { shouldDirty: true, shouldValidate: true },
-            )
-          }
-          disabledItemFilter={(role) => !roleButton || !isAssignableRole(role, roleButton)}
-        />
-      </ControlledField>
-      {dangerPermissions.length > 0 && (
-        <Alert variant='warning'>
-          <TriangleAlertIcon />
-          <AlertTitle>このロールには強力な権限が含まれています</AlertTitle>
-          <AlertDescription>
-            ボタンを押したメンバーは誰でも、次の権限を得られます:{' '}
-            {permToText(...dangerPermissions).join(' ')}
-          </AlertDescription>
-        </Alert>
-      )}
-    </>
-  );
 }
 
 export function createDefaultButton(allowed: AllowedComponent) {
@@ -242,10 +170,7 @@ type ButtonEditorProps = {
 
 export function ButtonEditor(props: ButtonEditorProps) {
   const style = useWatch({ name: `${props.basePath}.style` });
-  const customId = useWatch({ name: `${props.basePath}.custom_id` });
   if (style === ButtonStyle.Link) return <URLButtonEditor {...props} />;
-  if (typeof customId === 'string' && customId.startsWith(RoleButtonCustomIdPrefix))
-    return <RoleButtonEditor {...props} />;
   return <UserActionButtonEditor {...props} />;
 }
 
@@ -359,14 +284,6 @@ export function UserActionButtonEditor(props: ButtonEditorProps) {
           </SelectContent>
         </ControlledSelect>
       </ControlledField>
-    </InteractiveButtonCard>
-  );
-}
-
-export function RoleButtonEditor(props: ButtonEditorProps) {
-  return (
-    <InteractiveButtonCard {...props} icon={ShieldPlusIcon} title='ロールボタン'>
-      <RoleButtonFields basePath={props.basePath} />
     </InteractiveButtonCard>
   );
 }

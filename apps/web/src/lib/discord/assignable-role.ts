@@ -1,20 +1,20 @@
 import 'server-only';
 
-import type { RoleButtonRules } from '@repo/shared';
+import type { AssignableRoleRules } from '@repo/shared';
 import { PermissionFlagsBits } from 'discord-api-types/v10';
 import { getCachedSession } from '../dal';
 import { getGuild, getGuildMember, getRoles } from './api';
 import { hasPermission } from './utils';
 
 /**
- * ロールボタンに設定できるロールの制限を取得する。
+ * 付与・解除できるロールの制限を取得する。
  * 「ロールの管理」権限がなければ`null`を返す。
  * オーナーと管理者は、Botの階層の制限だけを受ける。
  */
-export async function getRoleButtonRules(
+export async function getAssignableRoleRules(
   guildId: string,
   discordUserId: string,
-): Promise<RoleButtonRules | null> {
+): Promise<AssignableRoleRules | null> {
   const [guild, member, roles] = await Promise.all([
     getGuild(guildId),
     getGuildMember(guildId, discordUserId),
@@ -37,9 +37,9 @@ export async function getRoleButtonRules(
   };
 }
 
-/** ログイン中のユーザーに対する、ロールボタンの制限を取得する */
-export async function getCurrentRoleButtonRules(guildId: string) {
+/** ログイン中のユーザーに対する、ロール付与の制限を取得する */
+export async function getCurrentAssignableRoleRules(guildId: string) {
   const session = await getCachedSession();
   if (!session) throw new Error('Unauthorized');
-  return getRoleButtonRules(guildId, session.user.discordUserId);
+  return getAssignableRoleRules(guildId, session.user.discordUserId);
 }

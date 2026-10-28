@@ -54,11 +54,17 @@ type SavedMessage = {
 type MessageListProps = {
   channels: InternalApiChannel[];
   messages: SavedMessage[];
-} & Pick<MessageResources, 'emojis' | 'roles' | 'roleButton'>;
+} & Pick<MessageResources, 'emojis' | 'roles' | 'allowedComponents'>;
 
 const dateFormat = new Intl.DateTimeFormat('ja-JP', { dateStyle: 'short', timeStyle: 'short' });
 
-export function MessageList({ channels, emojis, roles, roleButton, messages }: MessageListProps) {
+export function MessageList({
+  channels,
+  emojis,
+  roles,
+  allowedComponents,
+  messages,
+}: MessageListProps) {
   const { guildId } = useParams<{ guildId: string }>();
   const bindEditAction = editMessageAction.bind(null, guildId);
   const bindDeleteAction = deleteSavedMessageAction.bind(null, guildId);
@@ -135,7 +141,7 @@ export function MessageList({ channels, emojis, roles, roleButton, messages }: M
                 <ComponentsV2EditorDialog
                   defaultValues={message.components}
                   onSubmit={(components) => onEdit(message.id, components)}
-                  resources={{ emojis, roles, channels, roleButton }}
+                  resources={{ emojis, roles, channels, allowedComponents }}
                   title={`「${message.name}」を編集`}
                   submitLabel={
                     <>

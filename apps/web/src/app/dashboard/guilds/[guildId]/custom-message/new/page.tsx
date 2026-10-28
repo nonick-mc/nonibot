@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
+import { getCustomActionAllowedComponents } from '@/lib/custom-action';
 import { verifyDashboardAccessPermission } from '@/lib/dal';
 import { db } from '@/lib/db';
 import { getChannels, getGuildEmojis, getRoles } from '@/lib/discord/api';
-import { getCurrentRoleButtonRules } from '@/lib/discord/role-button';
 import { sortChannels, sortRoles } from '@/lib/discord/utils';
 import { maxSavedMessages } from '../schema';
 import { SendMessageForm } from './form';
@@ -17,7 +17,7 @@ export default async function Page({
   const { guildId } = await params;
   await verifyDashboardAccessPermission(guildId);
 
-  const [channels, emojis, roles, saved, roleButtonRules] = await Promise.all([
+  const [channels, emojis, roles, saved, allowedComponents] = await Promise.all([
     getChannels(guildId),
     getGuildEmojis(guildId),
     getRoles(guildId),
@@ -25,7 +25,7 @@ export default async function Page({
       where: (message, { eq }) => eq(message.guildId, guildId),
       columns: { id: true },
     }),
-    getCurrentRoleButtonRules(guildId),
+    getCustomActionAllowedComponents(guildId),
   ]);
 
   return (
@@ -33,7 +33,7 @@ export default async function Page({
       channels={sortChannels(channels)}
       emojis={emojis}
       roles={sortRoles(roles)}
-      roleButton={roleButtonRules ?? undefined}
+      allowedComponents={allowedComponents}
       isFull={saved.length >= maxSavedMessages}
     />
   );

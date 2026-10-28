@@ -21,9 +21,9 @@ import { SendDialog } from './send-dialog';
 type FormProps = {
   channels: InternalApiChannel[];
   isFull: boolean;
-} & Pick<MessageResources, 'emojis' | 'roles' | 'roleButton'>;
+} & Pick<MessageResources, 'emojis' | 'roles' | 'allowedComponents'>;
 
-export function SendMessageForm({ channels, emojis, roles, roleButton, isFull }: FormProps) {
+export function SendMessageForm({ channels, emojis, roles, allowedComponents, isFull }: FormProps) {
   const { guildId } = useParams<{ guildId: string }>();
   const router = useRouter();
   const bindSendMessageAction = sendMessageAction.bind(null, guildId);
@@ -62,7 +62,7 @@ export function SendMessageForm({ channels, emojis, roles, roleButton, isFull }:
               <ControlledFieldError />
             </ControlledFieldProvider>
             <ComponentsV2EditorPanel
-              resources={{ emojis, roles, channels, roleButton }}
+              resources={{ emojis, roles, channels, allowedComponents }}
               footer={(addMenu) => (
                 <div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
                   {addMenu}

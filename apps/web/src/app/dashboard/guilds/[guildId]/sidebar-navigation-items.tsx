@@ -14,6 +14,7 @@ import {
   ShieldCheckIcon,
   SpoolIcon,
   SquarePenIcon,
+  ZapIcon,
 } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { Badge } from '@/components/reui/badge';
@@ -131,6 +132,12 @@ export const SidebarNavigationItems: SidebarGroupItem<string>[] = [
         title: 'カスタムメッセージ',
         url: (guildId) => `/dashboard/guilds/${guildId}/custom-message`,
         icon: SquarePenIcon,
+      },
+      {
+        key: 'custom-action',
+        title: 'カスタムアクション',
+        url: (guildId) => `/dashboard/guilds/${guildId}/custom-action`,
+        icon: ZapIcon,
       },
       {
         key: 'scheduled-post',

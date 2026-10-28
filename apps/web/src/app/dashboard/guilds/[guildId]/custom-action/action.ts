@@ -2,11 +2,12 @@
 
 import { auditLog, type CustomActionStep, customAction } from '@repo/database';
 import { isAssignableRole } from '@repo/shared';
+import { ComponentType } from 'discord-api-types/v10';
 import { and, count, eq, ne, sql } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/db';
 import { getRoles } from '@/lib/discord/api';
-import { getRoleButtonRules } from '@/lib/discord/role-button';
+import { getAssignableRoleRules } from '@/lib/discord/assignable-role';
 import { guildActionClient } from '@/lib/safe-action/client';
 import { ActionClientError } from '@/lib/safe-action/error';
 import { createFormSchema, deleteFormSchema, maxCustomActions, updateFormSchema } from './schema';
@@ -21,14 +22,17 @@ async function assertAllowedSteps(
   steps: CustomActionStep[],
   previous: CustomActionStep[] = [],
 ) {
+  const previousRoleIds = previous.flatMap((s) =>
+    s.type === 'role-toggle' ? s.config.roleId : [],
+  );
   const roleIds = steps
-    .filter((s) => !previous.some((p) => p.type === s.type && p.config.roleId === s.config.roleId))
-    .map((s) => s.config.roleId);
+    .flatMap((s) => (s.type === 'role-toggle' ? s.config.roleId : []))
+    .filter((id) => !previousRoleIds.includes(id));
   if (!roleIds.length) return;
 
   const [roles, rules] = await Promise.all([
     getRoles(guildId),
-    getRoleButtonRules(guildId, discordUserId),
+    getAssignableRoleRules(guildId, discordUserId),
   ]);
   if (!rules) {
     throw new ActionClientError(
@@ -72,36 +76,48 @@ const findAction = async (guildId: string, id: string) => {
 
 export const createCustomAction = guildActionClient
   .inputSchema(createFormSchema)
-  .action(
-    async ({ parsedInput: { name, steps }, bindArgsParsedInputs: [guildId], ctx: { session } }) => {
-      await assertAllowedSteps(guildId, session.user.discordUserId, steps);
+  .action(async ({ parsedInput: { name }, bindArgsParsedInputs: [guildId], ctx: { session } }) => {
+    // 作成直後は、メッセージを返信する処理だけを持つ
+    const steps: CustomActionStep[] = [
+      {
+        type: 'reply-message',
+        config: {
+          components: [{ type: ComponentType.TextDisplay, content: 'ボタンが押されました！' }],
+          ephemeral: true,
+        },
+      },
+    ];
 
-      await db.transaction(async (tx) => {
-        await tx.execute(sql`select pg_advisory_xact_lock(hashtext(${guildId}))`);
-        const [{ total }] = await tx
-          .select({ total: count() })
-          .from(customAction)
-          .where(eq(customAction.guildId, guildId));
-        if (total >= maxCustomActions) {
-          throw new ActionClientError(
-            `作成できるアクションは${maxCustomActions}件までです。不要なアクションを削除してください。`,
-          );
-        }
-        await assertUniqueName(guildId, name, undefined, tx);
-        await tx.insert(customAction).values({ guildId, name, steps });
-      });
+    const id = await db.transaction(async (tx) => {
+      await tx.execute(sql`select pg_advisory_xact_lock(hashtext(${guildId}))`);
+      const [{ total }] = await tx
+        .select({ total: count() })
+        .from(customAction)
+        .where(eq(customAction.guildId, guildId));
+      if (total >= maxCustomActions) {
+        throw new ActionClientError(
+          `作成できるアクションは${maxCustomActions}件までです。不要なアクションを削除してください。`,
+        );
+      }
+      await assertUniqueName(guildId, name, undefined, tx);
+      const [created] = await tx
+        .insert(customAction)
+        .values({ guildId, name, steps })
+        .returning({ id: customAction.id });
+      return created.id;
+    });
 
-      await db.insert(auditLog).values({
-        guildId,
-        authorId: session.user.id,
-        targetName: 'custom_action',
-        actionType: 'create_custom_action',
-        after: { name, steps },
-      });
+    await db.insert(auditLog).values({
+      guildId,
+      authorId: session.user.id,
+      targetName: 'custom_action',
+      actionType: 'create_custom_action',
+      after: { name, steps },
+    });
 
-      revalidatePath('/');
-    },
-  );
+    revalidatePath('/');
+    return { id };
+  });
 
 export const updateCustomAction = guildActionClient
   .inputSchema(updateFormSchema)

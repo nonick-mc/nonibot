@@ -1,13 +1,9 @@
 'use server';
 
-import { auditLog, customMessage } from '@repo/database';
-import {
-  collectInteractiveComponents,
-  isAssignableRole,
-  parseRoleButtonCustomId,
-} from '@repo/shared';
+import { auditLog, customAction, customMessage } from '@repo/database';
+import { collectInteractiveComponents, parseCustomActionCustomId } from '@repo/shared';
 import { ChannelType, MessageFlags, PermissionFlagsBits } from 'discord-api-types/v10';
-import { and, count, eq, sql } from 'drizzle-orm';
+import { and, count, eq, inArray, sql } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/db';
 import {
@@ -15,9 +11,7 @@ import {
   deleteChannelMessage,
   editChannelMessage,
   getChannels,
-  getRoles,
 } from '@/lib/discord/api';
-import { getRoleButtonRules } from '@/lib/discord/role-button';
 import { hasPermission } from '@/lib/discord/utils';
 import { guildActionClient } from '@/lib/safe-action/client';
 import { ActionClientError } from '@/lib/safe-action/error';
@@ -30,33 +24,23 @@ import {
 } from './schema';
 
 /**
- * ロールボタンのロールが、設定できるものか検証する。
+ * ボタンのカスタムアクションが、このサーバーに存在するか検証する。
  * `previous`を指定すると、そこに含まれていないボタン(新しく追加・変更されたボタン)だけを検証する。
  */
-async function assertAssignableRoleButtons(
-  guildId: string,
-  discordUserId: string,
-  components: unknown,
-  previous?: unknown,
-) {
+async function assertCustomActionsExist(guildId: string, components: unknown, previous?: unknown) {
   const previousIds = new Set(collectInteractiveComponents(previous).map((c) => c.customId));
-  const roleIds = collectInteractiveComponents(components)
+  const actionIds = collectInteractiveComponents(components)
     .filter((c) => !previousIds.has(c.customId))
-    .flatMap((c) => parseRoleButtonCustomId(c.customId) ?? []);
-  if (!roleIds.length) return;
+    .flatMap((c) => parseCustomActionCustomId(c.customId) ?? []);
+  if (!actionIds.length) return;
 
-  const [roles, rules] = await Promise.all([
-    getRoles(guildId),
-    getRoleButtonRules(guildId, discordUserId),
-  ]);
-  if (!rules) {
-    throw new ActionClientError('ロールボタンを設置するには「ロールの管理」権限が必要です。');
-  }
-  const isValid = roleIds.every((id) => {
-    const role = roles.find((r) => r.id === id);
-    return role && isAssignableRole(role, rules);
+  const found = await db.query.customAction.findMany({
+    where: and(eq(customAction.guildId, guildId), inArray(customAction.id, actionIds)),
+    columns: { id: true },
   });
-  if (!isValid) throw new ActionClientError('ロールボタンに設定できないロールが含まれています。');
+  if (!actionIds.every((id) => found.some((a) => a.id === id))) {
+    throw new ActionClientError('存在しないカスタムアクションが含まれています。');
+  }
 }
 
 /** 保存できる件数に空きがあるか確認する */
@@ -88,7 +72,7 @@ export const sendMessageAction = guildActionClient
       bindArgsParsedInputs: [guildId],
       ctx: { session },
     }) => {
-      await assertAssignableRoleButtons(guildId, session.user.discordUserId, components);
+      await assertCustomActionsExist(guildId, components);
 
       const channels = await getChannels(guildId);
       const channel = channels.find((ch) => ch.id === channelId);
@@ -153,12 +137,7 @@ export const editMessageAction = guildActionClient
       ctx: { session },
     }) => {
       const saved = await findSavedMessage(guildId, id);
-      await assertAssignableRoleButtons(
-        guildId,
-        session.user.discordUserId,
-        components,
-        saved.components,
-      );
+      await assertCustomActionsExist(guildId, components, saved.components);
 
       await editChannelMessage(guildId, saved.channelId, saved.messageId, {
         components,

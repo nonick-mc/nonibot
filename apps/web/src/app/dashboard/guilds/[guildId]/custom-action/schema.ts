@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { SnowflakeRegex } from '@/lib/discord/zod';
+import { createMessageUserComponentsSchema, SnowflakeRegex } from '@/lib/discord/zod';
 
 z.config(z.locales.ja());
 
@@ -10,6 +10,13 @@ const stepSchema = z.discriminatedUnion('type', [
     type: z.literal('role-toggle'),
     config: z.object({ roleId: z.string().regex(SnowflakeRegex, 'ロールを選択してください。') }),
   }),
+  z.object({
+    type: z.literal('reply-message'),
+    config: z.object({
+      components: createMessageUserComponentsSchema(),
+      ephemeral: z.boolean(),
+    }),
+  }),
 ]);
 
 export const stepsSchema = z
@@ -19,19 +26,17 @@ export const stepsSchema = z
     error: '同じ種類の処理は1つのアクションに複数追加できません。',
   });
 
-const nameSchema = z
-  .string()
-  .trim()
-  .min(1, 'アクション名を入力してください。')
-  .max(50, 'アクション名は50文字以内で入力してください。');
-
 export const createFormSchema = z.object({
-  name: nameSchema,
-  steps: stepsSchema,
+  name: z
+    .string()
+    .trim()
+    .min(1, 'アクション名を入力してください。')
+    .max(50, 'アクション名は50文字以内で入力してください。'),
 });
 
 export const updateFormSchema = createFormSchema.extend({
   id: z.uuid(),
+  steps: stepsSchema,
 });
 
 export const deleteFormSchema = z.object({
