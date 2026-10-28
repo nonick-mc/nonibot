@@ -1,5 +1,6 @@
 'use client';
 
+import { getCustomActionPlaceholders } from '@repo/placeholders';
 import { type AssignableRoleRules, isAssignableRole } from '@repo/shared';
 import { getDangerPermissions, permToText } from '@repo/shared/constants';
 import type { InternalApiRole } from '@repo/shared/types';
@@ -216,6 +217,12 @@ function ReplyMessageStep({
   resources,
 }: { index: number } & Pick<StepsEditorProps, 'resources'>) {
   const { control } = useFormContext<{ steps: Steps }>();
+  // この処理より前の処理の結果だけを、プレースホルダーとして使える
+  const steps = useWatch({ control, name: 'steps' });
+  const stepResources: MessageResources = {
+    ...resources,
+    placeholders: getCustomActionPlaceholders(steps.slice(0, index).map((s) => s.type)),
+  };
 
   return (
     <EditorCard icon={MessageSquareReplyIcon} title='メッセージを返信する' withSortableItemHandle>
@@ -240,12 +247,12 @@ function ReplyMessageStep({
             render={(components) => (
               <DiscordMessage
                 components={components ?? []}
-                resources={resources}
+                resources={stepResources}
                 className='max-h-100'
               />
             )}
           />
-          <ControlledComponentsV2EditorDialog resources={resources}>
+          <ControlledComponentsV2EditorDialog resources={stepResources}>
             <ControlledButton variant='outline' className='w-full'>
               <PencilIcon />
               メッセージを編集

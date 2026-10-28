@@ -1,3 +1,4 @@
+import { customActionBasePlaceholders } from '@repo/placeholders';
 import { z } from 'zod';
 import { createMessageUserComponentsSchema, SnowflakeRegex } from '@/lib/discord/zod';
 
@@ -13,7 +14,8 @@ const stepSchema = z.discriminatedUnion('type', [
   z.object({
     type: z.literal('reply-message'),
     config: z.object({
-      components: createMessageUserComponentsSchema(),
+      // 前の処理の結果は`url`型ではないので、URL欄の検証には基本セットがあれば足りる
+      components: createMessageUserComponentsSchema(customActionBasePlaceholders),
       ephemeral: z.boolean(),
     }),
   }),
