@@ -1,6 +1,11 @@
 'use server';
 
 import { auditLog, customMessage } from '@repo/database';
+import {
+  collectInteractiveComponents,
+  isAssignableRole,
+  parseRoleButtonCustomId,
+} from '@repo/shared';
 import { ChannelType, MessageFlags, PermissionFlagsBits } from 'discord-api-types/v10';
 import { and, count, eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
@@ -10,7 +15,9 @@ import {
   deleteChannelMessage,
   editChannelMessage,
   getChannels,
+  getRoles,
 } from '@/lib/discord/api';
+import { getRoleButtonRules } from '@/lib/discord/role-button';
 import { hasPermission } from '@/lib/discord/utils';
 import { guildActionClient } from '@/lib/safe-action/client';
 import { ActionClientError } from '@/lib/safe-action/error';
@@ -21,6 +28,33 @@ import {
   renameFormSchema,
   sendFormSchema,
 } from './schema';
+
+/**
+ * ロールボタンのロールが、設定できるものか検証する。
+ * `previous`を指定すると、そこに含まれていないボタン(新しく追加・変更されたボタン)だけを検証する。
+ */
+async function assertAssignableRoleButtons(
+  guildId: string,
+  discordUserId: string,
+  components: unknown,
+  previous?: unknown,
+) {
+  const previousIds = new Set(collectInteractiveComponents(previous).map((c) => c.customId));
+  const roleIds = collectInteractiveComponents(components)
+    .filter((c) => !previousIds.has(c.customId))
+    .flatMap((c) => parseRoleButtonCustomId(c.customId) ?? []);
+  if (!roleIds.length) return;
+
+  const [roles, rules] = await Promise.all([
+    getRoles(guildId),
+    getRoleButtonRules(guildId, discordUserId),
+  ]);
+  const isValid = roleIds.every((id) => {
+    const role = roles.find((r) => r.id === id);
+    return role && isAssignableRole(role, rules);
+  });
+  if (!isValid) throw new ActionClientError('ロールボタンに設定できないロールが含まれています。');
+}
 
 const findSavedMessage = async (guildId: string, id: string) => {
   const saved = await db.query.customMessage.findFirst({
@@ -38,6 +72,8 @@ export const sendMessageAction = guildActionClient
       bindArgsParsedInputs: [guildId],
       ctx: { session },
     }) => {
+      await assertAssignableRoleButtons(guildId, session.user.discordUserId, components);
+
       const channels = await getChannels(guildId);
       const channel = channels.find((ch) => ch.id === channelId);
       if (
@@ -102,6 +138,12 @@ export const editMessageAction = guildActionClient
       ctx: { session },
     }) => {
       const saved = await findSavedMessage(guildId, id);
+      await assertAssignableRoleButtons(
+        guildId,
+        session.user.discordUserId,
+        components,
+        saved.components,
+      );
 
       await editChannelMessage(guildId, saved.channelId, saved.messageId, {
         components,
@@ -171,7 +213,6 @@ export const deleteSavedMessageAction = guildActionClient
       const saved = await findSavedMessage(guildId, id);
       await db.delete(customMessage).where(eq(customMessage.id, id));
 
-      // 既に削除されている等で失敗しても、エラーにはしない
       if (deleteDiscordMessage) {
         await deleteChannelMessage(guildId, saved.channelId, saved.messageId).catch(() => {});
       }

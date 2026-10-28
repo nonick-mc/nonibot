@@ -141,9 +141,7 @@ function RoleButtonFields({ basePath }: { basePath: string }) {
               { shouldDirty: true, shouldValidate: true },
             )
           }
-          disabledItemFilter={(role) =>
-            !roleButton || !isAssignableRole(role, roleButton.guildId, roleButton)
-          }
+          disabledItemFilter={(role) => !roleButton || !isAssignableRole(role, roleButton)}
         />
       </ControlledField>
       {dangerPermissions.length > 0 && (

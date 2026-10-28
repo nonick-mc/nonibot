@@ -1,3 +1,4 @@
+import { roleButtonAllowedComponent } from '@repo/shared';
 import { z } from 'zod';
 import { createMessageUserComponentsSchema, SnowflakeRegex } from '@/lib/discord/zod';
 
@@ -6,7 +7,7 @@ z.config(z.locales.ja());
 /** 保存できるメッセージの上限 */
 export const maxSavedMessages = 20;
 
-const componentsSchema = createMessageUserComponentsSchema();
+const componentsSchema = createMessageUserComponentsSchema(undefined, [roleButtonAllowedComponent]);
 const nameSchema = z.string().trim().min(1, '保存名を入力してください。').max(50);
 
 export const editorFormSchema = z.object({

@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { verifyDashboardAccessPermission } from '@/lib/dal';
 import { db } from '@/lib/db';
 import { getChannels, getGuildEmojis, getRoles } from '@/lib/discord/api';
+import { getCurrentRoleButtonRules } from '@/lib/discord/role-button';
 import { sortChannels, sortRoles } from '@/lib/discord/utils';
 import { MessageList } from './message-list';
 import { editorFormSchema, maxSavedMessages } from './schema';
@@ -21,7 +22,7 @@ export default async function Page({
   const { guildId } = await params;
   await verifyDashboardAccessPermission(guildId);
 
-  const [channels, emojis, roles, savedMessages] = await Promise.all([
+  const [channels, emojis, roles, savedMessages, roleButtonRules] = await Promise.all([
     getChannels(guildId),
     getGuildEmojis(guildId),
     getRoles(guildId),
@@ -30,6 +31,7 @@ export default async function Page({
       columns: { id: true, name: true, channelId: true, components: true, createdAt: true },
       orderBy: (message, { desc }) => desc(message.createdAt),
     }),
+    getCurrentRoleButtonRules(guildId),
   ]);
 
   return (
@@ -59,6 +61,7 @@ export default async function Page({
             channels={sortChannels(channels)}
             emojis={emojis}
             roles={sortRoles(roles)}
+            roleButton={roleButtonRules}
             messages={savedMessages.map(({ components, ...message }) => {
               // スキーマに合わない値はcomponentsだけ空にする
               const parsed = editorFormSchema.shape.components.safeParse(components);

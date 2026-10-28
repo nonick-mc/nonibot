@@ -25,6 +25,7 @@ export async function getRoleButtonRules(
     hasPermission(member.permissions, PermissionFlagsBits.Administrator);
 
   return {
+    guildId,
     botHighestPosition: guild.bot_highest_role_position,
     userHighestPosition: isUnrestricted
       ? null

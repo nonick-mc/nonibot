@@ -8,5 +8,5 @@ export type MessageResources = {
   channels?: InternalApiChannel[];
   allowedComponents?: AllowedComponent[];
   placeholders?: Placeholder;
-  roleButton?: RoleButtonRules & { guildId: string };
+  roleButton?: RoleButtonRules;
 };
