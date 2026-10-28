@@ -25,6 +25,23 @@ export const roleButtonAllowedComponent = {
 } satisfies BaseAllowedComponent;
 // #endregion
 
+// #region カスタムアクション
+export const CustomActionCustomIdPrefix = 'custom-action:';
+const customActionCustomIdRegex = new RegExp(
+  `^${CustomActionCustomIdPrefix}([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$`,
+);
+
+export const createCustomActionCustomId = (actionId: string) =>
+  `${CustomActionCustomIdPrefix}${actionId}`;
+export const parseCustomActionCustomId = (customId: unknown) =>
+  (typeof customId === 'string' && customActionCustomIdRegex.exec(customId)?.[1]) || null;
+
+export const customActionAllowedComponent = {
+  type: ComponentType.Button,
+  customIdPattern: customActionCustomIdRegex,
+} satisfies BaseAllowedComponent;
+// #endregion
+
 // #region 自動スレッド作成
 export const AutoCreateThreadCustomIdPrefix = 'auto-create-thread:';
 export const autoCreateThreadAllowedComponents = [
