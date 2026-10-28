@@ -1,8 +1,14 @@
+import type { APIMessageTopLevelComponent } from 'discord-api-types/v10';
 import { jsonb, pgTable, text, unique, uuid } from 'drizzle-orm/pg-core';
 import { timestamps } from '../utils';
 import { guild } from './guild';
 
-export type CustomActionStep = { type: 'role-toggle'; config: { roleId: string } };
+export type CustomActionStep =
+  | { type: 'role-toggle'; config: { roleId: string } }
+  | {
+      type: 'reply-message';
+      config: { components: APIMessageTopLevelComponent[]; ephemeral: boolean };
+    };
 
 export const customAction = pgTable(
   'custom_action',

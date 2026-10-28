@@ -5,38 +5,41 @@ import { and, eq } from 'drizzle-orm';
 import { Button, execute } from 'sunar';
 import { db } from '@/src/lib/db';
 import { errorMessage } from '@/src/lib/format';
-import { runStep, type StepResult } from '../custom-action-steps';
+import { runStep } from '../custom-action-steps';
 
 export const button = new Button({ id: new RegExp(`^${CustomActionCustomIdPrefix}`) });
-
-const SuccessMessageLifetime = 3_000;
 
 execute(button, async (interaction) => {
   if (!interaction.inCachedGuild()) return;
 
   const actionId = parseCustomActionCustomId(interaction.customId);
-  const action =
-    actionId &&
-    (await db.query.customAction.findFirst({
-      where: and(eq(customAction.id, actionId), eq(customAction.guildId, interaction.guildId)),
-    }));
+  const action = actionId
+    ? await db.query.customAction.findFirst({
+        where: and(eq(customAction.id, actionId), eq(customAction.guildId, interaction.guildId)),
+      })
+    : undefined;
 
-  const results: StepResult[] = [];
-  if (action) {
-    for (const step of action.steps) {
-      const result = await runStep(step, interaction);
-      results.push(result);
-      if (!result.ok) break;
-    }
+  if (!action?.steps.length) {
+    return interaction.reply({
+      content: errorMessage('このボタンは使用できません。'),
+      flags: [MessageFlags.Ephemeral],
+    });
   }
 
-  const ok = !!action && results.every((r) => r.ok);
-  await interaction.reply({
-    content: action
-      ? results.map((r) => r.message).join('\n')
-      : errorMessage('このボタンは使用できません。'),
-    flags: [MessageFlags.Ephemeral],
-    allowedMentions: { parse: [] },
-  });
-  if (ok) setTimeout(() => interaction.deleteReply().catch(() => {}), SuccessMessageLifetime);
+  for (const step of action.steps) {
+    const result = await runStep(step, interaction);
+    if (result.ok) continue;
+
+    const error = {
+      content: result.error,
+      flags: [MessageFlags.Ephemeral],
+      allowedMentions: { parse: [] },
+    } as const;
+    return interaction.replied || interaction.deferred
+      ? interaction.followUp(error)
+      : interaction.reply(error);
+  }
+
+  // どの処理も返信しなかった場合はinteraction.update({})
+  if (!interaction.replied && !interaction.deferred) await interaction.update({});
 });
