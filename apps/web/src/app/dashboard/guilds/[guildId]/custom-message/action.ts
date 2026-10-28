@@ -30,8 +30,8 @@ import {
 } from './schema';
 
 /**
- * ロールボタンのロールが、設定できるものか検証する。
- * `previous`を指定すると、そこに含まれていないボタン(新しく追加・変更されたボタン)だけを検証する。
+ * ロールボタンにロールを指定できる権限があるか検証
+ * `previous`を指定すると、そこに含まれていないボタンだけを検証する。
  */
 async function assertAssignableRoleButtons(
   guildId: string,
@@ -49,6 +49,9 @@ async function assertAssignableRoleButtons(
     getRoles(guildId),
     getRoleButtonRules(guildId, discordUserId),
   ]);
+  if (!rules) {
+    throw new ActionClientError('ロールボタンを設置するには「ロールの管理」権限が必要です。');
+  }
   const isValid = roleIds.every((id) => {
     const role = roles.find((r) => r.id === id);
     return role && isAssignableRole(role, rules);

@@ -61,7 +61,7 @@ export default async function Page({
             channels={sortChannels(channels)}
             emojis={emojis}
             roles={sortRoles(roles)}
-            roleButton={roleButtonRules}
+            roleButton={roleButtonRules ?? undefined}
             messages={savedMessages.map(({ components, ...message }) => {
               // スキーマに合わない値はcomponentsだけ空にする
               const parsed = editorFormSchema.shape.components.safeParse(components);

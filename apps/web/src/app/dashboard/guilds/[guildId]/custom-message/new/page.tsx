@@ -33,7 +33,7 @@ export default async function Page({
       channels={sortChannels(channels)}
       emojis={emojis}
       roles={sortRoles(roles)}
-      roleButton={roleButtonRules}
+      roleButton={roleButtonRules ?? undefined}
       isFull={saved.length >= maxSavedMessages}
     />
   );

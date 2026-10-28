@@ -8,12 +8,13 @@ import { hasPermission } from './utils';
 
 /**
  * ロールボタンに設定できるロールの制限を取得する。
+ * 「ロールの管理」権限がなければ`null`を返す。
  * オーナーと管理者は、Botの階層の制限だけを受ける。
  */
 export async function getRoleButtonRules(
   guildId: string,
   discordUserId: string,
-): Promise<RoleButtonRules> {
+): Promise<RoleButtonRules | null> {
   const [guild, member, roles] = await Promise.all([
     getGuild(guildId),
     getGuildMember(guildId, discordUserId),
@@ -23,6 +24,9 @@ export async function getRoleButtonRules(
   const isUnrestricted =
     guild.owner_id === discordUserId ||
     hasPermission(member.permissions, PermissionFlagsBits.Administrator);
+  if (!isUnrestricted && !hasPermission(member.permissions, PermissionFlagsBits.ManageRoles)) {
+    return null;
+  }
 
   return {
     guildId,
