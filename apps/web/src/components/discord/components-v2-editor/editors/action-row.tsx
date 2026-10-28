@@ -7,6 +7,7 @@ import {
   MousePointerClickIcon,
   PlusIcon,
   RectangleEllipsisIcon,
+  ShieldPlusIcon,
 } from 'lucide-react';
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 import { Sortable, SortableItem } from '@/components/reui/sortable';
@@ -23,11 +24,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
-import { useComponentEditorContext } from '../context';
+import { useComponentEditorContext, useEditorResources } from '../context';
 import { EditorCard } from '../editor-card';
 import {
   ButtonEditor,
   createDefaultButton,
+  createDefaultRoleButton,
   createDefaultUrlButton,
   useAllowedButtons,
 } from './button';
@@ -36,6 +38,7 @@ export function ActionRowEditor() {
   const { control } = useFormContext();
   const { basePath } = useComponentEditorContext();
   const allowedButtons = useAllowedButtons();
+  const { roleButton } = useEditorResources();
 
   const { fields, append, remove, move } = useFieldArray({
     control,
@@ -103,6 +106,15 @@ export function ActionRowEditor() {
                 <MousePointerClickIcon />
                 ボタン
               </DropdownMenuItem>
+              {roleButton && (
+                <DropdownMenuItem
+                  onClick={() => append(createDefaultRoleButton())}
+                  disabled={!canAdd(ComponentType.Button)}
+                >
+                  <ShieldPlusIcon />
+                  ロールボタン
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem
                 onClick={() => append(createDefaultUrlButton())}
                 disabled={!canAdd(ComponentType.Button)}

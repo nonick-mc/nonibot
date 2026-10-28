@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { roleButtonAllowedComponent } from '@repo/shared';
 import { SaveIcon } from 'lucide-react';
 import { type ComponentProps, type ReactNode, useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -40,14 +41,19 @@ export function ComponentsV2EditorDialog({
   children,
 }: ComponentsV2EditorModalProps) {
   const [open, setOpen] = useState(false);
-  const { allowedComponents, placeholders } = resources;
+  const { allowedComponents, placeholders, roleButton } = resources;
 
   const schema = useMemo(
     () =>
       z.object({
-        components: createMessageUserComponentsSchema(placeholders, allowedComponents),
+        components: createMessageUserComponentsSchema(
+          placeholders,
+          roleButton
+            ? [...(allowedComponents ?? []), roleButtonAllowedComponent]
+            : allowedComponents,
+        ),
       }),
-    [placeholders, allowedComponents],
+    [placeholders, allowedComponents, roleButton],
   );
 
   const form = useForm({

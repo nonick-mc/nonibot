@@ -1,18 +1,28 @@
 'use client';
 
-import type { AllowedComponent } from '@repo/shared';
+import {
+  type AllowedComponent,
+  createRoleButtonCustomId,
+  isAssignableRole,
+  parseRoleButtonCustomId,
+  RoleButtonCustomIdPrefix,
+} from '@repo/shared';
+import { getDangerPermissions, permToText } from '@repo/shared/constants';
 import { ButtonStyle, ComponentType } from 'discord-api-types/v10';
 import {
   LinkIcon,
   MousePointerClickIcon,
   PaletteIcon,
+  ShieldPlusIcon,
   SmileIcon,
   SmilePlusIcon,
   Trash2Icon,
+  TriangleAlertIcon,
 } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { DiscordEmojiPicker, DiscordEmojiPickerTrigger } from '@/components/discord/emoji-picker';
+import { Alert, AlertDescription, AlertTitle } from '@/components/reui/alert';
 import { ColorPicker, ColorPickerSwatches } from '@/components/reui/color-picker';
 import {
   ControlledField,
@@ -21,6 +31,7 @@ import {
   useControlledField,
 } from '@/components/rhf/field';
 import { ControlledInputGroupInput } from '@/components/rhf/input-group';
+import { ControlledRoleSelect } from '@/components/rhf/role-select';
 import { ControlledSelect, ControlledSelectTrigger } from '@/components/rhf/select';
 import { Button } from '@/components/ui/button';
 import {
@@ -29,7 +40,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { FieldContent, FieldGroup, FieldSeparator } from '@/components/ui/field';
+import { FieldContent, FieldDescription, FieldGroup, FieldSeparator } from '@/components/ui/field';
 import { InputGroup, InputGroupAddon } from '@/components/ui/input-group';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { SelectContent, SelectGroup, SelectItem, SelectValue } from '@/components/ui/select';
@@ -83,6 +94,70 @@ export function createDefaultUrlButton() {
     label: '',
     emoji: null,
   } as const;
+}
+
+export function createDefaultRoleButton() {
+  return {
+    type: ComponentType.Button,
+    style: ButtonStyle.Secondary,
+    custom_id: RoleButtonCustomIdPrefix,
+    label: '',
+    emoji: null,
+  } as const;
+}
+
+function RoleButtonFields({ basePath }: { basePath: string }) {
+  const { control, setValue } = useFormContext();
+  const { roles = [], roleButton } = useEditorResources();
+  const customId = useWatch({ control, name: `${basePath}.custom_id` });
+  const roleId = parseRoleButtonCustomId(customId);
+  const dangerPermissions = getDangerPermissions(
+    roles.find((role) => role.id === roleId)?.permissions ?? '0',
+  );
+
+  return (
+    <>
+      <ControlledField
+        control={control}
+        name={`${basePath}.custom_id`}
+        orientation='responsive'
+        align='center'
+      >
+        <FieldContent>
+          <ControlledFieldLabel>付与・解除するロール</ControlledFieldLabel>
+          <FieldDescription>
+            ボタンを押したメンバーにロールがなければ付与し、あれば解除します。nonibotとあなたのロールより低い位置にあるロールを選択できます。
+          </FieldDescription>
+          <ControlledFieldError />
+        </FieldContent>
+        <ControlledRoleSelect
+          className='sm:min-w-2xs'
+          items={roles}
+          value={roleId}
+          onChange={(id) =>
+            setValue(
+              `${basePath}.custom_id`,
+              id ? createRoleButtonCustomId(id) : RoleButtonCustomIdPrefix,
+              { shouldDirty: true, shouldValidate: true },
+            )
+          }
+          disabledItemFilter={(role) =>
+            !roleButton || !isAssignableRole(role, roleButton.guildId, roleButton)
+          }
+        />
+      </ControlledField>
+      {dangerPermissions.length > 0 && (
+        <Alert variant='warning'>
+          <TriangleAlertIcon />
+          <AlertTitle>このロールには強力な権限が含まれています</AlertTitle>
+          <AlertDescription>
+            ボタンを押したメンバーは誰でも、次の権限を得られます:{' '}
+            {permToText(...dangerPermissions).join('、')}
+          </AlertDescription>
+        </Alert>
+      )}
+    </>
+  );
 }
 
 export function createDefaultButton(allowed: AllowedComponent) {
@@ -168,11 +243,11 @@ type ButtonEditorProps = {
 
 export function ButtonEditor(props: ButtonEditorProps) {
   const style = useWatch({ name: `${props.basePath}.style` });
-  return style === ButtonStyle.Link ? (
-    <URLButtonEditor {...props} />
-  ) : (
-    <UserActionButtonEditor {...props} />
-  );
+  const customId = useWatch({ name: `${props.basePath}.custom_id` });
+  if (style === ButtonStyle.Link) return <URLButtonEditor {...props} />;
+  if (typeof customId === 'string' && customId.startsWith(RoleButtonCustomIdPrefix))
+    return <UserActionButtonEditor {...props} kind='role' />;
+  return <UserActionButtonEditor {...props} />;
 }
 
 function ButtonLabelField({ basePath }: { basePath: string }) {
@@ -203,15 +278,16 @@ export function UserActionButtonEditor({
   basePath,
   onRemove,
   withSortableItemHandle,
-}: ButtonEditorProps) {
+  kind = 'action',
+}: ButtonEditorProps & { kind?: 'action' | 'role' }) {
   const { control } = useFormContext();
   const allowedButtons = useAllowedButtons();
 
   return (
     <ComponentEditorContext.Provider value={{ basePath, onRemove }}>
       <EditorCard
-        icon={MousePointerClickIcon}
-        title='ボタン'
+        icon={kind === 'role' ? ShieldPlusIcon : MousePointerClickIcon}
+        title={kind === 'role' ? 'ロールボタン' : 'ボタン'}
         headerActions={
           <Popover>
             <PopoverTrigger render={<Button variant='ghost' size='icon-sm' />}>
@@ -243,33 +319,37 @@ export function UserActionButtonEditor({
         <FieldGroup className='gap-5'>
           <ButtonLabelField basePath={basePath} />
           <FieldSeparator />
-          <ControlledField
-            control={control}
-            name={`${basePath}.custom_id`}
-            orientation='responsive'
-            align='center'
-          >
-            <FieldContent>
-              <ControlledFieldLabel>ボタンを押した際のアクション</ControlledFieldLabel>
-              <ControlledFieldError />
-            </FieldContent>
-            <ControlledSelect<string>>
-              <ControlledSelectTrigger className='sm:min-w-2xs'>
-                <SelectValue>
-                  {(value: string) => allowedButtons.find((a) => a.customId === value)?.label}
-                </SelectValue>
-              </ControlledSelectTrigger>
-              <SelectContent alignItemWithTrigger={false}>
-                <SelectGroup>
-                  {allowedButtons.map((allowed) => (
-                    <SelectItem key={allowed.customId} value={allowed.customId}>
-                      {allowed.label}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </ControlledSelect>
-          </ControlledField>
+          {kind === 'role' ? (
+            <RoleButtonFields basePath={basePath} />
+          ) : (
+            <ControlledField
+              control={control}
+              name={`${basePath}.custom_id`}
+              orientation='responsive'
+              align='center'
+            >
+              <FieldContent>
+                <ControlledFieldLabel>ボタンを押した際のアクション</ControlledFieldLabel>
+                <ControlledFieldError />
+              </FieldContent>
+              <ControlledSelect<string>>
+                <ControlledSelectTrigger className='sm:min-w-2xs'>
+                  <SelectValue>
+                    {(value: string) => allowedButtons.find((a) => a.customId === value)?.label}
+                  </SelectValue>
+                </ControlledSelectTrigger>
+                <SelectContent alignItemWithTrigger={false}>
+                  <SelectGroup>
+                    {allowedButtons.map((allowed) => (
+                      <SelectItem key={allowed.customId} value={allowed.customId}>
+                        {allowed.label}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </ControlledSelect>
+            </ControlledField>
+          )}
         </FieldGroup>
       </EditorCard>
     </ComponentEditorContext.Provider>
