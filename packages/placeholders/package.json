@@ -20,12 +20,7 @@
     "dev": "tsc --watch",
     "build": "tsc"
   },
-  "peerDependencies": {
-    "json-templates": "^5.2.0"
-  },
   "devDependencies": {
-    "@types/json-templates": "^3.0.3",
-    "json-templates": "^5.2.0",
     "typescript": "^5.9.3"
   }
 }
