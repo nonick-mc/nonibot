@@ -7,6 +7,7 @@ import type {
   InternalApiGuild,
   InternalApiMember,
   InternalApiRole,
+  InternalApiUser,
 } from '@repo/shared/types';
 import {
   PermissionFlagsBits,
@@ -70,6 +71,9 @@ export const getGuildMember = cache((guildId: string, userId: string) => {
   return internalFetch<InternalApiMember, false>(
     `/guilds/${encodeURIComponent(guildId)}/members/${encodeURIComponent(userId)}`,
   );
+});
+export const getUser = cache((userId: string) => {
+  return internalFetch<InternalApiUser, false>(`/users/${encodeURIComponent(userId)}`);
 });
 export const getRoles = cache((guildId: string) => {
   return internalFetch<InternalApiRole[], false>(`/guilds/${encodeURIComponent(guildId)}/roles`);

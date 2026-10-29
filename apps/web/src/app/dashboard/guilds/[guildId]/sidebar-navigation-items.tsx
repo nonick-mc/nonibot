@@ -53,9 +53,8 @@ export const SidebarNavigationItems: SidebarGroupItem<string>[] = [
       {
         key: 'audit-log',
         title: '監査ログ',
-        url: (guildId) => `/guilds/${guildId}/audit-log`,
+        url: (guildId) => `/dashboard/guilds/${guildId}/audit-log`,
         icon: LogsIcon,
-        badge: <Badge variant='warning-outline'>Beta</Badge>,
       },
     ],
   },

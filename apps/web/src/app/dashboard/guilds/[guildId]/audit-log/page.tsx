@@ -1,0 +1,142 @@
+import { BetterFetchError } from '@better-fetch/fetch';
+import { auditLog, user } from '@repo/database';
+import { AuditLogRetentionDays, SnowflakeRegex } from '@repo/shared/constants';
+import { and, count, eq, inArray } from 'drizzle-orm';
+import type { Metadata } from 'next';
+import { Header } from '@/components/header';
+import { Card, CardHeader } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { verifyDashboardAccessPermission } from '@/lib/dal';
+import { db } from '@/lib/db';
+import { getChannels, getRoles, getUser } from '@/lib/discord/api';
+import type { AuditLogAuthor } from './columns';
+import { DataTable } from './data-table';
+import { Filters } from './filters';
+import type { DevDataMode } from './worst-case';
+
+export const metadata: Metadata = {
+  title: '監査ログ',
+};
+
+const pageSizes = [10, 25, 50];
+
+const toArray = (value: string | string[] | undefined) =>
+  value === undefined ? [] : Array.isArray(value) ? value : [value];
+
+async function fetchAuthor(discordUserId: string): Promise<AuditLogAuthor | null> {
+  try {
+    const u = await getUser(discordUserId);
+    return {
+      displayName: u.global_name ?? u.username,
+      username: u.username,
+      avatarUrl: u.avatar_url,
+    };
+  } catch (error) {
+    if (!(error instanceof BetterFetchError && error.status === 404)) {
+      console.error('監査ログの実行者の取得に失敗しました', error);
+    }
+    return null;
+  }
+}
+
+export default async function Page({
+  params,
+  searchParams,
+}: PageProps<'/dashboard/guilds/[guildId]/audit-log'>) {
+  const { guildId } = await params;
+  await verifyDashboardAccessPermission(guildId);
+
+  const query = await searchParams;
+  const requestedSize = Number(query.pageSize);
+  const pageSize = pageSizes.includes(requestedSize) ? requestedSize : pageSizes[0];
+
+  const users = toArray(query.user).filter((v) => SnowflakeRegex.test(v));
+  const targets = toArray(query.target).filter((v) =>
+    (auditLog.targetName.enumValues as string[]).includes(v),
+  ) as (typeof auditLog.targetName.enumValues)[number][];
+  const actions = toArray(query.action).filter((v) =>
+    (auditLog.actionType.enumValues as string[]).includes(v),
+  ) as (typeof auditLog.actionType.enumValues)[number][];
+
+  const where = and(
+    eq(auditLog.guildId, guildId),
+    users.length
+      ? inArray(
+          auditLog.authorId,
+          db.select({ id: user.id }).from(user).where(inArray(user.discordUserId, users)),
+        )
+      : undefined,
+    targets.length ? inArray(auditLog.targetName, targets) : undefined,
+    actions.length ? inArray(auditLog.actionType, actions) : undefined,
+  );
+
+  const [{ total }] = await db.select({ total: count() }).from(auditLog).where(where);
+  // 範囲外・巨大なページ番号は、最後のページに収める
+  const requestedPage = Number(query.page);
+  const lastPage = Math.max(1, Math.ceil(total / pageSize));
+  const page =
+    Number.isSafeInteger(requestedPage) && requestedPage >= 1
+      ? Math.min(requestedPage, lastPage)
+      : 1;
+
+  const [logs, authors, channels, roles] = await Promise.all([
+    db.query.auditLog.findMany({
+      where,
+      orderBy: (log, { desc }) => [desc(log.createdAt)],
+      limit: pageSize,
+      offset: (page - 1) * pageSize,
+      with: { author: { columns: { discordUserId: true } } },
+    }),
+    db
+      .selectDistinct({ discordUserId: user.discordUserId })
+      .from(auditLog)
+      .innerJoin(user, eq(auditLog.authorId, user.id))
+      .where(eq(auditLog.guildId, guildId)),
+    getChannels(guildId).catch(() => []),
+    getRoles(guildId).catch(() => []),
+  ]);
+
+  const discordUserIds = [...new Set(authors.map((a) => a.discordUserId))];
+  const fetched = await Promise.all(discordUserIds.map(fetchAuthor));
+  const authorMap = new Map(discordUserIds.map((id, i) => [id, fetched[i]]));
+
+  const rowsFromDb = logs.map(({ authorId: _, author, ...log }) => ({
+    ...log,
+    author: author ? (authorMap.get(author.discordUserId) ?? null) : null,
+  }));
+
+  // break-ui: 開発時のみ、`?data=`で最悪ケースのデータに差し替える。
+  const isDev = process.env.NODE_ENV === 'development';
+  const devFixture = isDev ? await import('./worst-case') : null;
+  const devMode: DevDataMode = devFixture?.DevDataModes.find((m) => m === query.data) ?? 'demo';
+  const worst = devFixture && devMode !== 'demo' ? devFixture.getWorstCase(devMode) : null;
+  const DevDataToggle = isDev ? (await import('./dev-data-toggle')).DevDataToggle : null;
+
+  return (
+    <>
+      <Header
+        title='監査ログ'
+        description={`ユーザーが過去${AuditLogRetentionDays}日間でダッシュボードで加えた変更を閲覧することができます。`}
+      />
+      <Card>
+        <CardHeader>
+          <Filters
+            users={authors.map((a) => ({
+              id: a.discordUserId,
+              author: authorMap.get(a.discordUserId) ?? null,
+            }))}
+          />
+        </CardHeader>
+        <Separator />
+        <DataTable
+          data={worst?.rows ?? rowsFromDb}
+          total={worst?.total ?? total}
+          page={page}
+          pageSize={pageSize}
+          resources={worst?.resources ?? { channels, roles }}
+        />
+      </Card>
+      {DevDataToggle && <DevDataToggle mode={devMode} />}
+    </>
+  );
+}

@@ -4,6 +4,7 @@ import type {
   InternalApiGuild,
   InternalApiMember,
   InternalApiRole,
+  InternalApiUser,
 } from '@repo/shared/types';
 import {
   type Guild,
@@ -12,6 +13,7 @@ import {
   type GuildMember,
   type Role,
   ThreadOnlyChannel,
+  type User,
 } from 'discord.js';
 
 export function serializeGuild(guild: Guild): InternalApiGuild {
@@ -82,5 +84,14 @@ export function serializeMember(member: GuildMember): InternalApiMember {
   return {
     permissions: member.permissions.bitfield.toString(),
     roles: [...member.roles.cache.keys()],
+  };
+}
+
+export function serializeUser(user: User): InternalApiUser {
+  return {
+    id: user.id,
+    username: user.username,
+    global_name: user.globalName,
+    avatar_url: user.displayAvatarURL({ size: 64 }),
   };
 }

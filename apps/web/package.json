@@ -22,6 +22,7 @@
     "@repo/placeholders": "workspace:*",
     "@repo/shared": "workspace:*",
     "@shadcn/react": "^0.3.1",
+    "@tanstack/react-table": "^9.3.1",
     "@types/mdx": "^2.0.13",
     "better-auth": "^1.6.11",
     "class-variance-authority": "^0.7.1",
