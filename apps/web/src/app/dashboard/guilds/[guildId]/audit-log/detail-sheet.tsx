@@ -6,8 +6,7 @@ import { PreviewResourcesContext } from '@/components/discord/preview/context';
 import { ChannelMention, RoleMention } from '@/components/discord/preview/mention';
 import { DiscordMessage, type MessagePreviewProps } from '@/components/discord/preview/message';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Card, CardContent } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
+import { Card } from '@/components/ui/card';
 import {
   Sheet,
   SheetContent,

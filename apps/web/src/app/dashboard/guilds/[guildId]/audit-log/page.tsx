@@ -1,10 +1,8 @@
 import { auditLog, user } from '@repo/database';
 import { SnowflakeRegex } from '@repo/shared/constants';
 import { and, count, eq, inArray } from 'drizzle-orm';
-import { InfoIcon } from 'lucide-react';
 import type { Metadata } from 'next';
 import { Header } from '@/components/header';
-import { Alert, AlertDescription, AlertTitle } from '@/components/reui/alert';
 import { Card, CardHeader } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { verifyDashboardAccessPermission } from '@/lib/dal';
@@ -99,15 +97,8 @@ export default async function Page({
     <>
       <Header
         title='監査ログ'
-        description='ユーザーがダッシュボードで加えた変更を閲覧することができます。'
+        description='ユーザーが過去28日間でダッシュボードで加えた変更を閲覧することができます。'
       />
-      <Alert variant='info'>
-        <InfoIcon />
-        <AlertTitle>この機能はベータ版です。</AlertTitle>
-        <AlertDescription>
-          この機能は開発中です。搭載している内容について予告なく変更する場合があります。
-        </AlertDescription>
-      </Alert>
       <Card>
         <CardHeader>
           <Filters
