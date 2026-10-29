@@ -72,7 +72,7 @@ export function DiscordMessage({
               </div>
               <div className='max-w-150'>
                 {components.length > 0 && (
-                  // ContainerとSectionは一番幅の広いものに揃える
+                  // Container・Section・TextDisplayは一番幅の広いものに揃える
                   <div className='mt-1 grid grid-cols-[auto_1fr] gap-y-2'>
                     {components.map((component, i) => (
                       <div
@@ -81,7 +81,8 @@ export function DiscordMessage({
                         className={cn(
                           'min-w-0',
                           component.type === ComponentType.Container ||
-                            component.type === ComponentType.Section
+                            component.type === ComponentType.Section ||
+                            component.type === ComponentType.TextDisplay
                             ? 'col-start-1'
                             : 'col-span-2',
                         )}
