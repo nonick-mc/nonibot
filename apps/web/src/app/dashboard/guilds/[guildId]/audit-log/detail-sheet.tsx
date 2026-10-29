@@ -122,10 +122,21 @@ function Sentence({ change }: { change: Change }) {
   }
 }
 
-function InfoRow({ icon: Icon, children }: { icon: typeof UserIcon; children: React.ReactNode }) {
+function InfoRow({
+  label,
+  icon: Icon,
+  children,
+}: {
+  label: string;
+  icon: typeof UserIcon;
+  children: React.ReactNode;
+}) {
   return (
     <div className='flex items-center gap-2 text-sm'>
-      <Icon className='mt-0.5 size-4 shrink-0 text-muted-foreground' />
+      <div className='flex shrink-0 items-center gap-1 text-muted-foreground sm:w-28'>
+        <Icon className='mt-0.5 size-4 shrink-0' />
+        <p className='max-sm:hidden'>{label}</p>
+      </div>
       {children}
     </div>
   );
@@ -205,7 +216,7 @@ export function DetailSheet({ log, resources, onClose }: Props) {
                 <SheetTitle>監査ログの詳細</SheetTitle>
                 <SheetDescription className='sr-only'>監査ログの詳細</SheetDescription>
                 <Card className='mt-3 p-4 flex flex-col gap-3'>
-                  <InfoRow icon={UserIcon}>
+                  <InfoRow label='ユーザー' icon={UserIcon}>
                     {author ? (
                       <>
                         <Avatar className='size-6'>
@@ -218,13 +229,13 @@ export function DetailSheet({ log, resources, onClose }: Props) {
                       <span className='text-muted-foreground'>不明なユーザー</span>
                     )}
                   </InfoRow>
-                  <InfoRow icon={ClockIcon}>
+                  <InfoRow label='実行日時' icon={ClockIcon}>
                     {dayjs(log.createdAt).tz().format('YYYY/MM/DD HH:mm')}
                   </InfoRow>
-                  <InfoRow icon={TargetIcon}>
+                  <InfoRow label='対象' icon={TargetIcon}>
                     {targetNameTexts[log.targetName] ?? '不明なターゲット'}
                   </InfoRow>
-                  <InfoRow icon={ZapIcon}>
+                  <InfoRow label='アクション' icon={ZapIcon}>
                     {actionTypeTexts[log.actionType] ?? '不明なアクション'}
                   </InfoRow>
                 </Card>
