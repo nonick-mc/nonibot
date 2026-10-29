@@ -1,11 +1,16 @@
 'use client';
 
-import { getCustomActionPlaceholders } from '@repo/placeholders';
+import {
+  customActionStepPlaceholders,
+  getCustomActionPlaceholders,
+  type Placeholder,
+} from '@repo/placeholders';
 import { type AssignableRoleRules, isAssignableRole } from '@repo/shared';
 import { getDangerPermissions, permToText } from '@repo/shared/constants';
 import type { InternalApiRole } from '@repo/shared/types';
 import { ComponentType } from 'discord-api-types/v10';
 import {
+  CircleAlertIcon,
   MessageSquareReplyIcon,
   PencilIcon,
   PlusIcon,
@@ -19,6 +24,7 @@ import { ComponentEditorContext } from '@/components/discord/components-v2-edito
 import { EditorCard } from '@/components/discord/components-v2-editor/editor-card';
 import { DiscordMessage } from '@/components/discord/preview/message';
 import type { MessageResources } from '@/components/discord/resources';
+import { PlaceholderIcons } from '@/components/placeholder/placeholder-picker-button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/reui/alert';
 import { Sortable, SortableItem } from '@/components/reui/sortable';
 import { ControlledButton } from '@/components/rhf/button';
@@ -31,6 +37,7 @@ import {
 import { ControlledRoleSelect } from '@/components/rhf/role-select';
 import { ControlledSwitch } from '@/components/rhf/switch';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -38,6 +45,9 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { FieldContent, FieldDescription, FieldGroup, FieldSeparator } from '@/components/ui/field';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Separator } from '@/components/ui/separator';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import type { stepsSchema } from './schema';
 
 export type Steps = z.infer<typeof stepsSchema>;
@@ -159,7 +169,7 @@ export function StepsEditor({
 }
 
 function StepConnector() {
-  return <div aria-hidden className='h-6 w-px bg-border' />;
+  return <div aria-hidden className='h-14 w-px bg-border' />;
 }
 
 function StepEditor({ index, ...props }: { index: number } & StepsEditorProps) {
@@ -217,15 +227,21 @@ function ReplyMessageStep({
   resources,
 }: { index: number } & Pick<StepsEditorProps, 'resources'>) {
   const { control } = useFormContext<{ steps: Steps }>();
-  // この処理より前の処理の結果だけを、プレースホルダーとして使える
   const steps = useWatch({ control, name: 'steps' });
+  const precedingTypes = steps.slice(0, index).map((s) => s.type);
   const stepResources: MessageResources = {
     ...resources,
-    placeholders: getCustomActionPlaceholders(steps.slice(0, index).map((s) => s.type)),
+    placeholders: getCustomActionPlaceholders(precedingTypes),
   };
+  const results = precedingTypes.flatMap((type) => customActionStepPlaceholders[type]);
 
   return (
-    <EditorCard icon={MessageSquareReplyIcon} title='メッセージを返信する' withSortableItemHandle>
+    <EditorCard
+      icon={MessageSquareReplyIcon}
+      title='メッセージを返信する'
+      headerActions={<StepResultPopover placeholders={results} />}
+      withSortableItemHandle
+    >
       <FieldGroup className='gap-4'>
         <ControlledField
           control={control}
@@ -262,5 +278,37 @@ function ReplyMessageStep({
         </ControlledField>
       </FieldGroup>
     </EditorCard>
+  );
+}
+
+/** 前の処理が提供するプレースホルダー(処理の結果)の一覧 */
+function StepResultPopover({ placeholders }: { placeholders: Placeholder }) {
+  if (!placeholders.length) return null;
+
+  return (
+    <Popover>
+      <PopoverTrigger render={<Button size='sm' variant='outline' />}>
+        <CircleAlertIcon className='mt-0.5' />
+        <span className='max-sm:hidden'>{placeholders.length}件のプレースホルダー</span>
+      </PopoverTrigger>
+      <PopoverContent align='end' className='w-72 gap-4'>
+        <p className='text-sm'>1つ前のアクションの結果をプレースホルダーを使用して表示できます。</p>
+        <Card>
+          <CardContent className='p-4 py-0 flex flex-col gap-2'>
+            {placeholders.map(({ key, description, type }) => (
+              <div key={key} className='flex items-start gap-3'>
+                <span className='mt-0.5 text-muted-foreground [&_svg]:size-4'>
+                  {PlaceholderIcons[type]}
+                </span>
+                <div className='flex flex-col'>
+                  <span className='font-mono text-sm'>{`{{${key}}}`}</span>
+                  <span className='text-xs text-muted-foreground'>{description}</span>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      </PopoverContent>
+    </Popover>
   );
 }
