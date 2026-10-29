@@ -47,6 +47,6 @@ execute(button, async (interaction) => {
       : interaction.reply(error);
   }
 
-  // どの処理も返信しなかった場合はinteraction.update({})
-  if (!interaction.replied && !interaction.deferred) await interaction.update({});
+  // どの処理も返信しなかった場合は、メッセージを変更せずに応答だけ返す
+  if (!interaction.replied && !interaction.deferred) await interaction.deferUpdate();
 });
