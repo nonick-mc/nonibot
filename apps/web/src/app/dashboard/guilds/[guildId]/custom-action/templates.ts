@@ -49,7 +49,7 @@ const templates = {
           components: [
             {
               type: ComponentType.TextDisplay,
-              content: '{{roleToggleRole}} を{{roleToggleResult}}しました。',
+              content: 'ボタンが押されました！',
             },
           ],
           ephemeral: true,
