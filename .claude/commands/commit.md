@@ -26,6 +26,7 @@ description: Create a git commit
    - 形式: `type(スコープ): 説明`（スコープ省略時は `type: 説明`）
    - typeはConventional Commits形式（feat/fix/docs/refactor/chore/test/style/perf/build/ci等）
    - 日本語で記述（type・スコープは英語）
+   - 説明は体言止めにする（文末を「〜する」「〜した」「〜できるようにする」にせず、「追加」「変更」「修正」「適用」のような名詞で終える）
    - 各候補は異なる詳細度や視点を提供（例: 技術的詳細重視、ビジネス価値重視、シンプル表現）
    - スコープと type は3候補で原則そろえ、説明文のみ変える
 4. **ユーザー選択**: AskUserQuestionで3候補を提示し選択を受ける
@@ -46,4 +47,5 @@ description: Create a git commit
 
 - Claude co-authorshipフッターは不要
 - メッセージは日本語（type・スコープのみ英語）
+- 説明は体言止め（例: 「適用する」→「適用」、「変更する」→「変更」、「作成できるようにする」→「作成機能を追加」）
 - 1行で完結（本文なし）
