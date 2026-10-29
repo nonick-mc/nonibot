@@ -39,22 +39,23 @@ export default async function Page({
       <Header
         title='カスタムメッセージ'
         description='サーバー内の任意のチャンネルにメッセージを送信します。'
-      >
-        <Button
-          className='max-sm:w-full'
-          render={<Link href={`/dashboard/guilds/${guildId}/custom-message/new`} />}
-          nativeButton={false}
-        >
-          <PlusIcon />
-          新規作成
-        </Button>
-      </Header>
+      />
       <Card className='bg-card/50'>
-        <CardHeader>
-          <CardTitle>保存したメッセージ</CardTitle>
-          <CardDescription>
-            あと{Math.max(maxSavedMessages - savedMessages.length, 0)}件のメッセージを保存できます。
-          </CardDescription>
+        <CardHeader className='flex flex-col sm:flex-row sm:items-center justify-between gap-4'>
+          <div className='w-full flex flex-col gap-1.5'>
+            <CardTitle>保存したメッセージ</CardTitle>
+            <CardDescription>
+              最大{maxSavedMessages}件のメッセージを保存できます。（残り
+              {Math.max(maxSavedMessages - savedMessages.length, 0)}件）
+            </CardDescription>
+          </div>
+          <Button
+            render={<Link href={`/dashboard/guilds/${guildId}/custom-message/new`} />}
+            nativeButton={false}
+          >
+            <PlusIcon />
+            新規作成
+          </Button>
         </CardHeader>
         <CardContent>
           <MessageList

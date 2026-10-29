@@ -1,4 +1,7 @@
+import { ArrowLeftIcon } from 'lucide-react';
 import type { Metadata } from 'next';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 import { getCustomActionAllowedComponents } from '@/lib/custom-action';
 import { verifyDashboardAccessPermission } from '@/lib/dal';
 import { db } from '@/lib/db';
@@ -29,12 +32,23 @@ export default async function Page({
   ]);
 
   return (
-    <SendMessageForm
-      channels={sortChannels(channels)}
-      emojis={emojis}
-      roles={sortRoles(roles)}
-      allowedComponents={allowedComponents}
-      isFull={saved.length >= maxSavedMessages}
-    />
+    <>
+      <Button
+        render={<Link href={`/dashboard/guilds/${guildId}/custom-message`} />}
+        nativeButton={false}
+        className='w-fit mb-2'
+        variant='outline'
+      >
+        <ArrowLeftIcon />
+        一覧に戻る
+      </Button>
+      <SendMessageForm
+        channels={sortChannels(channels)}
+        emojis={emojis}
+        roles={sortRoles(roles)}
+        allowedComponents={allowedComponents}
+        isFull={saved.length >= maxSavedMessages}
+      />
+    </>
   );
 }
