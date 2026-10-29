@@ -198,7 +198,7 @@ export function DetailSheet({ log, resources, onClose }: Props) {
   return (
     <PreviewResourcesContext.Provider value={resources}>
       <Sheet open={log !== null} onOpenChange={(open) => !open && onClose()}>
-        <SheetContent>
+        <SheetContent className='data-[side=right]:sm:max-w-xl'>
           {log && (
             <>
               <SheetHeader>
