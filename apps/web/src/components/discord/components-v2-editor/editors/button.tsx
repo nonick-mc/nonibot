@@ -188,7 +188,7 @@ function ButtonLabelField({ basePath }: { basePath: string }) {
         <ControlledFieldLabel>ラベル</ControlledFieldLabel>
         <ControlledFieldError />
       </FieldContent>
-      <InputGroup className='@md/field-group:w-2xs'>
+      <InputGroup className='@md/field-group:w-xs @md/field-group:min-w-xs'>
         <InputGroupAddon align='inline-start'>
           <EmojiField name={`${basePath}.emoji`} />
         </InputGroupAddon>
@@ -268,7 +268,7 @@ export function UserActionButtonEditor(props: ButtonEditorProps) {
           <ControlledFieldError />
         </FieldContent>
         <ControlledSelect<string>>
-          <ControlledSelectTrigger className='@md/field-group:w-2xs'>
+          <ControlledSelectTrigger className='@md/field-group:w-xs @md/field-group:min-w-xs'>
             <SelectValue>
               {(value: string) => allowedButtons.find((a) => a.customId === value)?.label}
             </SelectValue>
@@ -308,7 +308,7 @@ export function URLButtonEditor({ basePath, onRemove, withSortableItemHandle }: 
               <ControlledFieldLabel>URL</ControlledFieldLabel>
               <ControlledFieldError />
             </FieldContent>
-            <InputGroup className='@md/field-group:w-2xs'>
+            <InputGroup className='@md/field-group:w-xs @md/field-group:min-w-xs'>
               <ControlledInputGroupInput ref={urlRef} placeholder='URLを入力' />
               <InputGroupAddon align='inline-start'>
                 <LinkIcon />
