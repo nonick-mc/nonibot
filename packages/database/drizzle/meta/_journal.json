@@ -278,29 +278,8 @@
     {
       "idx": 39,
       "version": "7",
-      "when": 1792996908270,
-      "tag": "0039_nebulous_luckman",
-      "breakpoints": true
-    },
-    {
-      "idx": 40,
-      "version": "7",
-      "when": 1793003700715,
-      "tag": "0040_harsh_polaris",
-      "breakpoints": true
-    },
-    {
-      "idx": 41,
-      "version": "7",
-      "when": 1793160959875,
-      "tag": "0041_worthless_captain_universe",
-      "breakpoints": true
-    },
-    {
-      "idx": 42,
-      "version": "7",
-      "when": 1793270691755,
-      "tag": "0042_conscious_meggan",
+      "when": 1793297745381,
+      "tag": "0039_custom_message_and_action",
       "breakpoints": true
     }
   ]

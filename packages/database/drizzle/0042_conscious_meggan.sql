@@ -1,1 +1,0 @@
-ALTER TABLE "custom_action" DROP CONSTRAINT "custom_action_guild_id_name_unique";
