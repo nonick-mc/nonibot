@@ -10,7 +10,8 @@ import { db } from '@/lib/db';
 import { getChannels, getGuildEmojis, getRoles } from '@/lib/discord/api';
 import { getCurrentAssignableRoleRules } from '@/lib/discord/assignable-role';
 import { sortChannels, sortRoles } from '@/lib/discord/utils';
-import { stepsSchema } from '../schema';
+import type { Steps } from '../steps-editor';
+import { isCustomActionTemplate } from '../templates';
 import { SettingForm } from './form';
 
 export const metadata: Metadata = {
@@ -19,8 +20,10 @@ export const metadata: Metadata = {
 
 export default async function Page({
   params,
+  searchParams,
 }: PageProps<'/dashboard/guilds/[guildId]/custom-action/[actionId]'>) {
   const { guildId, actionId } = await params;
+  const { template } = await searchParams;
   await verifyDashboardAccessPermission(guildId);
 
   const [roles, channels, emojis, assignableRoleRules, action, messages] = await Promise.all([
@@ -49,6 +52,7 @@ export default async function Page({
     <>
       <Button
         render={<Link href={`/dashboard/guilds/${guildId}/custom-action`} />}
+        nativeButton={false}
         className='w-fit mb-2'
         variant='outline'
       >
@@ -63,12 +67,14 @@ export default async function Page({
         action={{
           id: action.id,
           name: action.name,
-          steps: stepsSchema.safeParse(action.steps).data ?? [],
+          // ロール未設定(`roleId: ''`)の処理も編集できるよう、検証せずに渡す
+          steps: action.steps as Steps,
         }}
         roles={sortRoles(roles)}
         resources={{ roles: sortRoles(roles), channels: sortChannels(channels), emojis }}
         assignableRoleRules={assignableRoleRules}
         usageCount={usageCount}
+        template={isCustomActionTemplate(template) ? template : undefined}
       />
     </>
   );

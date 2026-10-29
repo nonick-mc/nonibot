@@ -59,7 +59,7 @@ export default async function Page({
               {Math.max(maxCustomActions - actions.length, 0)}個）
             </CardDescription>
           </div>
-          <CreateDialog>
+          <CreateDialog names={actions.map((a) => a.name)}>
             <Button disabled={actions.length >= maxCustomActions}>
               <PlusIcon />
               アクションを作成する

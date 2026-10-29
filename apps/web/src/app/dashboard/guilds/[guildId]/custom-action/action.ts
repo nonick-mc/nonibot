@@ -2,8 +2,7 @@
 
 import { auditLog, type CustomActionStep, customAction } from '@repo/database';
 import { isAssignableRole } from '@repo/shared';
-import { ComponentType } from 'discord-api-types/v10';
-import { and, count, eq, ne, sql } from 'drizzle-orm';
+import { and, count, eq, sql } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/db';
 import { getRoles } from '@/lib/discord/api';
@@ -46,26 +45,6 @@ async function assertAllowedSteps(
   if (!isValid) throw new ActionClientError('設定できないロールが含まれています。');
 }
 
-/** 同じ名前のアクションが存在しないか確認する */
-async function assertUniqueName(
-  guildId: string,
-  name: string,
-  excludeId?: string,
-  executor: Pick<typeof db, 'select'> = db,
-) {
-  const [{ total }] = await executor
-    .select({ total: count() })
-    .from(customAction)
-    .where(
-      and(
-        eq(customAction.guildId, guildId),
-        eq(customAction.name, name),
-        excludeId ? ne(customAction.id, excludeId) : undefined,
-      ),
-    );
-  if (total > 0) throw new ActionClientError('同じ名前のアクションが既に存在します。');
-}
-
 const findAction = async (guildId: string, id: string) => {
   const found = await db.query.customAction.findFirst({
     where: and(eq(customAction.id, id), eq(customAction.guildId, guildId)),
@@ -77,16 +56,8 @@ const findAction = async (guildId: string, id: string) => {
 export const createCustomAction = guildActionClient
   .inputSchema(createFormSchema)
   .action(async ({ parsedInput: { name }, bindArgsParsedInputs: [guildId], ctx: { session } }) => {
-    // 作成直後は、メッセージを返信する処理だけを持つ
-    const steps: CustomActionStep[] = [
-      {
-        type: 'reply-message',
-        config: {
-          components: [{ type: ComponentType.TextDisplay, content: 'ボタンが押されました！' }],
-          ephemeral: true,
-        },
-      },
-    ];
+    // 作成直後は処理を持たない。テンプレートの内容は、編集ページのフォームにセットされる
+    const steps: CustomActionStep[] = [];
 
     const id = await db.transaction(async (tx) => {
       await tx.execute(sql`select pg_advisory_xact_lock(hashtext(${guildId}))`);
@@ -99,7 +70,6 @@ export const createCustomAction = guildActionClient
           `作成できるアクションは${maxCustomActions}件までです。不要なアクションを削除してください。`,
         );
       }
-      await assertUniqueName(guildId, name, undefined, tx);
       const [created] = await tx
         .insert(customAction)
         .values({ guildId, name, steps })
@@ -129,7 +99,6 @@ export const updateCustomAction = guildActionClient
     }) => {
       const saved = await findAction(guildId, id);
       await assertAllowedSteps(guildId, session.user.discordUserId, steps, saved.steps);
-      await assertUniqueName(guildId, name, id);
 
       await db.update(customAction).set({ name, steps }).where(eq(customAction.id, id));
 

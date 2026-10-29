@@ -5,6 +5,7 @@ import type { AssignableRoleRules } from '@repo/shared';
 import type { InternalApiRole } from '@repo/shared/types';
 import { Trash2Icon } from 'lucide-react';
 import { useParams } from 'next/navigation';
+import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import type { z } from 'zod';
@@ -18,11 +19,12 @@ import {
 import { ControlledInput } from '@/components/rhf/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { FieldContent, FieldDescription, FieldGroup } from '@/components/ui/field';
+import { FieldContent, FieldGroup } from '@/components/ui/field';
 import { updateCustomAction } from '../action';
 import { DeleteDialog } from '../delete-dialog';
 import { updateFormSchema } from '../schema';
 import { type Steps, StepsEditor } from '../steps-editor';
+import { type CustomActionTemplate, customActionTemplates } from '../templates';
 
 type ActionFormProps = {
   action: { id: string; name: string; steps: Steps };
@@ -30,6 +32,8 @@ type ActionFormProps = {
   assignableRoleRules: AssignableRoleRules | null;
   usageCount: number;
   resources: MessageResources;
+  /** 作成直後に選んだテンプレート。処理が空のときだけ、フォームに内容をセットする */
+  template?: CustomActionTemplate;
 };
 
 const formSchema = updateFormSchema.omit({ id: true });
@@ -40,11 +44,19 @@ export function SettingForm({
   assignableRoleRules,
   usageCount,
   resources,
+  template,
 }: ActionFormProps) {
   const { guildId } = useParams<{ guildId: string }>();
   const defaultValues = { name: action.name, steps: action.steps };
 
   const form = useForm({ resolver: zodResolver(formSchema), defaultValues });
+
+  useEffect(() => {
+    if (!template || action.steps.length) return;
+    form.setValue('steps', structuredClone(customActionTemplates[template].steps), {
+      shouldDirty: true,
+    });
+  }, [template, action.steps.length, form]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const res = await updateCustomAction.bind(null, guildId)({ id: action.id, ...values });
@@ -69,9 +81,6 @@ export function SettingForm({
               >
                 <FieldContent>
                   <ControlledFieldLabel>アクション名</ControlledFieldLabel>
-                  <FieldDescription>
-                    他のアクション名と重複しない名前にする必要があります。
-                  </FieldDescription>
                   <ControlledFieldError />
                 </FieldContent>
                 <ControlledInput
