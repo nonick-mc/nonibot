@@ -281,6 +281,13 @@
       "when": 1793297745381,
       "tag": "0039_custom_message_and_action",
       "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "7",
+      "when": 1793311441731,
+      "tag": "0040_clear_audit_log",
+      "breakpoints": true
     }
   ]
 }
