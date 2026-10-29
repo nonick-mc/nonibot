@@ -104,7 +104,7 @@ export default async function Page({
     <>
       <Header
         title='監査ログ'
-        description='ユーザーが過去28日間でダッシュボードで加えた変更を閲覧することができます。'
+        description={`ユーザーが過去${AuditLogRetentionDays}日間でダッシュボードで加えた変更を閲覧することができます。`}
       />
       <Card>
         <CardHeader>
