@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from 'cn';
 import { useParams, useRouter } from 'next/navigation';
 import { type ComponentProps, useState } from 'react';
 import { toast } from 'sonner';
@@ -26,6 +27,7 @@ import {
   QuestionnaireSubmit,
   QuestionnaireTitle,
 } from '@/components/ui/questionnaire';
+import { Spinner } from '@/components/ui/spinner';
 import { createCustomAction } from './action';
 import { createFormSchema } from './schema';
 import { type CustomActionTemplate, customActionTemplates } from './templates';
@@ -68,6 +70,17 @@ function CreateForm({
   const [name, setName] = useState(() => uniqueName(customActionTemplates.blank.label, names));
   const [nameEdited, setNameEdited] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // 質問を進めるときは右から、戻るときは左からスライドして表示する(最初の質問は動かさない)
+  const [direction, setDirection] = useState<1 | -1 | 0>(0);
+  const itemMotion =
+    direction === 0
+      ? undefined
+      : cn(
+          'data-active:animate-in data-active:fade-in-0 data-active:duration-300',
+          direction === 1
+            ? 'data-active:slide-in-from-right-8'
+            : 'data-active:slide-in-from-left-8',
+        );
 
   const templateKeys = (Object.keys(customActionTemplates) as CustomActionTemplate[]).filter(
     (key) => key !== 'blank',
@@ -120,8 +133,11 @@ function CreateForm({
   }
 
   return (
-    <Questionnaire onSubmit={onSubmit}>
-      <QuestionnaireItem name='template' required>
+    <Questionnaire
+      onSubmit={onSubmit}
+      onItemChange={(item) => setDirection(item === 'name' ? 1 : -1)}
+    >
+      <QuestionnaireItem name='template' required className={itemMotion}>
         <QuestionnaireTitle>どのアクションを作りますか?</QuestionnaireTitle>
         <QuestionnaireChoices>
           {renderChoice('blank')}
@@ -130,7 +146,7 @@ function CreateForm({
         </QuestionnaireChoices>
         <QuestionnaireError>選択してください。</QuestionnaireError>
       </QuestionnaireItem>
-      <QuestionnaireItem name='name' required>
+      <QuestionnaireItem name='name' required className={itemMotion}>
         <QuestionnaireTitle>アクション名を入力してください</QuestionnaireTitle>
         <QuestionnaireDescription>
           アクション名は後から変更することができます。
@@ -148,7 +164,10 @@ function CreateForm({
       <QuestionnaireActions>
         <QuestionnairePrevious>戻る</QuestionnairePrevious>
         <QuestionnaireNext>次へ</QuestionnaireNext>
-        <QuestionnaireSubmit disabled={isSubmitting}>作成</QuestionnaireSubmit>
+        <QuestionnaireSubmit disabled={isSubmitting}>
+          {isSubmitting && <Spinner />}
+          作成
+        </QuestionnaireSubmit>
       </QuestionnaireActions>
     </Questionnaire>
   );
