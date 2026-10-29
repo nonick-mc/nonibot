@@ -72,40 +72,30 @@ function Sentence({ change }: { change: Change }) {
     case 'toggle':
       return (
         <>
-          {label}を<Em>{change.value ? 'オン' : 'オフ'}</Em>にしました
+          {label} を <Em>{change.value ? 'オン' : 'オフ'}</Em> にしました
         </>
       );
     case 'changed':
-      return (
-        <>
-          {label}を<Val value={change.after} />
-          に設定しました
-        </>
-      );
     case 'set':
       return (
         <>
-          {label}を<Val value={change.after} />
-          に設定しました
+          {label} を <Val value={change.after} /> に設定しました
         </>
       );
     case 'unset':
-      return <>{label}の設定を解除しました</>;
+      return <>{label} の設定を解除しました</>;
     case 'list':
       return (
         <>
           {change.added.length > 0 && (
             <>
-              {label}に<Vals values={change.added} />
-              を追加しました
+              {label} に <Vals values={change.added} /> を追加しました
             </>
           )}
           {change.added.length > 0 && change.removed.length > 0 && <br />}
           {change.removed.length > 0 && (
             <>
-              {label}から
-              <Vals values={change.removed} />
-              を削除しました
+              {label} から <Vals values={change.removed} /> を削除しました
             </>
           )}
         </>
@@ -117,18 +107,17 @@ function Sentence({ change }: { change: Change }) {
         </>
       );
     case 'reordered':
-      return <>{label}の順序を変更しました</>;
+      return <>{label} の順序を変更しました</>;
     case 'message':
-      return <>{label}を設定しました</>;
+    case 'valueMessage':
+      return <>{label} を設定しました</>;
     case 'value':
       return (
         <>
-          {label}を<Vals values={Array.isArray(change.value) ? change.value : [change.value]} />
+          {label} を <Vals values={Array.isArray(change.value) ? change.value : [change.value]} />{' '}
           に設定しました
         </>
       );
-    case 'valueMessage':
-      return <>{label}を設定しました</>;
   }
 }
 
