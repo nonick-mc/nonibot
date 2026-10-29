@@ -20,7 +20,7 @@ execute(button, async (interaction) => {
       })
     : undefined;
 
-  if (!action?.steps.length) {
+  if (!action) {
     return interaction.reply({
       content: errorMessage('このボタンは使用できません。'),
       flags: [MessageFlags.Ephemeral],
