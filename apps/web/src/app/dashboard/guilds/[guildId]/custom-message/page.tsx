@@ -59,7 +59,7 @@ export default async function Page({
           >
             <Button>
               <PlusIcon />
-              新規作成
+              メッセージを送信する
             </Button>
           </CreateDialog>
         </CardHeader>
