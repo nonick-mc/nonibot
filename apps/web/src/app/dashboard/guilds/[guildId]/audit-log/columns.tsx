@@ -58,7 +58,7 @@ export const actionTypeTexts: Record<AuditLog['actionType'], string> = {
 };
 
 /** 先頭2つの文字(グラフェム単位)。絵文字や国旗を途中で切らない */
-const initials = (name: string) =>
+export const initials = (name: string) =>
   [...new Intl.Segmenter().segment(name)]
     .slice(0, 2)
     .map((s) => s.segment)

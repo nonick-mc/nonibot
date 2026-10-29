@@ -16,7 +16,7 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
-import { actionTypeTexts, type CustomizedAuditLog, targetNameTexts } from './columns';
+import { actionTypeTexts, type CustomizedAuditLog, initials, targetNameTexts } from './columns';
 import {
   type Change,
   describeChanges,
@@ -220,7 +220,7 @@ export function DetailSheet({ log, resources, onClose }: Props) {
                       <>
                         <Avatar className='size-6'>
                           <AvatarImage src={author.avatarUrl} />
-                          <AvatarFallback>{author.username.slice(0, 2)}</AvatarFallback>
+                          <AvatarFallback>{initials(author.username)}</AvatarFallback>
                         </Avatar>
                         <span className='break-all'>@{author.username}</span>
                       </>

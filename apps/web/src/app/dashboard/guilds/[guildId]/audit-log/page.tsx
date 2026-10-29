@@ -1,5 +1,6 @@
+import { BetterFetchError } from '@better-fetch/fetch';
 import { auditLog, user } from '@repo/database';
-import { SnowflakeRegex } from '@repo/shared/constants';
+import { AuditLogRetentionDays, SnowflakeRegex } from '@repo/shared/constants';
 import { and, count, eq, inArray } from 'drizzle-orm';
 import type { Metadata } from 'next';
 import { Header } from '@/components/header';
@@ -10,9 +11,8 @@ import { db } from '@/lib/db';
 import { getChannels, getRoles, getUser } from '@/lib/discord/api';
 import type { AuditLogAuthor } from './columns';
 import { DataTable } from './data-table';
-import { DevDataToggle } from './dev-data-toggle';
 import { Filters } from './filters';
-import { type DevDataMode, DevDataModes, getWorstCase } from './worst-case';
+import type { DevDataMode } from './worst-case';
 
 export const metadata: Metadata = {
   title: '監査ログ',
@@ -31,7 +31,10 @@ async function fetchAuthor(discordUserId: string): Promise<AuditLogAuthor | null
       username: u.username,
       avatarUrl: u.avatar_url,
     };
-  } catch {
+  } catch (error) {
+    if (!(error instanceof BetterFetchError && error.status === 404)) {
+      console.error('監査ログの実行者の取得に失敗しました', error);
+    }
     return null;
   }
 }
@@ -44,7 +47,6 @@ export default async function Page({
   await verifyDashboardAccessPermission(guildId);
 
   const query = await searchParams;
-  const page = Math.max(1, Number(query.page) || 1);
   const requestedSize = Number(query.pageSize);
   const pageSize = pageSizes.includes(requestedSize) ? requestedSize : pageSizes[0];
 
@@ -68,7 +70,16 @@ export default async function Page({
     actions.length ? inArray(auditLog.actionType, actions) : undefined,
   );
 
-  const [logs, [{ total }], authors, channels, roles] = await Promise.all([
+  const [{ total }] = await db.select({ total: count() }).from(auditLog).where(where);
+  // 範囲外・巨大なページ番号は、最後のページに収める
+  const requestedPage = Number(query.page);
+  const lastPage = Math.max(1, Math.ceil(total / pageSize));
+  const page =
+    Number.isSafeInteger(requestedPage) && requestedPage >= 1
+      ? Math.min(requestedPage, lastPage)
+      : 1;
+
+  const [logs, authors, channels, roles] = await Promise.all([
     db.query.auditLog.findMany({
       where,
       orderBy: (log, { desc }) => [desc(log.createdAt)],
@@ -76,7 +87,6 @@ export default async function Page({
       offset: (page - 1) * pageSize,
       with: { author: { columns: { discordUserId: true } } },
     }),
-    db.select({ total: count() }).from(auditLog).where(where),
     db
       .selectDistinct({ discordUserId: user.discordUserId })
       .from(auditLog)
@@ -95,10 +105,12 @@ export default async function Page({
     author: author ? (authorMap.get(author.discordUserId) ?? null) : null,
   }));
 
-  // break-ui: 開発時のみ、`?data=`で最悪ケースのデータに差し替える
+  // break-ui: 開発時のみ、`?data=`で最悪ケースのデータに差し替える。
   const isDev = process.env.NODE_ENV === 'development';
-  const devMode = DevDataModes.find((m) => m === query.data) ?? 'demo';
-  const worst = isDev && devMode !== 'demo' ? getWorstCase(devMode) : null;
+  const devFixture = isDev ? await import('./worst-case') : null;
+  const devMode: DevDataMode = devFixture?.DevDataModes.find((m) => m === query.data) ?? 'demo';
+  const worst = devFixture && devMode !== 'demo' ? devFixture.getWorstCase(devMode) : null;
+  const DevDataToggle = isDev ? (await import('./dev-data-toggle')).DevDataToggle : null;
 
   return (
     <>
@@ -124,7 +136,7 @@ export default async function Page({
           resources={worst?.resources ?? { channels, roles }}
         />
       </Card>
-      {isDev && <DevDataToggle mode={devMode as DevDataMode} />}
+      {DevDataToggle && <DevDataToggle mode={devMode} />}
     </>
   );
 }
