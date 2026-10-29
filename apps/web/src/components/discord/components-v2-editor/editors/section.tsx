@@ -33,7 +33,7 @@ import {
   ButtonEditor,
   createDefaultButton,
   createDefaultUrlButton,
-  useButtonActions,
+  useAllowedButtons,
 } from './button';
 import { ComponentEditorByType } from './index';
 import { ThumbnailEditor } from './thumbnail';
@@ -99,7 +99,7 @@ function SectionMainContent() {
 function SectionAccessory() {
   const { control, setValue } = useFormContext();
   const { basePath } = useComponentEditorContext();
-  const buttonActions = useButtonActions();
+  const allowedButtons = useAllowedButtons();
   const accessoryPath = `${basePath}.accessory`;
   const accessoryType = useWatch({ control, name: `${accessoryPath}.type` });
 
@@ -142,10 +142,8 @@ function SectionAccessory() {
                     <ImageIcon />
                     サムネイル
                   </DropdownMenuItem>
-                  {buttonActions.length > 0 && (
-                    <DropdownMenuItem
-                      onClick={() => setAccessory(createDefaultButton(buttonActions[0]))}
-                    >
+                  {allowedButtons.length > 0 && (
+                    <DropdownMenuItem onClick={() => setAccessory(createDefaultButton())}>
                       <MousePointerClickIcon />
                       ボタン
                     </DropdownMenuItem>

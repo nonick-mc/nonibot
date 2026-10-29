@@ -29,13 +29,13 @@ import {
   ButtonEditor,
   createDefaultButton,
   createDefaultUrlButton,
-  useButtonActions,
+  useAllowedButtons,
 } from './button';
 
 export function ActionRowEditor() {
   const { control } = useFormContext();
   const { basePath } = useComponentEditorContext();
-  const buttonActions = useButtonActions();
+  const allowedButtons = useAllowedButtons();
 
   const { fields, append, remove, move } = useFieldArray({
     control,
@@ -97,8 +97,8 @@ export function ActionRowEditor() {
             </DropdownMenuTrigger>
             <DropdownMenuContent side='bottom' align='start'>
               <DropdownMenuItem
-                onClick={() => append(createDefaultButton(buttonActions[0]))}
-                disabled={!canAdd(ComponentType.Button) || buttonActions.length === 0}
+                onClick={() => append(createDefaultButton())}
+                disabled={!canAdd(ComponentType.Button) || allowedButtons.length === 0}
               >
                 <MousePointerClickIcon />
                 ボタン

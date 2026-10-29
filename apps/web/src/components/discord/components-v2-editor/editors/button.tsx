@@ -1,16 +1,16 @@
 'use client';
 
-import type { ComponentAction } from '@repo/shared';
 import { ButtonStyle, ComponentType } from 'discord-api-types/v10';
 import {
   LinkIcon,
+  type LucideIcon,
   MousePointerClickIcon,
   PaletteIcon,
   SmileIcon,
   SmilePlusIcon,
   Trash2Icon,
 } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { type ReactNode, useRef, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { DiscordEmojiPicker, DiscordEmojiPickerTrigger } from '@/components/discord/emoji-picker';
 import { ColorPicker, ColorPickerSwatches } from '@/components/reui/color-picker';
@@ -21,6 +21,7 @@ import {
   useControlledField,
 } from '@/components/rhf/field';
 import { ControlledInputGroupInput } from '@/components/rhf/input-group';
+import { ControlledRoleSelect } from '@/components/rhf/role-select';
 import { ControlledSelect, ControlledSelectTrigger } from '@/components/rhf/select';
 import { Button } from '@/components/ui/button';
 import {
@@ -29,16 +30,15 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { FieldContent, FieldGroup, FieldSeparator } from '@/components/ui/field';
+import { FieldContent, FieldDescription, FieldGroup, FieldSeparator } from '@/components/ui/field';
 import { InputGroup, InputGroupAddon } from '@/components/ui/input-group';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { SelectContent, SelectGroup, SelectItem, SelectValue } from '@/components/ui/select';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { DiscordButtonEmoji } from '../../preview/button';
-import { ComponentEditorContext } from '../context';
+import { ComponentEditorContext, useEditorResources } from '../context';
 import { EditorCard } from '../editor-card';
 import { EditorPlaceholderPicker } from '../placeholder-picker';
-import { useEditorResources } from '../context';
 
 const ButtonStyleOptions = [
   { label: 'Primary', value: '#5865f2', style: ButtonStyle.Primary },
@@ -71,9 +71,9 @@ function ButtonStylePicker() {
   );
 }
 
-export function useButtonActions() {
-  const { componentActions = [] } = useEditorResources();
-  return componentActions.filter((action) => action.type === ComponentType.Button);
+export function useAllowedButtons() {
+  const { allowedComponents = [] } = useEditorResources();
+  return allowedComponents.filter((allowed) => allowed.type === ComponentType.Button);
 }
 
 export function createDefaultUrlButton() {
@@ -86,11 +86,11 @@ export function createDefaultUrlButton() {
   } as const;
 }
 
-export function createDefaultButton(action: ComponentAction) {
+export function createDefaultButton() {
   return {
     type: ComponentType.Button,
     style: ButtonStyle.Secondary,
-    custom_id: action.customId,
+    custom_id: '',
     label: '',
     emoji: null,
   } as const;
@@ -169,11 +169,8 @@ type ButtonEditorProps = {
 
 export function ButtonEditor(props: ButtonEditorProps) {
   const style = useWatch({ name: `${props.basePath}.style` });
-  return style === ButtonStyle.Link ? (
-    <URLButtonEditor {...props} />
-  ) : (
-    <UserActionButtonEditor {...props} />
-  );
+  if (style === ButtonStyle.Link) return <URLButtonEditor {...props} />;
+  return <UserActionButtonEditor {...props} />;
 }
 
 function ButtonLabelField({ basePath }: { basePath: string }) {
@@ -190,7 +187,7 @@ function ButtonLabelField({ basePath }: { basePath: string }) {
         <ControlledFieldLabel>ラベル</ControlledFieldLabel>
         <ControlledFieldError />
       </FieldContent>
-      <InputGroup className='sm:min-w-2xs'>
+      <InputGroup className='@md/field-group:w-xs @md/field-group:min-w-xs'>
         <InputGroupAddon align='inline-start'>
           <EmojiField name={`${basePath}.emoji`} />
         </InputGroupAddon>
@@ -200,19 +197,21 @@ function ButtonLabelField({ basePath }: { basePath: string }) {
   );
 }
 
-export function UserActionButtonEditor({
+function InteractiveButtonCard({
   basePath,
   onRemove,
   withSortableItemHandle,
-}: ButtonEditorProps) {
+  icon,
+  title,
+  children,
+}: ButtonEditorProps & { icon: LucideIcon; title: string; children: ReactNode }) {
   const { control } = useFormContext();
-  const buttonActions = useButtonActions();
 
   return (
     <ComponentEditorContext.Provider value={{ basePath, onRemove }}>
       <EditorCard
-        icon={MousePointerClickIcon}
-        title='ボタン'
+        icon={icon}
+        title={title}
         headerActions={
           <Popover>
             <PopoverTrigger render={<Button variant='ghost' size='icon-sm' />}>
@@ -244,36 +243,56 @@ export function UserActionButtonEditor({
         <FieldGroup className='gap-5'>
           <ButtonLabelField basePath={basePath} />
           <FieldSeparator />
-          <ControlledField
-            control={control}
-            name={`${basePath}.custom_id`}
-            orientation='responsive'
-            align='center'
-          >
-            <FieldContent>
-              <ControlledFieldLabel>ボタンを押した際のアクション</ControlledFieldLabel>
-              <ControlledFieldError />
-            </FieldContent>
-            <ControlledSelect<string>>
-              <ControlledSelectTrigger className='sm:min-w-2xs'>
-                <SelectValue>
-                  {(value: string) => buttonActions.find((a) => a.customId === value)?.label}
-                </SelectValue>
-              </ControlledSelectTrigger>
-              <SelectContent alignItemWithTrigger={false}>
-                <SelectGroup>
-                  {buttonActions.map((action) => (
-                    <SelectItem key={action.customId} value={action.customId}>
-                      {action.label}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </ControlledSelect>
-          </ControlledField>
+          {children}
         </FieldGroup>
       </EditorCard>
     </ComponentEditorContext.Provider>
+  );
+}
+
+export function UserActionButtonEditor(props: ButtonEditorProps) {
+  const { control } = useFormContext();
+  const allowedButtons = useAllowedButtons();
+  const customId = useWatch({ control, name: `${props.basePath}.custom_id` });
+  const selected = allowedButtons.some((a) => a.customId === customId) ? customId : '';
+
+  return (
+    <InteractiveButtonCard {...props} icon={MousePointerClickIcon} title='ボタン'>
+      <ControlledField
+        control={control}
+        name={`${props.basePath}.custom_id`}
+        orientation='responsive'
+        align='center'
+      >
+        <FieldContent>
+          <ControlledFieldLabel>ボタンを押した際のアクション</ControlledFieldLabel>
+          <ControlledFieldError />
+        </FieldContent>
+        <ControlledSelect<string>
+          value={selected}
+          items={allowedButtons.map((a) => ({ value: a.customId, label: a.label }))}
+        >
+          <ControlledSelectTrigger className='@md/field-group:w-xs @md/field-group:min-w-xs'>
+            <SelectValue placeholder='アクションを選択' />
+          </ControlledSelectTrigger>
+          <SelectContent alignItemWithTrigger={false}>
+            {allowedButtons.length ? (
+              <SelectGroup>
+                {allowedButtons.map((allowed) => (
+                  <SelectItem key={allowed.customId} value={allowed.customId}>
+                    {allowed.label}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            ) : (
+              <p className='py-6 text-center text-sm text-muted-foreground'>
+                選択できるアクションがありません
+              </p>
+            )}
+          </SelectContent>
+        </ControlledSelect>
+      </ControlledField>
+    </InteractiveButtonCard>
   );
 }
 
@@ -297,7 +316,7 @@ export function URLButtonEditor({ basePath, onRemove, withSortableItemHandle }: 
               <ControlledFieldLabel>URL</ControlledFieldLabel>
               <ControlledFieldError />
             </FieldContent>
-            <InputGroup className='sm:min-w-2xs'>
+            <InputGroup className='@md/field-group:w-xs @md/field-group:min-w-xs'>
               <ControlledInputGroupInput ref={urlRef} placeholder='URLを入力' />
               <InputGroupAddon align='inline-start'>
                 <LinkIcon />

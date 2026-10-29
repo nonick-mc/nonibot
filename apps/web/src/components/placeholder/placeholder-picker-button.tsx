@@ -41,7 +41,7 @@ export function useTextInputInsert(inputRef: TextInputRef, mode: TextInputInsert
   return { open, setOpen, handleSelect, handleOpenChangeComplete };
 }
 
-const PlaceholderIcons = {
+export const PlaceholderIcons = {
   text: <BracesIcon />,
   mention: <AtSignIcon />,
   url: <LinkIcon />,

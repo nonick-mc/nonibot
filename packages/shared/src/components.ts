@@ -1,14 +1,36 @@
 import { ComponentType } from 'discord-api-types/v10';
 
-/** メッセージへの設置を許可するインタラクティブコンポーネント */
-export type AllowedComponent = { type: ComponentType; customId: string };
-/** メッセージに設置できるインタラクティブコンポーネントの動作 */
-export type ComponentAction = AllowedComponent & { label: string };
+/**
+ * 許可リストの要素。`customId`は完全一致、`customIdPattern`は正規表現で判定する。
+ */
+export type BaseAllowedComponent =
+  | { type: ComponentType; customId: string }
+  | { type: ComponentType; customIdPattern: RegExp };
+/** エディタの選択肢にもなる、完全一致の`customId`を持つ許可コンポーネント */
+export type AllowedComponent = Extract<BaseAllowedComponent, { customId: string }> & {
+  label: string;
+};
 
+// #region カスタムアクション
+export const CustomActionCustomIdPrefix = 'custom-action:';
+const customActionCustomIdRegex = new RegExp(
+  `^${CustomActionCustomIdPrefix}([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$`,
+);
+
+export const createCustomActionCustomId = (actionId: string) =>
+  `${CustomActionCustomIdPrefix}${actionId}`;
+export const parseCustomActionCustomId = (customId: unknown) =>
+  (typeof customId === 'string' && customActionCustomIdRegex.exec(customId)?.[1]) || null;
+
+export const customActionAllowedComponent = {
+  type: ComponentType.Button,
+  customIdPattern: customActionCustomIdRegex,
+} satisfies BaseAllowedComponent;
+// #endregion
+
+// #region 自動スレッド作成
 export const AutoCreateThreadCustomIdPrefix = 'auto-create-thread:';
-export const VerificationCustomIdPrefix = 'verification:';
-
-export const autoCreateThreadActions = [
+export const autoCreateThreadAllowedComponents = [
   {
     type: ComponentType.Button,
     customId: `${AutoCreateThreadCustomIdPrefix}archive`,
@@ -24,15 +46,19 @@ export const autoCreateThreadActions = [
     customId: `${AutoCreateThreadCustomIdPrefix}archive-lock`,
     label: 'スレッドをアーカイブ&ロックする',
   },
-] satisfies ComponentAction[];
+] satisfies AllowedComponent[];
+// #endregion
 
-export const verificationActions = [
+// #region メンバー認証
+export const VerificationCustomIdPrefix = 'verification:';
+export const verificationAllowedComponents = [
   {
     type: ComponentType.Button,
     customId: `${VerificationCustomIdPrefix}verify`,
     label: 'メンバー認証を開始する',
   },
-] satisfies ComponentAction[];
+] satisfies AllowedComponent[];
+// #endregion
 
 export type InteractiveComponent = {
   type: unknown;
@@ -59,8 +85,14 @@ export function collectInteractiveComponents(
 
 /** `type`と`custom_id`の組が許可されているかどうか */
 export function isAllowedComponent(
-  allowed: readonly AllowedComponent[],
+  allowed: readonly BaseAllowedComponent[],
   { type, customId }: Pick<InteractiveComponent, 'type' | 'customId'>,
 ) {
-  return allowed.some((c) => c.type === type && c.customId === customId);
+  return allowed.some(
+    (c) =>
+      c.type === type &&
+      ('customId' in c
+        ? c.customId === customId
+        : typeof customId === 'string' && c.customIdPattern.test(customId)),
+  );
 }

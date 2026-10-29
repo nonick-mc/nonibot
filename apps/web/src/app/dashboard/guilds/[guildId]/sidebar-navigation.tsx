@@ -42,6 +42,7 @@ export function SidebarNavigation({ featureStatuses }: SidebarNavigationProps) {
                       className='group/collapsible'
                     >
                       <CollapsibleTrigger
+                        disabled={item.disabled}
                         render={
                           <SidebarMenuButton>
                             <item.icon className='text-muted-foreground mt-0.5' />
@@ -56,12 +57,17 @@ export function SidebarNavigation({ featureStatuses }: SidebarNavigationProps) {
                             <SidebarMenuSubItem key={subitem.key}>
                               <SidebarMenuSubButton
                                 isActive={segments[0] === item.key && segments[1] === subitem.key}
+                                aria-disabled={subitem.disabled}
                                 render={
-                                  <Link
-                                    href={`${item.url(params.guildId)}/${subitem.key}` as Route}
-                                  >
-                                    {subitem.title}
-                                  </Link>
+                                  subitem.disabled ? (
+                                    <span>{subitem.title}</span>
+                                  ) : (
+                                    <Link
+                                      href={`${item.url(params.guildId)}/${subitem.key}` as Route}
+                                    >
+                                      {subitem.title}
+                                    </Link>
+                                  )
                                 }
                               />
                               {subitem.badge && (
@@ -76,11 +82,19 @@ export function SidebarNavigation({ featureStatuses }: SidebarNavigationProps) {
                     <>
                       <SidebarMenuButton
                         isActive={segments[0] === item.key}
+                        aria-disabled={item.disabled}
                         render={
-                          <Link href={item.url(params.guildId) as Route}>
-                            <item.icon className='text-muted-foreground mt-0.5' />
-                            {item.title}
-                          </Link>
+                          item.disabled ? (
+                            <span>
+                              <item.icon className='text-muted-foreground mt-0.5' />
+                              {item.title}
+                            </span>
+                          ) : (
+                            <Link href={item.url(params.guildId) as Route}>
+                              <item.icon className='text-muted-foreground mt-0.5' />
+                              {item.title}
+                            </Link>
+                          )
                         }
                       />
                       {item.badge && <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>}

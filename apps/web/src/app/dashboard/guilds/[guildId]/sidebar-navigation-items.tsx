@@ -1,4 +1,5 @@
 import {
+  CalendarClockIcon,
   ClipboardListIcon,
   FlagIcon,
   HammerIcon,
@@ -9,10 +10,11 @@ import {
   LogsIcon,
   type LucideIcon,
   MegaphoneIcon,
-  MessagesSquareIcon,
   ScanQrCodeIcon,
   ShieldCheckIcon,
   SpoolIcon,
+  SquarePenIcon,
+  ZapIcon,
 } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { Badge } from '@/components/reui/badge';
@@ -29,12 +31,14 @@ type SidebarItem<T> = {
   badge?: ReactNode;
   icon: LucideIcon;
   subitems?: SidebarSubItem[];
+  disabled?: boolean;
 };
 
 type SidebarSubItem = {
   title: string;
   key?: string;
   badge?: ReactNode;
+  disabled?: boolean;
 };
 
 export const SidebarNavigationItems: SidebarGroupItem<string>[] = [
@@ -117,6 +121,31 @@ export const SidebarNavigationItems: SidebarGroupItem<string>[] = [
         title: 'メンバー認証',
         url: (guildId) => `/dashboard/guilds/${guildId}/verification`,
         icon: ScanQrCodeIcon,
+      },
+    ],
+  },
+  {
+    title: 'ツール',
+    items: [
+      {
+        key: 'custom-message',
+        title: 'カスタムメッセージ',
+        url: (guildId) => `/dashboard/guilds/${guildId}/custom-message`,
+        icon: SquarePenIcon,
+      },
+      {
+        key: 'custom-action',
+        title: 'カスタムアクション',
+        url: (guildId) => `/dashboard/guilds/${guildId}/custom-action`,
+        icon: ZapIcon,
+      },
+      {
+        key: 'scheduled-post',
+        title: '予約投稿',
+        url: (guildId) => `/dashboard/guilds/${guildId}/scheduled-post`,
+        icon: CalendarClockIcon,
+        badge: <Badge variant='outline'>近日公開</Badge>,
+        disabled: true,
       },
     ],
   },

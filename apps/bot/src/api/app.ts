@@ -26,6 +26,13 @@ export function createApp(client: Client<true>, secret: string) {
   const expected = sha256(secret);
   const app = new Hono();
 
+  const getSendableChannel = (guildId: string, channelId: string) => {
+    const channel = client.channels.cache.get(channelId);
+    return channel?.isSendable() && !channel.isDMBased() && channel.guildId === guildId
+      ? channel
+      : null;
+  };
+
   app.use(async (c, next) => {
     const token = c.req.header('authorization')?.replace(/^Bearer /, '') ?? '';
     if (!timingSafeEqual(sha256(token), expected)) {
@@ -105,14 +112,8 @@ export function createApp(client: Client<true>, secret: string) {
   });
 
   app.post('/guilds/:guildId/channels/:channelId/messages', async (c) => {
-    const channel = client.channels.cache.get(c.req.param('channelId'));
-    if (
-      !channel?.isSendable() ||
-      channel.isDMBased() ||
-      channel.guildId !== c.req.param('guildId')
-    ) {
-      return c.json(notFound, 404);
-    }
+    const channel = getSendableChannel(c.req.param('guildId'), c.req.param('channelId'));
+    if (!channel) return c.json(notFound, 404);
 
     const body = await c.req.json().catch(() => null);
     if (typeof body !== 'object' || body === null) {
@@ -124,6 +125,38 @@ export function createApp(client: Client<true>, secret: string) {
       body: { components, flags, allowed_mentions },
     });
     return c.json(message as object);
+  });
+
+  app.patch('/guilds/:guildId/channels/:channelId/messages/:messageId', async (c) => {
+    const { guildId, channelId, messageId } = c.req.param();
+    const channel = getSendableChannel(guildId, channelId);
+    if (!channel || !SnowflakeRegex.test(messageId)) return c.json(notFound, 404);
+
+    const body = await c.req.json().catch(() => null);
+    if (typeof body !== 'object' || body === null) {
+      return c.json({ error: 'Bad Request' } satisfies InternalApiError, 400);
+    }
+
+    const { components, flags } = body;
+    const message = await client.rest.patch(Routes.channelMessage(channel.id, messageId), {
+      body: { components, flags },
+    });
+    return c.json(message as object);
+  });
+
+  app.delete('/guilds/:guildId/channels/:channelId/messages/:messageId', async (c) => {
+    const { guildId, channelId, messageId } = c.req.param();
+    const channel = getSendableChannel(guildId, channelId);
+    if (!channel || !SnowflakeRegex.test(messageId)) return c.json(notFound, 404);
+
+    // 「メッセージの管理」権限があると他人のメッセージも消せてしまうため、Bot自身が送信したものだけを対象にする
+    const message = await channel.messages.fetch(messageId);
+    if (message.author.id !== client.user.id) {
+      return c.json({ error: 'Forbidden' } satisfies InternalApiError, 403);
+    }
+
+    await client.rest.delete(Routes.channelMessage(channel.id, messageId));
+    return c.body(null, 204);
   });
 
   app.onError((error, c) => {

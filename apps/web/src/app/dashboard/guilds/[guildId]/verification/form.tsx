@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { verificationMessagePlaceholders } from '@repo/placeholders';
-import { verificationActions } from '@repo/shared';
+import { verificationAllowedComponents } from '@repo/shared';
 import type { InternalApiChannel } from '@repo/shared/types';
 import { CheckCircle2Icon, PencilIcon } from 'lucide-react';
 import { useParams } from 'next/navigation';
@@ -64,7 +64,7 @@ export function SettingForm({
     roles: roles?.filter((role) => role.id !== guildId),
     channels,
     emojis,
-    componentActions: verificationActions,
+    allowedComponents: verificationAllowedComponents,
     placeholders: verificationMessagePlaceholders,
   };
 

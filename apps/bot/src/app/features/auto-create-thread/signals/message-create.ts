@@ -1,6 +1,6 @@
 import { renderPlaceholders } from '@repo/placeholders';
 import {
-  autoCreateThreadActions,
+  autoCreateThreadAllowedComponents,
   collectInteractiveComponents,
   isAllowedComponent,
 } from '@repo/shared';
@@ -85,7 +85,7 @@ async function sendMessage(
   // 任意のcustom_idによるインタラクションの実行を防ぐため、許可されていないコンポーネントを含む場合は送信しない
   if (
     collectInteractiveComponents(components).some(
-      (component) => !isAllowedComponent(autoCreateThreadActions, component),
+      (component) => !isAllowedComponent(autoCreateThreadAllowedComponents, component),
     )
   ) {
     console.error(
