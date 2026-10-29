@@ -47,10 +47,17 @@ export function DataTable({ data, total, page, pageSize }: Props) {
   });
 
   return (
-    <DataGrid table={table} recordCount={total} emptyMessage='ログがありません。'>
+    <DataGrid
+      table={table}
+      recordCount={total}
+      emptyMessage='ログがありません。'
+      tableClassNames={{ base: 'min-w-180' }}
+    >
       <CardContent>
         <DataGridContainer>
-          <DataGridTable />
+          <div className='no-scrollbar scroll-fade-x overflow-x-auto'>
+            <DataGridTable />
+          </div>
         </DataGridContainer>
       </CardContent>
       <Separator />
