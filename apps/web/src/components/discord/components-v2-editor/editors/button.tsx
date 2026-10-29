@@ -1,6 +1,5 @@
 'use client';
 
-import type { AllowedComponent } from '@repo/shared';
 import { ButtonStyle, ComponentType } from 'discord-api-types/v10';
 import {
   LinkIcon,
@@ -87,11 +86,11 @@ export function createDefaultUrlButton() {
   } as const;
 }
 
-export function createDefaultButton(allowed: AllowedComponent) {
+export function createDefaultButton() {
   return {
     type: ComponentType.Button,
     style: ButtonStyle.Secondary,
-    custom_id: allowed.customId,
+    custom_id: '',
     label: '',
     emoji: null,
   } as const;
@@ -254,6 +253,8 @@ function InteractiveButtonCard({
 export function UserActionButtonEditor(props: ButtonEditorProps) {
   const { control } = useFormContext();
   const allowedButtons = useAllowedButtons();
+  const customId = useWatch({ control, name: `${props.basePath}.custom_id` });
+  const selected = allowedButtons.some((a) => a.customId === customId) ? customId : '';
 
   return (
     <InteractiveButtonCard {...props} icon={MousePointerClickIcon} title='ボタン'>
@@ -267,20 +268,27 @@ export function UserActionButtonEditor(props: ButtonEditorProps) {
           <ControlledFieldLabel>ボタンを押した際のアクション</ControlledFieldLabel>
           <ControlledFieldError />
         </FieldContent>
-        <ControlledSelect<string>>
+        <ControlledSelect<string>
+          value={selected}
+          items={allowedButtons.map((a) => ({ value: a.customId, label: a.label }))}
+        >
           <ControlledSelectTrigger className='@md/field-group:w-xs @md/field-group:min-w-xs'>
-            <SelectValue>
-              {(value: string) => allowedButtons.find((a) => a.customId === value)?.label}
-            </SelectValue>
+            <SelectValue placeholder='アクションを選択' />
           </ControlledSelectTrigger>
           <SelectContent alignItemWithTrigger={false}>
-            <SelectGroup>
-              {allowedButtons.map((allowed) => (
-                <SelectItem key={allowed.customId} value={allowed.customId}>
-                  {allowed.label}
-                </SelectItem>
-              ))}
-            </SelectGroup>
+            {allowedButtons.length ? (
+              <SelectGroup>
+                {allowedButtons.map((allowed) => (
+                  <SelectItem key={allowed.customId} value={allowed.customId}>
+                    {allowed.label}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            ) : (
+              <p className='py-6 text-center text-sm text-muted-foreground'>
+                選択できるアクションがありません
+              </p>
+            )}
           </SelectContent>
         </ControlledSelect>
       </ControlledField>

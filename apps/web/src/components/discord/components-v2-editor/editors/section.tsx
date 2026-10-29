@@ -143,9 +143,7 @@ function SectionAccessory() {
                     サムネイル
                   </DropdownMenuItem>
                   {allowedButtons.length > 0 && (
-                    <DropdownMenuItem
-                      onClick={() => setAccessory(createDefaultButton(allowedButtons[0]))}
-                    >
+                    <DropdownMenuItem onClick={() => setAccessory(createDefaultButton())}>
                       <MousePointerClickIcon />
                       ボタン
                     </DropdownMenuItem>

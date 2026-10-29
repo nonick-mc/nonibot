@@ -106,7 +106,7 @@ function createUserComponentV2Schema(
     path: ['label'],
   };
 
-  // custom_idは任意のインタラクションを実行できてしまうため、許可されたIDのみを受け付ける
+  // 許可されたcustom_idのみを受け付ける
   const InteractiveButton = ButtonBase.extend({
     style: z.union([
       z.literal(ButtonStyle.Primary),
@@ -116,26 +116,25 @@ function createUserComponentV2Schema(
     ]),
     custom_id: z
       .string({ error: 'アクションを選択してください。' })
+      .min(1, 'アクションを選択してください。')
       .refine(
         (customId) =>
+          !customId ||
           isAllowedComponent(allowedComponents, { type: ComponentType.Button, customId }),
-        { error: '許可されていないボタンです。' },
+        { error: 'アクションを選択してください。' },
       ),
   }).refine(hasLabelOrEmoji, hasLabelOrEmojiParams);
 
-  // URLボタンはインタラクションを発生させないため、custom_idの代わりにurlを持つ
   const LinkButton = ButtonBase.extend({
     style: z.literal(ButtonStyle.Link),
     url: createUrlOrPlaceholderSchema(placeholders).max(512),
   }).refine(hasLabelOrEmoji, hasLabelOrEmojiParams);
 
-  // スタイルで判別し、もう一方のフィールド (custom_idまたはurl) は取り除かれる
   const Button = z.discriminatedUnion('style', [InteractiveButton, LinkButton]);
 
   const ActionRow = z.object({
     type: z.literal(ComponentType.ActionRow),
     id: z.number().int().optional(),
-    // SelectMenuを追加する場合はunionに加える (SelectMenuは1行に1つまで)
     components: z
       .array(z.discriminatedUnion('type', [Button]))
       .min(1, '要素が少なくとも1つ以上必要です。')
@@ -223,7 +222,8 @@ export function createMessageUserComponentsSchema(
       // custom_idはコンポーネントの種類に関係なくメッセージ内で一意である必要がある
       const interactives = collectInteractiveComponents(components);
       for (const { customId, path } of interactives) {
-        if (interactives.filter((c) => c.customId === customId).length < 2) continue;
+        // 未選択(空)のものは、選択を求めるエラーだけを出す
+        if (!customId || interactives.filter((c) => c.customId === customId).length < 2) continue;
         ctx.addIssue({
           code: 'custom',
           message: '同じ動作のコンポーネントを複数設置することはできません。',

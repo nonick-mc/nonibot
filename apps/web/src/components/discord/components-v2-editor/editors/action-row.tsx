@@ -97,7 +97,7 @@ export function ActionRowEditor() {
             </DropdownMenuTrigger>
             <DropdownMenuContent side='bottom' align='start'>
               <DropdownMenuItem
-                onClick={() => append(createDefaultButton(allowedButtons[0]))}
+                onClick={() => append(createDefaultButton())}
                 disabled={!canAdd(ComponentType.Button) || allowedButtons.length === 0}
               >
                 <MousePointerClickIcon />
