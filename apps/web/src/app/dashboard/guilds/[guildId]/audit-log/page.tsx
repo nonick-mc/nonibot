@@ -9,7 +9,7 @@ import { Card, CardHeader } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { verifyDashboardAccessPermission } from '@/lib/dal';
 import { db } from '@/lib/db';
-import { getUser } from '@/lib/discord/api';
+import { getChannels, getRoles, getUser } from '@/lib/discord/api';
 import type { AuditLogAuthor } from './columns';
 import { DataTable } from './data-table';
 import { Filters } from './filters';
@@ -68,7 +68,7 @@ export default async function Page({
     actions.length ? inArray(auditLog.actionType, actions) : undefined,
   );
 
-  const [logs, [{ total }], authors] = await Promise.all([
+  const [logs, [{ total }], authors, channels, roles] = await Promise.all([
     db.query.auditLog.findMany({
       where,
       orderBy: (log, { desc }) => [desc(log.createdAt)],
@@ -82,6 +82,8 @@ export default async function Page({
       .from(auditLog)
       .innerJoin(user, eq(auditLog.authorId, user.id))
       .where(eq(auditLog.guildId, guildId)),
+    getChannels(guildId).catch(() => []),
+    getRoles(guildId).catch(() => []),
   ]);
 
   const discordUserIds = [...new Set(authors.map((a) => a.discordUserId))];
@@ -116,7 +118,13 @@ export default async function Page({
           />
         </CardHeader>
         <Separator />
-        <DataTable data={rows} total={total} page={page} pageSize={pageSize} />
+        <DataTable
+          data={rows}
+          total={total}
+          page={page}
+          pageSize={pageSize}
+          resources={{ channels, roles }}
+        />
       </Card>
     </>
   );
