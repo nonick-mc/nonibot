@@ -1,5 +1,5 @@
 ﻿import { relations } from 'drizzle-orm';
-import { jsonb, pgEnum, pgTable, text, uuid } from 'drizzle-orm/pg-core';
+import { index, jsonb, pgEnum, pgTable, text, uuid } from 'drizzle-orm/pg-core';
 import { timestamps } from '../utils';
 import { user } from './auth';
 import { guild } from './guild';
@@ -44,18 +44,23 @@ const targetName = [
 export const actionTypeEnum = pgEnum('action_type', actionType);
 export const targetNameEnum = pgEnum('target_name', targetName);
 
-export const auditLog = pgTable('audit_log', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  guildId: text('guild_id')
-    .references(() => guild.id, { onDelete: 'cascade' })
-    .notNull(),
-  authorId: text('author_id').references(() => user.id, { onDelete: 'set null' }),
-  targetName: targetNameEnum('target_name').notNull(),
-  actionType: actionTypeEnum('action_type').notNull(),
-  before: jsonb('before').$type<unknown>(),
-  after: jsonb('after').$type<unknown>(),
-  createdAt: timestamps.createdAt,
-});
+export const auditLog = pgTable(
+  'audit_log',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    guildId: text('guild_id')
+      .references(() => guild.id, { onDelete: 'cascade' })
+      .notNull(),
+    authorId: text('author_id').references(() => user.id, { onDelete: 'set null' }),
+    targetName: targetNameEnum('target_name').notNull(),
+    actionType: actionTypeEnum('action_type').notNull(),
+    before: jsonb('before').$type<unknown>(),
+    after: jsonb('after').$type<unknown>(),
+    createdAt: timestamps.createdAt,
+  },
+  // ギルドごとに新しい順で一覧するクエリ用
+  (t) => [index('audit_log_guild_id_created_at_idx').on(t.guildId, t.createdAt.desc())],
+);
 
 export const auditLogRelations = relations(auditLog, ({ one }) => ({
   author: one(user, {
