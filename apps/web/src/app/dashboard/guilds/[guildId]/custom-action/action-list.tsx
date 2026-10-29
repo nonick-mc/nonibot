@@ -79,7 +79,7 @@ export function ActionList({ guildId, actions, usage }: ActionListProps) {
                   }
                 })
               ) : (
-                <span>アクションが設定されていません</span>
+                <span className='text-warning'>アクションが設定されていません</span>
               )}
             </div>
           </ItemContent>
