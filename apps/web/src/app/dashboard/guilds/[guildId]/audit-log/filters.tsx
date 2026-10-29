@@ -48,29 +48,31 @@ function FilterPopover({
         {title}
         {selected.length > 0 && <Badge variant='outline'>{selected.length}</Badge>}
       </PopoverTrigger>
-      <PopoverContent className='max-h-80 w-64 gap-1 overflow-y-auto p-2'>
-        {options.length === 0 && (
-          <p className='p-2 text-muted-foreground text-sm'>選択肢がありません。</p>
-        )}
-        {options.map((option) => (
-          // biome-ignore lint/a11y/noLabelWithoutControl: Checkboxを内包している
-          <label
-            key={option.value}
-            className='flex cursor-pointer items-center gap-2 rounded-md p-2 text-sm hover:bg-accent'
-          >
-            <Checkbox
-              checked={selected.includes(option.value)}
-              onCheckedChange={(checked) => toggle(option.value, checked)}
-            />
-            {option.avatarUrl !== undefined && (
-              <Avatar className='size-5'>
-                <AvatarImage src={option.avatarUrl} />
-                <AvatarFallback>{option.label.slice(0, 1)}</AvatarFallback>
-              </Avatar>
-            )}
-            <span className='truncate'>{option.label}</span>
-          </label>
-        ))}
+      <PopoverContent className='w-64 gap-0 p-0'>
+        <div className='flex max-h-80 flex-col gap-1 overflow-y-auto p-2 no-scrollbar scroll-fade-y'>
+          {options.length === 0 && (
+            <p className='p-2 text-muted-foreground text-sm'>選択肢がありません。</p>
+          )}
+          {options.map((option) => (
+            // biome-ignore lint/a11y/noLabelWithoutControl: Checkboxを内包している
+            <label
+              key={option.value}
+              className='flex cursor-pointer items-center gap-2 rounded-md p-2 text-sm hover:bg-accent'
+            >
+              <Checkbox
+                checked={selected.includes(option.value)}
+                onCheckedChange={(checked) => toggle(option.value, checked)}
+              />
+              {option.avatarUrl !== undefined && (
+                <Avatar className='size-5'>
+                  <AvatarImage src={option.avatarUrl} />
+                  <AvatarFallback>{option.label.slice(0, 1)}</AvatarFallback>
+                </Avatar>
+              )}
+              <span className='truncate'>{option.label}</span>
+            </label>
+          ))}
+        </div>
       </PopoverContent>
     </Popover>
   );
