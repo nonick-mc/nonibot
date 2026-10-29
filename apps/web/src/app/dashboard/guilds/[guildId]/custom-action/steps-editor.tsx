@@ -46,8 +46,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { FieldContent, FieldDescription, FieldGroup, FieldSeparator } from '@/components/ui/field';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Separator } from '@/components/ui/separator';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import type { stepsSchema } from './schema';
 
 export type Steps = z.infer<typeof stepsSchema>;

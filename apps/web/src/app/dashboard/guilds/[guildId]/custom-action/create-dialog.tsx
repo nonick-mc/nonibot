@@ -6,7 +6,6 @@ import { toast } from 'sonner';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -31,7 +30,7 @@ import { createCustomAction } from './action';
 import { createFormSchema } from './schema';
 import { type CustomActionTemplate, customActionTemplates } from './templates';
 
-/** 既に使われている名前と重複しない、`名前 2`のような連番付きの名前を返す */
+/** 既に使われている名前と重複しない連番付きの名前を返す */
 function uniqueName(base: string, existing: string[]) {
   if (!existing.includes(base)) return base;
   let n = 2;
