@@ -27,7 +27,6 @@ import {
   QuestionnaireSubmit,
   QuestionnaireTitle,
 } from '@/components/ui/questionnaire';
-import { Separator } from '@/components/ui/separator';
 import { createCustomAction } from './action';
 import { createFormSchema } from './schema';
 import { type CustomActionTemplate, customActionTemplates } from './templates';
@@ -42,11 +41,11 @@ function uniqueName(base: string, existing: string[]) {
 
 type CreateDialogProps = {
   children: ComponentProps<typeof DialogTrigger>['render'];
-  /** 既存のアクション名(名前の初期値の連番に使う) */
   names: string[];
+  canManageRoles: boolean;
 };
 
-export function CreateDialog({ children, names }: CreateDialogProps) {
+export function CreateDialog({ children, names, canManageRoles }: CreateDialogProps) {
   return (
     <Dialog>
       <DialogTrigger render={children} />
@@ -54,13 +53,16 @@ export function CreateDialog({ children, names }: CreateDialogProps) {
         <DialogHeader>
           <DialogTitle>アクションを作成</DialogTitle>
         </DialogHeader>
-        <CreateForm names={names} />
+        <CreateForm names={names} canManageRoles={canManageRoles} />
       </DialogContent>
     </Dialog>
   );
 }
 
-function CreateForm({ names }: Pick<CreateDialogProps, 'names'>) {
+function CreateForm({
+  names,
+  canManageRoles,
+}: Pick<CreateDialogProps, 'names' | 'canManageRoles'>) {
   const { guildId } = useParams<{ guildId: string }>();
   const router = useRouter();
   const [template, setTemplate] = useState<CustomActionTemplate>('blank');
@@ -74,10 +76,12 @@ function CreateForm({ names }: Pick<CreateDialogProps, 'names'>) {
 
   function renderChoice(templateKey: CustomActionTemplate) {
     const t = customActionTemplates[templateKey];
+    const disabled = t.needsRoleRules && !canManageRoles;
     return (
       <QuestionnaireChoice
         key={templateKey}
         value={templateKey}
+        disabled={disabled}
         defaultChecked={templateKey === template}
         onChange={() => {
           setTemplate(templateKey);
@@ -90,6 +94,11 @@ function CreateForm({ names }: Pick<CreateDialogProps, 'names'>) {
         </span>
         {t.description && (
           <QuestionnaireChoiceDescription>{t.description}</QuestionnaireChoiceDescription>
+        )}
+        {disabled && (
+          <QuestionnaireChoiceDescription className='text-warning'>
+            選択するには「ロールの管理」権限が必要です。
+          </QuestionnaireChoiceDescription>
         )}
       </QuestionnaireChoice>
     );
@@ -125,7 +134,7 @@ function CreateForm({ names }: Pick<CreateDialogProps, 'names'>) {
       <QuestionnaireItem name='name' required>
         <QuestionnaireTitle>アクション名を入力してください</QuestionnaireTitle>
         <QuestionnaireDescription>
-          同じ名前のアクションも作成できます。あとから変更もできます。
+          アクション名は後から変更することができます。
         </QuestionnaireDescription>
         <QuestionnaireInput
           maxLength={50}

@@ -2,7 +2,13 @@ import { ComponentType } from 'discord-api-types/v10';
 import { AtSignIcon, type LucideIcon, MessageSquareReplyIcon, SparklesIcon } from 'lucide-react';
 import type { Steps } from './steps-editor';
 
-type Template = { icon?: LucideIcon; label: string; description?: string; steps: Steps };
+type Template = {
+  icon?: LucideIcon;
+  label: string;
+  description?: string;
+  needsRoleRules?: boolean;
+  steps: Steps;
+};
 
 const templates = {
   blank: {
@@ -13,6 +19,7 @@ const templates = {
   'role-toggle': {
     icon: AtSignIcon,
     label: 'ロール付与',
+    needsRoleRules: true,
     description: 'ボタンを押した人に指定したロールを付与・解除し、結果を返信します。',
     steps: [
       // ロールは編集ページで選ぶ(未設定のままでは保存できない)

@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { verifyDashboardAccessPermission } from '@/lib/dal';
 import { db } from '@/lib/db';
 import { getRoles } from '@/lib/discord/api';
+import { getCurrentAssignableRoleRules } from '@/lib/discord/assignable-role';
 import { ActionList } from './action-list';
 import { CreateDialog } from './create-dialog';
 import { maxCustomActions } from './schema';
@@ -21,8 +22,9 @@ export default async function Page({
   const { guildId } = await params;
   await verifyDashboardAccessPermission(guildId);
 
-  const [roles, actions, messages] = await Promise.all([
+  const [roles, assignableRoleRules, actions, messages] = await Promise.all([
     getRoles(guildId),
+    getCurrentAssignableRoleRules(guildId),
     db.query.customAction.findMany({
       where: (action, { eq }) => eq(action.guildId, guildId),
       orderBy: (action, { desc }) => desc(action.createdAt),
@@ -59,7 +61,7 @@ export default async function Page({
               {Math.max(maxCustomActions - actions.length, 0)}個）
             </CardDescription>
           </div>
-          <CreateDialog names={actions.map((a) => a.name)}>
+          <CreateDialog names={actions.map((a) => a.name)} canManageRoles={!!assignableRoleRules}>
             <Button disabled={actions.length >= maxCustomActions}>
               <PlusIcon />
               アクションを作成する
