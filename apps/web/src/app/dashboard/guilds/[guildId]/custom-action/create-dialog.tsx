@@ -28,17 +28,10 @@ import {
   QuestionnaireTitle,
 } from '@/components/ui/questionnaire';
 import { Spinner } from '@/components/ui/spinner';
+import { uniqueName } from '@/lib/unique-name';
 import { createCustomAction } from './action';
 import { createFormSchema } from './schema';
 import { type CustomActionTemplate, customActionTemplates } from './templates';
-
-/** 既に使われている名前と重複しない連番付きの名前を返す */
-function uniqueName(base: string, existing: string[]) {
-  if (!existing.includes(base)) return base;
-  let n = 2;
-  while (existing.includes(`${base} ${n}`)) n++;
-  return `${base} ${n}`;
-}
 
 type CreateDialogProps = {
   children: ComponentProps<typeof DialogTrigger>['render'];
@@ -70,7 +63,6 @@ function CreateForm({
   const [name, setName] = useState(() => uniqueName(customActionTemplates.blank.label, names));
   const [nameEdited, setNameEdited] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  // 質問を進めるときは右から、戻るときは左からスライドして表示する(最初の質問は動かさない)
   const [direction, setDirection] = useState<1 | -1 | 0>(0);
   const itemMotion =
     direction === 0

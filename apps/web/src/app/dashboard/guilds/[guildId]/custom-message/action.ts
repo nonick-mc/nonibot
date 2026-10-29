@@ -1,5 +1,6 @@
 'use server';
 
+import { isDeepStrictEqual } from 'node:util';
 import { auditLog, customAction, customMessage } from '@repo/database';
 import { collectInteractiveComponents, parseCustomActionCustomId } from '@repo/shared';
 import { ChannelType, MessageFlags, PermissionFlagsBits } from 'discord-api-types/v10';
@@ -15,13 +16,7 @@ import {
 import { hasPermission } from '@/lib/discord/utils';
 import { guildActionClient } from '@/lib/safe-action/client';
 import { ActionClientError } from '@/lib/safe-action/error';
-import {
-  deleteFormSchema,
-  editFormSchema,
-  maxSavedMessages,
-  renameFormSchema,
-  sendFormSchema,
-} from './schema';
+import { deleteFormSchema, maxSavedMessages, sendFormSchema, updateFormSchema } from './schema';
 
 /**
  * ボタンのカスタムアクションが、このサーバーに存在するか検証する。
@@ -128,68 +123,46 @@ export const sendMessageAction = guildActionClient
     },
   );
 
-export const editMessageAction = guildActionClient
-  .inputSchema(editFormSchema)
+export const updateCustomMessage = guildActionClient
+  .inputSchema(updateFormSchema)
   .action(
     async ({
-      parsedInput: { id, components },
+      parsedInput: { id, name, components },
       bindArgsParsedInputs: [guildId],
       ctx: { session },
     }) => {
       const saved = await findSavedMessage(guildId, id);
-      await assertCustomActionsExist(guildId, components, saved.components);
 
-      await editChannelMessage(guildId, saved.channelId, saved.messageId, {
-        components,
-        flags: MessageFlags.IsComponentsV2,
-      }).catch((e) => {
-        if (e?.status === 404) {
-          throw new ActionClientError(
-            '元のメッセージが見つかりません。削除された場合は、保存したメッセージを削除してください。',
-          );
-        }
-        throw new ActionClientError('メッセージを編集できませんでした。');
-      });
+      // 名前だけの変更では、Discordのメッセージを編集しない
+      if (!isDeepStrictEqual(components, saved.components)) {
+        await assertCustomActionsExist(guildId, components, saved.components);
 
-      await db.update(customMessage).set({ components }).where(eq(customMessage.id, id));
+        await editChannelMessage(guildId, saved.channelId, saved.messageId, {
+          components,
+          flags: MessageFlags.IsComponentsV2,
+        }).catch((e) => {
+          if (e?.status === 404) {
+            throw new ActionClientError(
+              '元のメッセージが見つかりません。削除された場合は、保存したメッセージを削除してください。',
+            );
+          }
+          throw new ActionClientError('メッセージを編集できませんでした。');
+        });
+      }
 
-      const target = {
-        channelId: saved.channelId,
-        messageId: saved.messageId,
-        name: saved.name,
-      };
+      await db
+        .update(customMessage)
+        .set({ name, components })
+        .where(and(eq(customMessage.id, id), eq(customMessage.guildId, guildId)));
+
+      const target = { channelId: saved.channelId, messageId: saved.messageId };
       await db.insert(auditLog).values({
         guildId,
         authorId: session.user.id,
         targetName: 'custom_message',
         actionType: 'update_custom_message',
-        before: { ...target, components: saved.components },
-        after: { ...target, components },
-      });
-
-      revalidatePath('/');
-    },
-  );
-
-export const renameMessageAction = guildActionClient
-  .inputSchema(renameFormSchema)
-  .action(
-    async ({ parsedInput: { id, name }, bindArgsParsedInputs: [guildId], ctx: { session } }) => {
-      const saved = await findSavedMessage(guildId, id);
-      await db.update(customMessage).set({ name }).where(eq(customMessage.id, id));
-
-      const target = {
-        channelId: saved.channelId,
-        messageId: saved.messageId,
-        components: saved.components,
-      };
-      await db.insert(auditLog).values({
-        guildId,
-        authorId: session.user.id,
-        targetName: 'custom_message',
-        actionType: 'update_custom_message',
-        before: { ...target, name: saved.name },
-        after: { ...target, name },
+        before: { ...target, name: saved.name, components: saved.components },
+        after: { ...target, name, components },
       });
 
       revalidatePath('/');

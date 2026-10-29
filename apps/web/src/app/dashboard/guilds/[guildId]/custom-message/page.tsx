@@ -1,6 +1,5 @@
 import { PlusIcon } from 'lucide-react';
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { Header } from '@/components/header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,8 +8,9 @@ import { verifyDashboardAccessPermission } from '@/lib/dal';
 import { db } from '@/lib/db';
 import { getChannels, getGuildEmojis, getRoles } from '@/lib/discord/api';
 import { sortChannels, sortRoles } from '@/lib/discord/utils';
+import { CreateDialog } from './create-dialog';
 import { MessageList } from './message-list';
-import { editorFormSchema, maxSavedMessages } from './schema';
+import { maxSavedMessages } from './schema';
 
 export const metadata: Metadata = {
   title: 'カスタムメッセージ',
@@ -28,7 +28,7 @@ export default async function Page({
     getRoles(guildId),
     db.query.customMessage.findMany({
       where: (message, { eq }) => eq(message.guildId, guildId),
-      columns: { id: true, name: true, channelId: true, components: true, createdAt: true },
+      columns: { id: true, name: true, channelId: true, createdAt: true },
       orderBy: (message, { desc }) => desc(message.createdAt),
     }),
     getCustomActionAllowedComponents(guildId),
@@ -49,25 +49,25 @@ export default async function Page({
               {Math.max(maxSavedMessages - savedMessages.length, 0)}件）
             </CardDescription>
           </div>
-          <Button
-            render={<Link href={`/dashboard/guilds/${guildId}/custom-message/new`} />}
-            nativeButton={false}
-          >
-            <PlusIcon />
-            新規作成
-          </Button>
-        </CardHeader>
-        <CardContent>
-          <MessageList
+          <CreateDialog
             channels={sortChannels(channels)}
             emojis={emojis}
             roles={sortRoles(roles)}
             allowedComponents={allowedComponents}
-            messages={savedMessages.map(({ components, ...message }) => {
-              // スキーマに合わない値はcomponentsだけ空にする
-              const parsed = editorFormSchema.shape.components.safeParse(components);
-              return { ...message, components: parsed.success ? parsed.data : [] };
-            })}
+            isFull={savedMessages.length >= maxSavedMessages}
+            names={savedMessages.map((m) => m.name)}
+          >
+            <Button>
+              <PlusIcon />
+              新規作成
+            </Button>
+          </CreateDialog>
+        </CardHeader>
+        <CardContent>
+          <MessageList
+            guildId={guildId}
+            channels={sortChannels(channels)}
+            messages={savedMessages}
           />
         </CardContent>
       </Card>

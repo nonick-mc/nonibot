@@ -14,10 +14,7 @@ export function ControlledComponentsV2EditorDialog({
   const { field } = useControlledField();
   return (
     <ComponentsV2EditorDialog
-      onSubmit={(values) => {
-        field.onChange(values);
-        return true;
-      }}
+      onSubmit={field.onChange}
       defaultValues={field.value}
       resources={resources}
     >

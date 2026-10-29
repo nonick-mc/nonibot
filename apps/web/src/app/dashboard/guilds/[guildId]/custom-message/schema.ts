@@ -16,8 +16,9 @@ export const editorFormSchema = z.object({
   components: componentsSchema,
 });
 
-export const channelFormSchema = z.object({
+export const createFormSchema = z.object({
   channelId: z.string().regex(SnowflakeRegex, 'チャンネルを選択してください。'),
+  components: componentsSchema,
   save: z.boolean(),
   name: z.string().trim().max(50, '保存名は50文字以内で入力してください。'),
 });
@@ -28,17 +29,13 @@ export const sendFormSchema = z.object({
   name: nameSchema.optional(),
 });
 
-export const editFormSchema = z.object({
+export const updateFormSchema = z.object({
   id: z.uuid(),
+  name: nameSchema,
   components: componentsSchema,
 });
 
 export const deleteFormSchema = z.object({
   id: z.uuid(),
   deleteDiscordMessage: z.boolean(),
-});
-
-export const renameFormSchema = z.object({
-  id: z.uuid(),
-  name: nameSchema,
 });
