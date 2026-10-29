@@ -49,12 +49,12 @@ export const actionTypeTexts: Record<AuditLog['actionType'], string> = {
   update_rule: 'ルールを更新しました',
   delete_rule: 'ルールを削除しました',
   send_verification_panel: '認証パネルを送信しました',
-  send_custom_message: 'カスタムメッセージを送信しました',
-  update_custom_message: 'カスタムメッセージを更新しました',
-  delete_custom_message: 'カスタムメッセージを削除しました',
-  create_custom_action: 'カスタムアクションを作成しました',
-  update_custom_action: 'カスタムアクションを更新しました',
-  delete_custom_action: 'カスタムアクションを削除しました',
+  send_custom_message: 'メッセージを送信しました',
+  update_custom_message: 'メッセージを更新しました',
+  delete_custom_message: 'メッセージを削除しました',
+  create_custom_action: 'アクションを作成しました',
+  update_custom_action: 'アクションを更新しました',
+  delete_custom_action: 'アクションを削除しました',
 };
 
 export type AuditLogAuthor = {
