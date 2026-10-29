@@ -10,7 +10,9 @@ import { db } from '@/lib/db';
 import { getChannels, getRoles, getUser } from '@/lib/discord/api';
 import type { AuditLogAuthor } from './columns';
 import { DataTable } from './data-table';
+import { DevDataToggle } from './dev-data-toggle';
 import { Filters } from './filters';
+import { type DevDataMode, DevDataModes, getWorstCase } from './worst-case';
 
 export const metadata: Metadata = {
   title: '監査ログ',
@@ -88,10 +90,15 @@ export default async function Page({
   const fetched = await Promise.all(discordUserIds.map(fetchAuthor));
   const authorMap = new Map(discordUserIds.map((id, i) => [id, fetched[i]]));
 
-  const rows = logs.map(({ authorId: _, author, ...log }) => ({
+  const rowsFromDb = logs.map(({ authorId: _, author, ...log }) => ({
     ...log,
     author: author ? (authorMap.get(author.discordUserId) ?? null) : null,
   }));
+
+  // break-ui: 開発時のみ、`?data=`で最悪ケースのデータに差し替える
+  const isDev = process.env.NODE_ENV === 'development';
+  const devMode = DevDataModes.find((m) => m === query.data) ?? 'demo';
+  const worst = isDev && devMode !== 'demo' ? getWorstCase(devMode) : null;
 
   return (
     <>
@@ -110,13 +117,14 @@ export default async function Page({
         </CardHeader>
         <Separator />
         <DataTable
-          data={rows}
-          total={total}
+          data={worst?.rows ?? rowsFromDb}
+          total={worst?.total ?? total}
           page={page}
           pageSize={pageSize}
-          resources={{ channels, roles }}
+          resources={worst?.resources ?? { channels, roles }}
         />
       </Card>
+      {isDev && <DevDataToggle mode={devMode as DevDataMode} />}
     </>
   );
 }

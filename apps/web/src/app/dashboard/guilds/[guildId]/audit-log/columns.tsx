@@ -57,6 +57,13 @@ export const actionTypeTexts: Record<AuditLog['actionType'], string> = {
   delete_custom_action: 'アクションを削除しました',
 };
 
+/** 先頭2つの文字(グラフェム単位)。絵文字や国旗を途中で切らない */
+const initials = (name: string) =>
+  [...new Intl.Segmenter().segment(name)]
+    .slice(0, 2)
+    .map((s) => s.segment)
+    .join('');
+
 export type AuditLogAuthor = {
   displayName: string;
   username: string;
@@ -85,7 +92,7 @@ export const columns: ColumnDef<DataGridFeatures, CustomizedAuditLog>[] = [
         <div className='flex items-center gap-2'>
           <Avatar className='size-8'>
             <AvatarImage src={author.avatarUrl} />
-            <AvatarFallback>{author.displayName.slice(0, 2)}</AvatarFallback>
+            <AvatarFallback>{initials(author.displayName)}</AvatarFallback>
           </Avatar>
           <div className='flex flex-col leading-tight'>
             <span className='text-sm'>{author.displayName}</span>

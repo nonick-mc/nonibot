@@ -2,6 +2,7 @@
 
 import dayjs from 'dayjs';
 import { ClockIcon, TargetIcon, UserIcon, ZapIcon } from 'lucide-react';
+import { useContext } from 'react';
 import { PreviewResourcesContext } from '@/components/discord/preview/context';
 import { ChannelMention, RoleMention } from '@/components/discord/preview/mention';
 import { DiscordMessage, type MessagePreviewProps } from '@/components/discord/preview/message';
@@ -31,11 +32,21 @@ type Props = {
 };
 
 function Val({ value }: { value: Value }) {
+  const { channels = [], roles = [] } = useContext(PreviewResourcesContext);
+
   if (typeof value === 'string') return <Em>{value}</Em>;
-  return 'channel' in value ? (
-    <ChannelMention id={value.channel} />
-  ) : (
+  if ('channel' in value) {
+    // 削除済みなどで見つからないときは、区別できるようIDを出す
+    return channels.some((c) => c.id === value.channel) ? (
+      <ChannelMention id={value.channel} />
+    ) : (
+      <Em>不明なチャンネル({value.channel})</Em>
+    );
+  }
+  return roles.some((r) => r.id === value.role) ? (
     <RoleMention id={value.role} />
+  ) : (
+    <Em>不明なロール({value.role})</Em>
   );
 }
 
@@ -136,7 +147,7 @@ function InfoRow({
         <Icon className='mt-0.5 size-4 shrink-0' />
         <p className='max-sm:hidden'>{label}</p>
       </div>
-      {children}
+      <div className='flex min-w-0 items-center gap-2'>{children}</div>
     </div>
   );
 }
@@ -169,13 +180,13 @@ function ChangeList({
           <li
             // biome-ignore lint/suspicious/noArrayIndexKey: ラベルが重複しうる(「不明な設定」)ため
             key={`${change.kind}-${change.label}-${i}`}
-            className='flex items-start gap-3'
+            className='flex items-start gap-3 max-sm:flex-col max-sm:gap-1'
           >
             <span className={cn('font-mono', nested ? 'text-warning' : 'text-success')}>
               {String(i + 1).padStart(2, '0')}
             </span>
             <div className='flex min-w-0 flex-1 flex-col gap-2'>
-              <p>
+              <p className='wrap-anywhere'>
                 <Sentence change={change} />
               </p>
               {preview &&
@@ -222,7 +233,7 @@ export function DetailSheet({ log, resources, onClose }: Props) {
                           <AvatarImage src={author.avatarUrl} />
                           <AvatarFallback>{author.username.slice(0, 2)}</AvatarFallback>
                         </Avatar>
-                        <span>@{author.username}</span>
+                        <span className='break-all'>@{author.username}</span>
                       </>
                     ) : (
                       <span className='text-muted-foreground'>不明なユーザー</span>
@@ -240,11 +251,15 @@ export function DetailSheet({ log, resources, onClose }: Props) {
                 </Card>
               </SheetHeader>
               <div className='flex flex-1 flex-col gap-6 overflow-y-auto no-scrollbar scroll-fade-y px-6 pb-4'>
-                {hasAfter && (
+                {hasAfter ? (
                   <section className='flex flex-col gap-3'>
                     <h3 className='font-semibold text-sm'>詳細</h3>
                     <ChangeList changes={changes} resources={resources} />
                   </section>
+                ) : (
+                  <p className='py-6 text-center text-muted-foreground text-sm'>
+                    変更後の内容がないため、詳細は表示されません。
+                  </p>
                 )}
               </div>
             </>
