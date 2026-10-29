@@ -22,9 +22,14 @@ export const discordOAuth2UserFetch = createFetch({
   auth: {
     type: 'Bearer',
     token: async () => {
+      const requestHeaders = await headers();
+      const accounts = await auth.api.listUserAccounts({ headers: requestHeaders });
+      const discord = accounts.find((account) => account.providerId === 'discord');
+      if (!discord) throw new Error('Discord account not linked');
+
       const { accessToken } = await auth.api.getAccessToken({
-        body: { providerId: 'discord' },
-        headers: await headers(),
+        body: { accountId: discord.id },
+        headers: requestHeaders,
       });
       return accessToken;
     },
