@@ -17,6 +17,14 @@ export function runStep(
       return toggleRole(step.config.roleId, interaction);
     case 'reply-message':
       return replyMessage(step.config, interaction, params);
+    default:
+      // DBに未知の処理が保存されている場合
+      return Promise.resolve({
+        ok: false,
+        error: errorMessage(
+          'このボタンの処理を実行できませんでした。サーバーの管理者に連絡してください。',
+        ),
+      });
   }
 }
 
