@@ -65,6 +65,13 @@ export type InternalApiMember = {
   roles: string[];
 };
 
+export type InternalApiUser = {
+  id: string;
+  username: string;
+  global_name: string | null;
+  avatar_url: string;
+};
+
 export type InternalApiError = {
   error: string;
 };

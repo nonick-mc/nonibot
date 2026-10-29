@@ -16,6 +16,7 @@ import {
   serializeGuild,
   serializeMember,
   serializeRole,
+  serializeUser,
 } from './serializers';
 
 const sha256 = (value: string) => createHash('sha256').update(value).digest();
@@ -82,6 +83,20 @@ export function createApp(client: Client<true>, secret: string) {
     });
     if (!member) return c.json(notFound, 404);
     return c.json(serializeMember(member));
+  });
+
+  app.get('/users/:userId', async (c) => {
+    const userId = c.req.param('userId');
+    if (!SnowflakeRegex.test(userId)) return c.json(notFound, 404);
+
+    const user = await client.users.fetch(userId).catch((error) => {
+      if (error instanceof DiscordAPIError && error.code === RESTJSONErrorCodes.UnknownUser) {
+        return null;
+      }
+      throw error;
+    });
+    if (!user) return c.json(notFound, 404);
+    return c.json(serializeUser(user));
   });
 
   app.put('/guilds/:guildId/members/:userId/roles/:roleId', async (c) => {

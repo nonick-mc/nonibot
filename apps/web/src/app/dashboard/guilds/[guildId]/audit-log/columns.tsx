@@ -1,6 +1,6 @@
 'use client';
 
-import type { auditLog, user } from '@repo/database';
+import type { auditLog } from '@repo/database';
 import dayjs from 'dayjs';
 import type { InferSelectModel } from 'drizzle-orm';
 import 'dayjs/locale/ja';
@@ -22,7 +22,7 @@ dayjs.tz.setDefault('Asia/Tokyo');
 
 type AuditLog = InferSelectModel<typeof auditLog>;
 
-const targetNameTexts: Record<AuditLog['targetName'], string> = {
+export const targetNameTexts: Record<AuditLog['targetName'], string> = {
   guild: 'サーバー',
   join_message: '入室メッセージ',
   leave_message: '退室メッセージ',
@@ -43,7 +43,7 @@ const targetNameTexts: Record<AuditLog['targetName'], string> = {
   custom_action: 'カスタムアクション',
 };
 
-const actionTypeTexts: Record<AuditLog['actionType'], string> = {
+export const actionTypeTexts: Record<AuditLog['actionType'], string> = {
   update_guild_setting: '設定に変更を加えました',
   create_rule: 'ルールを作成しました',
   update_rule: 'ルールを更新しました',
@@ -57,8 +57,14 @@ const actionTypeTexts: Record<AuditLog['actionType'], string> = {
   delete_custom_action: 'カスタムアクションを削除しました',
 };
 
+export type AuditLogAuthor = {
+  displayName: string;
+  username: string;
+  avatarUrl: string;
+};
+
 export type CustomizedAuditLog = Omit<AuditLog, 'authorId'> & {
-  author: Pick<InferSelectModel<typeof user>, 'name' | 'globalName' | 'image'> | null;
+  author: AuditLogAuthor | null;
 };
 
 export const columns: ColumnDef<DataGridFeatures, CustomizedAuditLog>[] = [
@@ -77,11 +83,14 @@ export const columns: ColumnDef<DataGridFeatures, CustomizedAuditLog>[] = [
 
       return (
         <div className='flex items-center gap-2'>
-          <Avatar className='size-7'>
-            <AvatarImage src={author.image ?? undefined} />
-            <AvatarFallback>{author.name.slice(0, 2)}</AvatarFallback>
+          <Avatar className='size-8'>
+            <AvatarImage src={author.avatarUrl} />
+            <AvatarFallback>{author.displayName.slice(0, 2)}</AvatarFallback>
           </Avatar>
-          <span className='text-sm'>{author.name}</span>
+          <div className='flex flex-col leading-tight'>
+            <span className='text-sm'>{author.displayName}</span>
+            <span className='text-muted-foreground text-xs'>@{author.username}</span>
+          </div>
         </div>
       );
     },
