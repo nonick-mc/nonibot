@@ -11,14 +11,19 @@ export function GuildInfoCardAction({ guildId }: { guildId: string }) {
   const [isDisabled, setIsDisabled] = useState(false);
 
   const handleCopy = async () => {
+    if (!(await copy(guildId))) return toast.error('サーバーIDのコピーに失敗しました');
     setIsDisabled(true);
-    await copy(guildId);
     toast.success('サーバーIDをコピーしました');
     setTimeout(() => setIsDisabled(false), 3000);
   };
 
   return (
-    <Button variant='outline' onClick={handleCopy} disabled={isDisabled}>
+    <Button
+      variant='outline'
+      aria-label='サーバーIDをコピー'
+      onClick={handleCopy}
+      disabled={isDisabled}
+    >
       {isDisabled ? <CheckIcon /> : <CopyIcon />}
       <span className='hidden sm:block'>サーバーIDをコピー</span>
     </Button>
