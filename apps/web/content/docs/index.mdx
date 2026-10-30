@@ -1,7 +1,37 @@
 ---
 title: ようこそ
+icon: Album
 ---
 
-## Introduction
+import { LogIn, Flag, Hammer, SquareSlash, ClipboardList, Sparkles, Spool } from 'lucide-react';
 
-こんにちは。このドキュメントは日本語でも検索できます。
+**nonibot**の公式ドキュメントへようこそ！
+このドキュメントは、nonibotの導入方法から各機能の詳しい使い方まで、nonibotのほぼ全てを網羅しています。
+
+![](https://cdn.nonick.net/nonibot/twitter-banner.png)
+
+### nonibotとは
+
+nonibotは、Discordサーバー運営のサポートに特化したモダンなDiscordBotです。
+nonibotは当初、開発者の運営しているDiscordサーバー、[NoNICK SERVER](https://discord.gg/nonick-mc)での専属BOTに搭載していた独自機能を、他のサーバーでも使用可能にすることを目的として開発されました。
+現在は独自機能の移植に限らず、サーバー運営に役に立つ様々な機能を積極的に搭載しています。
+
+### 搭載している機能の一部
+
+<Cards>
+  <Card title="入室メッセージ" href="/docs/features/join-message" icon={<LogIn/>}>
+    新たに参加したメンバーを歓迎したり、サーバーでやっておくべきことを事前に伝えたりすることができます。
+  </Card>
+  <Card title="イベントログ" href="/docs/features/log" icon={<ClipboardList/>}>
+    サーバー内で起こったKickやBanなどのアクションを**イベントログ**一つで記録することができます。
+  </Card>
+  <Card title="サーバー内通報" href="/docs/features/report" icon={<Flag/>}>
+    サーバーのメンバーが悪意のあるメッセージやユーザーを通報できるようにし、モデレーターがサーバーを確認する負担を大幅に減らすことができます。
+  </Card>
+  <Card title="自動スレッド作成" href="/docs/features/auto-create-thread" icon={<Spool/>}>
+    メッセージの投稿に合わせて自動でスレッドを作成することができます。スレッドの名前やスレッドに送るメッセージなど、あらゆる項目をカスタマイズ可能です。
+  </Card>
+  <Card title="AutoMod Plus" href="/docs/features/automod-plus" icon={<Hammer/>}>
+    DiscordのAutoModでは設定が難しい高度なワードフィルターを有効にして、サーバーのセキュリティを更に高めることができます。
+  </Card>
+</Cards>
