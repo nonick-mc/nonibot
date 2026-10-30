@@ -37,9 +37,10 @@ export function FeatureTabs({ guildId, featureStatuses }: FeatureTabsProps) {
                   <CardDescription>{description}</CardDescription>
                 </CardHeader>
                 <CardContent
-                  className={cn('mt-auto flex items-center justify-end', {
-                    'justify-between': hasStatus,
-                  })}
+                  className={cn(
+                    'mt-auto flex items-center',
+                    hasStatus ? 'justify-between' : 'justify-end',
+                  )}
                 >
                   {hasStatus && (
                     <span className='flex items-center gap-1.5 text-sm text-muted-foreground'>
