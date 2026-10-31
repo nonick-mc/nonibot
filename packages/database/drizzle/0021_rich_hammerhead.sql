@@ -17,4 +17,5 @@ ALTER TABLE "public_setting"."report" RENAME COLUMN "create_at" TO "created_at";
 ALTER TABLE "public_setting"."timeout_log" RENAME COLUMN "create_at" TO "created_at";--> statement-breakpoint
 ALTER TABLE "public_setting"."verification" RENAME COLUMN "create_at" TO "created_at";--> statement-breakpoint
 ALTER TABLE "public_setting"."voice_log" RENAME COLUMN "create_at" TO "created_at";--> statement-breakpoint
-ALTER TABLE "public_setting"."join_message" ADD COLUMN "send_trigger" "send_trigger" NOT NULL;
+ALTER TABLE "public_setting"."join_message" ADD COLUMN "send_trigger" "send_trigger" NOT NULL DEFAULT 'joined';--> statement-breakpoint
+ALTER TABLE "public_setting"."join_message" ALTER COLUMN "send_trigger" DROP DEFAULT;
