@@ -50,8 +50,5 @@ export const auth = betterAuth({
       ipAddressHeaders: ['cf-connecting-ip', 'x-forwarded-for'],
     },
   },
-  experimental: {
-    joins: true,
-  },
   plugins: [dash()],
 });
