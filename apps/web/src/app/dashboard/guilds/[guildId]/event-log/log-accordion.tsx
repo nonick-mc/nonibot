@@ -108,7 +108,7 @@ export function LogAccordion({ channels, roles, defaultValues }: LogAccordionPro
           <AccordionItem
             key={item.key}
             value={item.key}
-            className='rounded-2xl border border-border bg-card/50 '
+            className='rounded-2xl border border-border bg-card/50 last:border-b'
           >
             <AccordionTrigger className='p-6'>
               <div className='flex gap-2 items-center font-heading text-base font-medium'>
