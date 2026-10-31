@@ -118,7 +118,7 @@ export default async function Page({
         title='監査ログ'
         description={`ユーザーが過去${AuditLogRetentionDays}日間でダッシュボードで加えた変更を閲覧することができます。`}
       />
-      <Card>
+      <Card className='bg-card/50'>
         <CardHeader>
           <Filters
             users={authors.map((a) => ({
