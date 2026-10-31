@@ -8,6 +8,8 @@ nonibot(Discord BOT + Webダッシュボード)の v6 モノレポ。pnpm worksp
 
 `README.md` は旧構成(`apps/dashboard`, `packages/bot`)の記述が残っており、現状とは異なる。
 
+`apps/bot/CLAUDE.md` と `apps/web/CLAUDE.md` に、各アプリ固有の事項(Botの構造・内部API、Webのアクセス制御・監査ログなど)がある。該当ディレクトリで作業するときはそちらも参照する。
+
 ## コマンド
 
 ルートの `package.json` に各ワークスペース用のショートカットがある(`pnpm bot <cmd>`, `pnpm web <cmd>`, `pnpm database <cmd>`)。
@@ -15,7 +17,9 @@ nonibot(Discord BOT + Webダッシュボード)の v6 モノレポ。pnpm worksp
 - `pnpm dev` / `pnpm build`: 全ワークスペースを turbo で実行
 - Bot: `pnpm bot dev`(tsx watch)、`pnpm bot build`(`tsc --noEmit && tsdown`)、`pnpm bot lint`(= `tsc --noEmit`、型チェックのみ)
 - Web: `pnpm web dev` / `pnpm web build`
-- DB: `pnpm database generate`(マイグレーション生成)、`migrate`、`push`、`studio`
+- DB: `pnpm database generate`(マイグレーション生成)、`migrate`、`push`、`studio`。接続先は `packages/database/.env` の `DATABASE_URL`
+- `packages/placeholders` は `pnpm placeholders build`、`packages/shared` は `pnpm -C packages/shared build`(`shared` 用のショートカットはない)
+- CI は `main` 以外への push で `pnpm build` を実行するだけ(型チェックを含む)
 - Lint/Format: `npx biome check --write <対象パス>`。**リポジトリ全体や `apps` 全体には実行しない**(無関係なファイルが大量に書き換わる)。変更したファイル/ディレクトリだけを指定する
 - テストは存在しない
 
@@ -40,9 +44,15 @@ nonibot(Discord BOT + Webダッシュボード)の v6 モノレポ。pnpm worksp
 
 `@repo/*` はビルド成果物(`dist`)を参照するので、パッケージ側を変更したら `pnpm database build` などで再ビルドするか、`dev`(`tsc --watch`)を動かす。
 
+### マイグレーションの `when`(ブランチを跨ぐときの注意)
+
+drizzle の migrator は、`drizzle.__drizzle_migrations` の `created_at` が**最大の1行だけ**を見て、`_journal.json` の `when` がそれより新しいものだけを実行する。連番やファイル名は見ない。`main`(v5)と別ブランチで並行して `generate` すると、後から作られたほうの `when` が大きくなり、**もう片方の未適用分が「適用済み」としてスキップされる**(エラーにならず、後続の別のマイグレーションで初めて壊れることもある)。
+
+`main` を取り込む、または `main` にマイグレーションが入っているブランチを作るときは、`when` が単調増加であること、`main` の最終 `when` より新しいことを確認する。DBの移行を試すときは、`main` の `0000〜` を空DBに流して行ごとにデータを入れたDBに、現在のマイグレーションを流す。
+
 ## 新しい機能(設定)を追加する流れ
 
-1. `packages/database` にスキーマ追加 → `pnpm database generate`。**既存行がある表に NOT NULL カラムを足す場合**は、生成SQLを「`DEFAULT` 付きで追加 → `DROP DEFAULT`」に手で書き換える(スキーマ側に DEFAULT を持たせない方針のため)。
+1. `packages/database` にスキーマ追加 → `pnpm database generate`。**既存行がある表に NOT NULL カラムを足す場合**は、生成SQLを「`DEFAULT` 付きで追加 → `DROP DEFAULT`」に手で書き換える(スキーマ側に DEFAULT を持たせない方針のため)。空のDBでは気づけず、行がある本番DBでだけ失敗する。
 2. 監査ログの `targetName` に追加。
 3. Bot: `features/<feature>/signals/` にハンドラを置く。
 4. Web: 上記4点セットのページを作り、`sidebar-navigation-items.tsx` に項目を追加。
