@@ -8,6 +8,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Card, CardContent } from '@/components/ui/card';
+import { Reveal } from '../reveal';
 
 const linkClass = 'text-foreground underline';
 
@@ -73,23 +74,27 @@ const items: { question: string; answer: ReactNode }[] = [
 export function FaqSection() {
   return (
     <section className='container max-w-4xl py-32'>
-      <h2 className='mb-4 text-3xl font-semibold md:mb-11 md:text-4xl'>よくある質問</h2>
-      <Card>
-        <CardContent>
-          <Accordion>
-            {items.map((item) => (
-              <AccordionItem key={item.question}>
-                <AccordionTrigger className='font-semibold hover:no-underline py-5'>
-                  {item.question}
-                </AccordionTrigger>
-                <AccordionContent className='text-muted-foreground py-3'>
-                  {item.answer}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </CardContent>
-      </Card>
+      <Reveal>
+        <h2 className='mb-4 text-3xl font-semibold md:mb-11 md:text-4xl'>よくある質問</h2>
+      </Reveal>
+      <Reveal delay={0.1}>
+        <Card>
+          <CardContent>
+            <Accordion>
+              {items.map((item) => (
+                <AccordionItem key={item.question}>
+                  <AccordionTrigger className='font-semibold hover:no-underline py-5'>
+                    {item.question}
+                  </AccordionTrigger>
+                  <AccordionContent className='text-muted-foreground py-3'>
+                    {item.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </CardContent>
+        </Card>
+      </Reveal>
     </section>
   );
 }

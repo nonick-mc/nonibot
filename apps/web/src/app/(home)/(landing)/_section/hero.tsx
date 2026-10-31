@@ -3,11 +3,12 @@ import type { Route } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { Reveal } from '../reveal';
 
 export function HeroSection() {
   return (
     <section className='container max-w-6xl py-32 text-center'>
-      <div className='mx-auto flex max-w-5xl flex-col gap-6'>
+      <Reveal className='mx-auto flex max-w-5xl flex-col gap-6'>
         <h1 className='text-3xl font-bold lg:text-6xl'>
           あなたのDiscordサーバーを
           <br />
@@ -16,8 +17,8 @@ export function HeroSection() {
         <p className='text-muted-foreground text-balance lg:text-lg'>
           nonibotは、サーバー運営のサポートに特化した次世代のDiscordBotです。サーバー運営に関する便利な機能を幅広く搭載しています。
         </p>
-      </div>
-      <div className='flex justify-center gap-3 pt-7 pb-12'>
+      </Reveal>
+      <Reveal delay={0.15} className='flex justify-center gap-3 pt-7 pb-12'>
         <Button
           size='lg'
           render={
@@ -39,8 +40,8 @@ export function HeroSection() {
           }
           nativeButton={false}
         />
-      </div>
-      <div className='mask-b-from-80%'>
+      </Reveal>
+      <Reveal delay={0.3} className='mask-b-from-80%'>
         {(['dark', 'light'] as const).map((theme) => (
           <Image
             key={theme}
@@ -52,7 +53,7 @@ export function HeroSection() {
             className={`h-auto w-full rounded-t-xl border ${theme === 'dark' ? 'hidden dark:block' : 'dark:hidden'}`}
           />
         ))}
-      </div>
+      </Reveal>
     </section>
   );
 }

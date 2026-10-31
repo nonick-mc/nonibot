@@ -7,6 +7,7 @@ import {
   WrenchIcon,
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import { Reveal } from '../reveal';
 
 const features = [
   {
@@ -50,22 +51,26 @@ const features = [
 export function FeatureSection() {
   return (
     <section className='container max-w-6xl py-32'>
-      <h2 className='mx-auto mb-16 max-w-3xl text-center text-4xl font-bold text-pretty lg:text-5xl'>
-        機能性と使いやすさを両立した
-        <br />
-        サーバー管理Bot
-      </h2>
+      <Reveal>
+        <h2 className='mx-auto mb-16 max-w-3xl text-center text-4xl font-bold text-pretty lg:text-5xl'>
+          機能性と使いやすさを両立した
+          <br />
+          サーバー管理Bot
+        </h2>
+      </Reveal>
       <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
-        {features.map(({ heading, description, icon: Icon }) => (
-          <Card key={heading}>
-            <CardContent>
-              <div className='bg-accent mb-5 flex size-14 items-center justify-center rounded-full'>
-                <Icon className='size-6' />
-              </div>
-              <h3 className='mb-2 text-xl font-semibold'>{heading}</h3>
-              <p className='text-muted-foreground'>{description}</p>
-            </CardContent>
-          </Card>
+        {features.map(({ heading, description, icon: Icon }, i) => (
+          <Reveal key={heading} delay={(i % 3) * 0.1} className='h-full'>
+            <Card className='h-full'>
+              <CardContent>
+                <div className='bg-accent mb-5 flex size-14 items-center justify-center rounded-full'>
+                  <Icon className='size-6' />
+                </div>
+                <h3 className='mb-2 text-xl font-semibold'>{heading}</h3>
+                <p className='text-muted-foreground'>{description}</p>
+              </CardContent>
+            </Card>
+          </Reveal>
         ))}
       </div>
     </section>
