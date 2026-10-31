@@ -57,6 +57,7 @@ export function FeatureTabs({ guildId, featureStatuses }: FeatureTabsProps) {
                     variant='outline'
                     size='sm'
                     render={<Link href={`/dashboard/guilds/${guildId}/${key}`} />}
+                    nativeButton={false}
                   >
                     設定
                     <ArrowRightIcon />
