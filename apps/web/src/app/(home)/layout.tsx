@@ -10,11 +10,11 @@ export default function Layout({ children }: LayoutProps<'/'>) {
       style={{ '--fd-layout-width': '1400px' } as object}
       links={[
         {
-          text: 'Docs',
+          text: 'ドキュメント',
           url: '/docs',
         },
         {
-          text: 'Blog',
+          text: 'ブログ',
           url: '/blog',
         },
         {
@@ -25,7 +25,6 @@ export default function Layout({ children }: LayoutProps<'/'>) {
           ),
         },
       ]}
-      searchToggle={{ enabled: false }}
     >
       {children}
     </HomeLayout>
