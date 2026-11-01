@@ -1,0 +1,11 @@
+{
+  "pages": [
+    "bulkdelete",
+    "firstmessage",
+    "help",
+    "info",
+    "pauseinvite",
+    "ratelimit",
+    "timeout"
+  ]
+}

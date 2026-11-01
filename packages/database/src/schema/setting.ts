@@ -1,4 +1,4 @@
-﻿import type { RESTPostAPIChannelMessageJSONBody } from 'discord-api-types/v10';
+﻿import type { APIMessageTopLevelComponent } from 'discord-api-types/v10';
 import { boolean, integer, jsonb, pgEnum, pgSchema, text } from 'drizzle-orm/pg-core';
 import { timestamps } from '../utils';
 import { guild } from './guild';
@@ -10,12 +10,22 @@ const guildId = text('guild_id')
   .references(() => guild.id, { onDelete: 'cascade' });
 
 // #region JoinMessage
+export const sendTriggerEnum = pgEnum('send_trigger', ['joined', 'passedMembershipGate']);
 export const joinMessageSetting = settingSchema.table('join_message', {
   guildId,
   enabled: boolean('enabled').notNull(),
   channel: text('channel'),
+  sendTrigger: sendTriggerEnum('send_trigger').notNull(),
   ignoreBot: boolean('ignore_bot').notNull(),
-  message: jsonb('message').$type<RESTPostAPIChannelMessageJSONBody>().notNull(),
+  messageComponents: jsonb('message_components')
+    .array()
+    .$type<APIMessageTopLevelComponent[]>()
+    .notNull(),
+  dmEnabled: boolean('dm_enabled').notNull(),
+  dmMessageComponents: jsonb('dm_message_components')
+    .array()
+    .$type<APIMessageTopLevelComponent[]>()
+    .notNull(),
   ...timestamps,
 });
 // #endregion
@@ -26,7 +36,10 @@ export const leaveMessageSetting = settingSchema.table('leave_message', {
   enabled: boolean('enabled').notNull(),
   channel: text('channel'),
   ignoreBot: boolean('ignore_bot').notNull(),
-  message: jsonb('message').$type<RESTPostAPIChannelMessageJSONBody>().notNull(),
+  messageComponents: jsonb('message_components')
+    .array()
+    .$type<APIMessageTopLevelComponent[]>()
+    .notNull(),
   ...timestamps,
 });
 // #endregion
@@ -34,12 +47,15 @@ export const leaveMessageSetting = settingSchema.table('leave_message', {
 // #region Report
 export const reportSetting = settingSchema.table('report', {
   guildId,
-  channel: text('channel').notNull(),
-  forumCompletedTag: text('forum_completed_tag'),
-  forumIgnoredTag: text('forum_ignored_tag'),
+  enabled: boolean('enabled').notNull(),
+  channel: text('channel'),
+  resolvedForumTag: text('resolved_forum_tag'),
+  ignoredForumTag: text('ignored_forum_tag'),
+  messageCategories: jsonb('message_categories').array().$type<{ label: string }[]>().notNull(),
+  userCategories: jsonb('user_categories').array().$type<{ label: string }[]>().notNull(),
   includeModerator: boolean('include_moderator').notNull(),
+  ignoreRoles: text('ignore_roles').array().notNull(),
   showModerateLog: boolean('show_moderate_log').notNull(),
-  enableMention: boolean('enable_mention').notNull(),
   mentionRoles: text('mention_roles').array().notNull(),
   ...timestamps,
 });
@@ -50,6 +66,7 @@ const baseLogSetting = {
   guildId,
   enabled: boolean('enabled').notNull(),
   channel: text('channel'),
+  ignoreRoles: text('ignore_roles').array().notNull(),
   ...timestamps,
 };
 
@@ -66,6 +83,7 @@ export const msgExpandSetting = settingSchema.table('message_expand', {
   guildId,
   enabled: boolean('enabled').notNull(),
   allowExternalGuild: boolean('allow_external_guild').notNull(),
+  onlyOwnGuild: boolean('only_own_guild').notNull(),
   ignoreChannels: text('ignore_channels').array().notNull(),
   ignoreChannelTypes: integer('ignore_channel_types').array().notNull(),
   ignorePrefixes: text('ignore_prefixes').array().notNull(),
@@ -80,6 +98,8 @@ export const autoChangeVerifyLevelSetting = settingSchema.table('auto_change_ver
   startHour: integer('start_hour').notNull(),
   endHour: integer('end_hour').notNull(),
   level: integer('level').notNull(),
+  // 期間内のみ、期間外に戻すべき認証レベルを一時的に保存する(期間外はnull)
+  defaultLevel: integer('default_level'),
   enableLog: boolean('enable_log').notNull(),
   logChannel: text('log_channel'),
   ...timestamps,
@@ -91,6 +111,9 @@ export const autoPublicSetting = settingSchema.table('auto_public', {
   guildId,
   enabled: boolean('enabled').notNull(),
   channels: text('channels').array().notNull(),
+  reactOnFailure: boolean('react_on_failure').notNull(),
+  ignoreRoles: text('ignore_roles').array().notNull(),
+  ignoreWebhooks: boolean('ignore_webhooks').notNull(),
   ...timestamps,
 });
 // #endregion
@@ -118,6 +141,10 @@ export const verificationSetting = settingSchema.table('verification', {
   enabled: boolean('enabled').notNull(),
   role: text('role'),
   captchaType: captchaTypeEnum('captcha_type').notNull(),
+  messageComponents: jsonb('message_components')
+    .array()
+    .$type<APIMessageTopLevelComponent[]>()
+    .notNull(),
   ...timestamps,
 });
 // #endregion

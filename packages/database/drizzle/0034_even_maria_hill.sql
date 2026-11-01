@@ -1,0 +1,2 @@
+ALTER TABLE "public_rule"."auto_create_thread" ADD COLUMN "message_enabled" boolean DEFAULT false NOT NULL;--> statement-breakpoint
+ALTER TABLE "public_rule"."auto_create_thread" ADD COLUMN "message_components" jsonb[] DEFAULT '{}' NOT NULL;

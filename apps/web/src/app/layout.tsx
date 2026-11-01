@@ -1,8 +1,22 @@
 import { RootProvider } from 'fumadocs-ui/provider/next';
-import './global.css';
-import type { Metadata } from 'next';
-import { Noto_Sans_JP } from 'next/font/google';
-import SearchDialog from '@/components/search';
+import type { Metadata, Viewport } from 'next';
+import { Geist_Mono, Noto_Sans_JP } from 'next/font/google';
+import './globals.css';
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
+import { RouterEventsProvider } from '@/components/router-events-provider';
+import { Toaster } from '@/components/ui/sonner';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { cn } from '@/lib/utils';
+
+const notoSansJP = Noto_Sans_JP({
+  subsets: ['latin'],
+  variable: '--font-sans',
+});
+
+const geistMono = Geist_Mono({
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
+});
 
 export const metadata: Metadata = {
   title: {
@@ -12,15 +26,41 @@ export const metadata: Metadata = {
   description: 'あなたのDiscordサーバーをもっと便利に。',
 };
 
-const notoSansJP = Noto_Sans_JP({
-  subsets: ['latin'],
-});
+export const viewport: Viewport = {
+  themeColor: '#0073f5',
+};
 
-export default function Layout({ children }: LayoutProps<'/'>) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html lang='ja' className={notoSansJP.className} suppressHydrationWarning>
-      <body className='flex flex-col min-h-screen'>
-        <RootProvider search={{ SearchDialog }}>{children}</RootProvider>
+    <html
+      lang='ja'
+      suppressHydrationWarning
+      className={cn('antialiased', geistMono.variable, 'font-sans', notoSansJP.variable)}
+    >
+      <body className='min-h-screen flex flex-col'>
+        <RootProvider
+          i18n={{
+            translations: {
+              search: '検索...',
+            },
+          }}
+          theme={{
+            attribute: 'class',
+            defaultTheme: 'system',
+            enableSystem: true,
+            disableTransitionOnChange: true,
+          }}
+        >
+          <NuqsAdapter>
+            <TooltipProvider>{children}</TooltipProvider>
+            <Toaster position='top-center' />
+            <RouterEventsProvider />
+          </NuqsAdapter>
+        </RootProvider>
       </body>
     </html>
   );

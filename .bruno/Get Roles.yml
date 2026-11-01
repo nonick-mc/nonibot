@@ -1,0 +1,22 @@
+info:
+  name: Get Roles
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: "{{baseUrl}}/guilds/:guildId/roles"
+  params:
+    - name: guildId
+      value: "{{guild_id}}"
+      type: path
+  auth:
+    type: bearer
+    token: "{{secret}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

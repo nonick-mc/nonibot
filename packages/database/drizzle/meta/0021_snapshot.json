@@ -1,5 +1,5 @@
 {
-  "id": "6fe269d8-42fc-412c-b506-cb01970b0375",
+  "id": "5f963ed7-cb60-43f6-8fbd-3a5b0a2487e7",
   "prevId": "9fd15708-546c-4e1f-b4af-9ba3917dc14c",
   "version": "7",
   "dialect": "postgresql",
@@ -53,8 +53,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "create_at": {
-          "name": "create_at",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
@@ -66,28 +66,28 @@
         "audit_log_guild_id_guild_id_fk": {
           "name": "audit_log_guild_id_guild_id_fk",
           "tableFrom": "audit_log",
+          "tableTo": "guild",
           "columnsFrom": [
             "guild_id"
           ],
-          "tableTo": "guild",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         },
         "audit_log_author_id_user_id_fk": {
           "name": "audit_log_author_id_user_id_fk",
           "tableFrom": "audit_log",
+          "tableTo": "user",
           "columnsFrom": [
             "author_id"
           ],
-          "tableTo": "user",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "set null"
+          "onDelete": "set null",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -192,24 +192,24 @@
             }
           ],
           "isUnique": false,
-          "with": {},
+          "concurrently": false,
           "method": "btree",
-          "concurrently": false
+          "with": {}
         }
       },
       "foreignKeys": {
         "account_user_id_user_id_fk": {
           "name": "account_user_id_user_id_fk",
           "tableFrom": "account",
+          "tableTo": "user",
           "columnsFrom": [
             "user_id"
           ],
-          "tableTo": "user",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -284,34 +284,34 @@
             }
           ],
           "isUnique": false,
-          "with": {},
+          "concurrently": false,
           "method": "btree",
-          "concurrently": false
+          "with": {}
         }
       },
       "foreignKeys": {
         "session_user_id_user_id_fk": {
           "name": "session_user_id_user_id_fk",
           "tableFrom": "session",
+          "tableTo": "user",
           "columnsFrom": [
             "user_id"
           ],
-          "tableTo": "user",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "session_token_unique": {
           "name": "session_token_unique",
+          "nullsNotDistinct": false,
           "columns": [
             "token"
-          ],
-          "nullsNotDistinct": false
+          ]
         }
       },
       "policies": {},
@@ -386,10 +386,10 @@
       "uniqueConstraints": {
         "user_email_unique": {
           "name": "user_email_unique",
+          "nullsNotDistinct": false,
           "columns": [
             "email"
-          ],
-          "nullsNotDistinct": false
+          ]
         }
       },
       "policies": {},
@@ -451,9 +451,9 @@
             }
           ],
           "isUnique": false,
-          "with": {},
+          "concurrently": false,
           "method": "btree",
-          "concurrently": false
+          "with": {}
         }
       },
       "foreignKeys": {},
@@ -486,8 +486,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "create_at": {
-          "name": "create_at",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
@@ -555,8 +555,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "create_at": {
-          "name": "create_at",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
@@ -568,15 +568,15 @@
         "report_guild_id_guild_id_fk": {
           "name": "report_guild_id_guild_id_fk",
           "tableFrom": "report",
+          "tableTo": "guild",
           "columnsFrom": [
             "guild_id"
           ],
-          "tableTo": "guild",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -632,8 +632,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "create_at": {
-          "name": "create_at",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
@@ -651,15 +651,15 @@
         "auto_create_thread_guild_id_guild_id_fk": {
           "name": "auto_create_thread_guild_id_guild_id_fk",
           "tableFrom": "auto_create_thread",
+          "tableTo": "guild",
           "columnsFrom": [
             "guild_id"
           ],
-          "tableTo": "guild",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
@@ -722,8 +722,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "create_at": {
-          "name": "create_at",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
@@ -741,15 +741,15 @@
         "auto_change_verify_level_guild_id_guild_id_fk": {
           "name": "auto_change_verify_level_guild_id_guild_id_fk",
           "tableFrom": "auto_change_verify_level",
+          "tableTo": "guild",
           "columnsFrom": [
             "guild_id"
           ],
-          "tableTo": "guild",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -822,8 +822,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "create_at": {
-          "name": "create_at",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
@@ -841,15 +841,15 @@
         "auto_mod_guild_id_guild_id_fk": {
           "name": "auto_mod_guild_id_guild_id_fk",
           "tableFrom": "auto_mod",
+          "tableTo": "guild",
           "columnsFrom": [
             "guild_id"
           ],
-          "tableTo": "guild",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -880,8 +880,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "create_at": {
-          "name": "create_at",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
@@ -899,15 +899,15 @@
         "auto_public_guild_id_guild_id_fk": {
           "name": "auto_public_guild_id_guild_id_fk",
           "tableFrom": "auto_public",
+          "tableTo": "guild",
           "columnsFrom": [
             "guild_id"
           ],
-          "tableTo": "guild",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -938,8 +938,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "create_at": {
-          "name": "create_at",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
@@ -957,15 +957,15 @@
         "ban_log_guild_id_guild_id_fk": {
           "name": "ban_log_guild_id_guild_id_fk",
           "tableFrom": "ban_log",
+          "tableTo": "guild",
           "columnsFrom": [
             "guild_id"
           ],
-          "tableTo": "guild",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -996,6 +996,13 @@
           "primaryKey": false,
           "notNull": false
         },
+        "send_trigger": {
+          "name": "send_trigger",
+          "type": "send_trigger",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
         "ignore_bot": {
           "name": "ignore_bot",
           "type": "boolean",
@@ -1008,8 +1015,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "create_at": {
-          "name": "create_at",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
@@ -1027,15 +1034,15 @@
         "join_message_guild_id_guild_id_fk": {
           "name": "join_message_guild_id_guild_id_fk",
           "tableFrom": "join_message",
+          "tableTo": "guild",
           "columnsFrom": [
             "guild_id"
           ],
-          "tableTo": "guild",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -1066,8 +1073,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "create_at": {
-          "name": "create_at",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
@@ -1085,15 +1092,15 @@
         "kick_log_guild_id_guild_id_fk": {
           "name": "kick_log_guild_id_guild_id_fk",
           "tableFrom": "kick_log",
+          "tableTo": "guild",
           "columnsFrom": [
             "guild_id"
           ],
-          "tableTo": "guild",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -1136,8 +1143,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "create_at": {
-          "name": "create_at",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
@@ -1155,15 +1162,15 @@
         "leave_message_guild_id_guild_id_fk": {
           "name": "leave_message_guild_id_guild_id_fk",
           "tableFrom": "leave_message",
+          "tableTo": "guild",
           "columnsFrom": [
             "guild_id"
           ],
-          "tableTo": "guild",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -1194,8 +1201,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "create_at": {
-          "name": "create_at",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
@@ -1213,15 +1220,15 @@
         "message_delete_log_guild_id_guild_id_fk": {
           "name": "message_delete_log_guild_id_guild_id_fk",
           "tableFrom": "message_delete_log",
+          "tableTo": "guild",
           "columnsFrom": [
             "guild_id"
           ],
-          "tableTo": "guild",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -1252,8 +1259,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "create_at": {
-          "name": "create_at",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
@@ -1271,15 +1278,15 @@
         "message_edit_log_guild_id_guild_id_fk": {
           "name": "message_edit_log_guild_id_guild_id_fk",
           "tableFrom": "message_edit_log",
+          "tableTo": "guild",
           "columnsFrom": [
             "guild_id"
           ],
-          "tableTo": "guild",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -1328,8 +1335,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "create_at": {
-          "name": "create_at",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
@@ -1347,15 +1354,15 @@
         "message_expand_guild_id_guild_id_fk": {
           "name": "message_expand_guild_id_guild_id_fk",
           "tableFrom": "message_expand",
+          "tableTo": "guild",
           "columnsFrom": [
             "guild_id"
           ],
-          "tableTo": "guild",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -1416,8 +1423,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "create_at": {
-          "name": "create_at",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
@@ -1435,15 +1442,15 @@
         "report_guild_id_guild_id_fk": {
           "name": "report_guild_id_guild_id_fk",
           "tableFrom": "report",
+          "tableTo": "guild",
           "columnsFrom": [
             "guild_id"
           ],
-          "tableTo": "guild",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -1474,8 +1481,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "create_at": {
-          "name": "create_at",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
@@ -1493,15 +1500,15 @@
         "timeout_log_guild_id_guild_id_fk": {
           "name": "timeout_log_guild_id_guild_id_fk",
           "tableFrom": "timeout_log",
+          "tableTo": "guild",
           "columnsFrom": [
             "guild_id"
           ],
-          "tableTo": "guild",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -1539,8 +1546,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "create_at": {
-          "name": "create_at",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
@@ -1558,15 +1565,15 @@
         "verification_guild_id_guild_id_fk": {
           "name": "verification_guild_id_guild_id_fk",
           "tableFrom": "verification",
+          "tableTo": "guild",
           "columnsFrom": [
             "guild_id"
           ],
-          "tableTo": "guild",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -1597,8 +1604,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "create_at": {
-          "name": "create_at",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
@@ -1616,15 +1623,15 @@
         "voice_log_guild_id_guild_id_fk": {
           "name": "voice_log_guild_id_guild_id_fk",
           "tableFrom": "voice_log",
+          "tableTo": "guild",
           "columnsFrom": [
             "guild_id"
           ],
-          "tableTo": "guild",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -1675,16 +1682,24 @@
         "image",
         "web"
       ]
+    },
+    "public.send_trigger": {
+      "name": "send_trigger",
+      "schema": "public",
+      "values": [
+        "joined",
+        "verified"
+      ]
     }
   },
   "schemas": {
     "public_rule": "public_rule",
     "public_setting": "public_setting"
   },
-  "views": {},
   "sequences": {},
   "roles": {},
   "policies": {},
+  "views": {},
   "_meta": {
     "columns": {},
     "schemas": {},

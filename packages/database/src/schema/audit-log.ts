@@ -1,10 +1,22 @@
 ﻿import { relations } from 'drizzle-orm';
-import { jsonb, pgEnum, pgTable, text, uuid } from 'drizzle-orm/pg-core';
+import { index, jsonb, pgEnum, pgTable, text, uuid } from 'drizzle-orm/pg-core';
 import { timestamps } from '../utils';
 import { user } from './auth';
 import { guild } from './guild';
 
-const actionType = ['update_guild_setting', 'create_rule', 'update_rule', 'delete_rule'] as const;
+const actionType = [
+  'update_guild_setting',
+  'create_rule',
+  'update_rule',
+  'delete_rule',
+  'send_verification_panel',
+  'send_custom_message',
+  'update_custom_message',
+  'delete_custom_message',
+  'create_custom_action',
+  'update_custom_action',
+  'delete_custom_action',
+] as const;
 
 const targetName = [
   // guild.ts
@@ -25,23 +37,30 @@ const targetName = [
   'auto_create_thread',
   'auto_mod',
   'verification',
+  'custom_message',
+  'custom_action',
 ] as const;
 
 export const actionTypeEnum = pgEnum('action_type', actionType);
 export const targetNameEnum = pgEnum('target_name', targetName);
 
-export const auditLog = pgTable('audit_log', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  guildId: text('guild_id')
-    .references(() => guild.id, { onDelete: 'cascade' })
-    .notNull(),
-  authorId: text('author_id').references(() => user.id, { onDelete: 'set null' }),
-  targetName: targetNameEnum('target_name').notNull(),
-  actionType: actionTypeEnum('action_type').notNull(),
-  before: jsonb('before').$type<unknown>(),
-  after: jsonb('after').$type<unknown>(),
-  createdAt: timestamps.createdAt,
-});
+export const auditLog = pgTable(
+  'audit_log',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    guildId: text('guild_id')
+      .references(() => guild.id, { onDelete: 'cascade' })
+      .notNull(),
+    authorId: text('author_id').references(() => user.id, { onDelete: 'set null' }),
+    targetName: targetNameEnum('target_name').notNull(),
+    actionType: actionTypeEnum('action_type').notNull(),
+    before: jsonb('before').$type<unknown>(),
+    after: jsonb('after').$type<unknown>(),
+    createdAt: timestamps.createdAt,
+  },
+  // ギルドごとに新しい順で一覧するクエリ用
+  (t) => [index('audit_log_guild_id_created_at_idx').on(t.guildId, t.createdAt.desc())],
+);
 
 export const auditLogRelations = relations(auditLog, ({ one }) => ({
   author: one(user, {

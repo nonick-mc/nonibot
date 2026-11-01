@@ -1,6 +1,7 @@
 {
   "pages": [
-    "welcome-message",
+    "join-message",
+    "leave-message",
     "report",
     "log",
     "message-expand",

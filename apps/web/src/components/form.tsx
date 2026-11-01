@@ -1,0 +1,69 @@
+'use client';
+
+import { AnimatePresence, motion } from 'framer-motion';
+import { InfoIcon, SaveIcon } from 'lucide-react';
+import dynamic from 'next/dynamic';
+import { useFormContext, useFormState } from 'react-hook-form';
+import { Button } from '@/components/ui/button';
+import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia } from '@/components/ui/item';
+import { Spinner } from '@/components/ui/spinner';
+
+const DevTool = dynamic(() => import('@hookform/devtools').then((module) => module.DevTool), {
+  ssr: false,
+});
+
+export function FormChangePublisher() {
+  const { isDirty, isSubmitting } = useFormState();
+  const { reset } = useFormContext();
+
+  return (
+    <AnimatePresence>
+      {isDirty && (
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 50 }}
+          transition={{ duration: 0.8, type: 'spring', bounce: 0.5 }}
+          className='fixed bottom-4 right-4 z-50'
+        >
+          <Item className='items-center bg-card shadow-lg border border-border'>
+            <ItemMedia className='self-center! translate-y-0!'>
+              <InfoIcon className='size-5 mt-0.5 text-warning' />
+            </ItemMedia>
+            <ItemContent className='max-sm:hidden'>
+              <ItemDescription className='text-sm font-medium text-foreground'>
+                保存されていない変更があります！
+              </ItemDescription>
+            </ItemContent>
+            <ItemActions>
+              <Button
+                type='button'
+                variant='outline'
+                size='sm'
+                onClick={() => reset(undefined, { keepValues: false })}
+                disabled={isSubmitting}
+              >
+                リセット
+              </Button>
+              <Button type='submit' size='sm' disabled={isSubmitting}>
+                {isSubmitting ? <Spinner className='pt-0' /> : <SaveIcon />}
+                変更を保存
+              </Button>
+            </ItemActions>
+          </Item>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+function FormDevToolInner() {
+  const form = useFormContext();
+  if (process.env.NODE_ENV !== 'development') return null;
+
+  return <DevTool control={form.control} placement='top-left' />;
+}
+
+export const FormDevTool = dynamic(() => Promise.resolve({ default: FormDevToolInner }), {
+  ssr: false,
+});

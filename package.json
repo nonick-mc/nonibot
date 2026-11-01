@@ -5,12 +5,10 @@
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
-    "build:bot": "turbo run build --filter=bot",
-    "build:dashboard": "turbo run build --filter=dashboard",
-    "build:web": "turbo run build --filter=web",
-    "db:generate": "pnpm --filter=@repo/database db:generate",
-    "db:migrate": "pnpm --filter=@repo/database db:migrate",
-    "db:studio": "pnpm --filter=@repo/database db:studio"
+    "bot": "pnpm -C ./apps/bot",
+    "web": "pnpm -C ./apps/web",
+    "database": "pnpm -C ./packages/database",
+    "placeholders": "pnpm -C ./packages/placeholders"
   },
   "engines": {
     "node": ">=22.0.0"
@@ -19,7 +17,7 @@
   "devDependencies": {
     "@biomejs/biome": "^2.5.13",
     "@types/node": "^22.20.2",
-    "shadcn": "^3.8.5",
+    "shadcn": "^4.23.0",
     "turbo": "^2.10.12"
   }
 }
