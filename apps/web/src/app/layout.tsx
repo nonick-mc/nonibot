@@ -19,6 +19,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://bot.nonick.net'),
   title: {
     default: 'nonibot',
     template: '%s - nonibot',
