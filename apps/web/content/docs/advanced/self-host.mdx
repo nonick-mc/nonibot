@@ -1,0 +1,246 @@
+---
+title: nonibotをセルフホストする
+icon: Server
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { ExternalLinkIcon } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+
+nonibotはオープンソースで開発されており、ユーザーが独自のサーバー上でBotとダッシュボードを運用(セルフホスト)することができます。
+このページでは、セルフホストの方法を解説します。
+
+<Callout type="warn">
+セルフホストしたnonibotは、公式のnonibotとは別のBotとして動作します。公式のBotやダッシュボードとは設定やデータを共有しません。
+</Callout>
+
+nonibotは次の3つで構成されています。
+
+構成 | 説明
+--- | ---
+Bot | Discordに接続して機能を提供します。ダッシュボード向けの内部APIサーバーも同時に起動します。
+ダッシュボード | 設定を行うWebアプリケーション (Next.js) です。
+データベース | 設定を保存するPostgreSQLです。
+
+---
+
+## 方法1. Railway Templateを使用してホスティングする（推奨）
+
+[Railway](https://railway.com)のテンプレートを使うと、Bot・ダッシュボード・データベースをまとめて構築できます。
+
+### 必要なもの
+
+- [Discord Developer Portal](https://discord.com/developers/applications)で作成したアプリケーション
+- [Cloudflare Turnstile](https://www.cloudflare.com/ja-jp/application-services/products/turnstile/)のサイトキーとシークレットキー （[メンバー認証](/docs/features/verification)で使用）
+
+<Button
+  variant="outline"
+  className="no-underline"
+  nativeButton={false}
+  render={
+    <a
+      href="https://railway.com/deploy/nonibot?referralCode=nqkH73&utm_medium=integration&utm_source=template&utm_campaign=generic"
+      target="_blank"
+      rel="noreferrer"
+    />
+  }
+>
+  nonibotのRailway Templateを開く
+  <ExternalLinkIcon data-icon="inline-end" />
+</Button>
+
+<Steps>
+  <Step>
+    ### テンプレートをデプロイする
+    上のリンクを開き、「Deploy Now」をクリックします。
+
+    ![](https://cdn.nonick.net/nonibot/self-host/railway-step1.png)
+  </Step>
+  <Step>
+    ### 環境変数を入力する
+    画面の指示に従って環境変数の入力を行った後、「Deploy」をクリックします。
+
+    {/* TODO: スクリーンショット - 環境変数の入力画面 */}
+  </Step>
+  <Step>
+    ### ダッシュボードのURLを設定する
+    `web`→`Settings`の`Networking`から、ポート`8080`にダッシュボード用のドメインを設定します。  
+    保有しているドメインを設定する場合は「Custom Domain」、それ以外の場合は「Generate Domain」をクリックします。
+
+    ![](https://cdn.nonick.net/nonibot/self-host/railway-step3.png)
+
+    <Callout type="warning">
+      設定したドメインのURLと`BETTER_AUTH_URL`のURLが異なる場合は、`web`→`Variables`から値を更新してください。
+    </Callout>
+  </Step>
+  <Step>
+    ### Discord Developer PortalでリダイレクトURLを登録する
+    [Discord Developer Portal](https://discord.com/developers/applications)の `OAuth2` →  `Redirects` に、次のURLを追加します。
+
+    ```
+    https://<ダッシュボードのURL>/api/auth/callback/discord
+    ```
+    ```
+    https://<ダッシュボードのURL>/api/invite/callback
+    ```
+  </Step>
+</Steps>
+
+---
+
+## 方法2. 他のサーバーでホスティングする
+
+VPSなど、任意のサーバーでホスティングすることもできます。
+
+### 必要なもの
+
+- [Node.js](https://nodejs.org) 22以上
+- [pnpm](https://pnpm.io) 10以上
+- PostgreSQL
+- [Discord Developer Portal](https://discord.com/developers/applications)で作成したアプリケーション
+- [Cloudflare Turnstile](https://www.cloudflare.com/ja-jp/application-services/products/turnstile/)のサイトキーとシークレットキー （[メンバー認証](/docs/features/verification)で使用）
+
+### セットアップ
+
+リポジトリをクローンし、依存関係をインストールします。
+
+```bash
+git clone https://github.com/nonick-mc/nonibot.git
+cd nonibot
+pnpm install
+```
+
+### 環境変数
+
+プロジェクトごとに以下の場所へ環境変数ファイルを作成します。  
+それぞれ `.env.sample` をコピーして使うと便利です。
+
+プロジェクト | ファイルの場所
+--- | ---
+Bot | `apps/bot/.env`
+ダッシュボード | `apps/web/.env.local`
+データベース (マイグレーション用) | `packages/database/.env`
+
+```bash
+cp apps/bot/.env.sample apps/bot/.env
+cp apps/web/.env.sample apps/web/.env.local
+cp packages/database/.env.sample packages/database/.env
+```
+
+#### Bot (`apps/bot/.env`)
+
+変数名 | 説明
+--- | ---
+`DISCORD_TOKEN` | Discord Botのトークン
+`DATABASE_URL` | PostgreSQLの接続URL
+`INTERNAL_API_SECRET` | 内部APIの認証に使う任意の文字列。<br/>`openssl rand -base64 32` コマンドなどで生成することもできます。
+`INTERNAL_API_PORT` | 内部APIのポート番号（例: `3001`）
+`INTERNAL_API_HOST` | 内部APIがリッスンするホスト（例: `127.0.0.1`）<br/>別のマシンやコンテナからアクセスさせる場合は `0.0.0.0` にします。
+
+#### ダッシュボード (`apps/web/.env.local`)
+
+変数名 | 説明
+--- | ---
+`DATABASE_URL` | PostgreSQLの接続URL
+`BETTER_AUTH_URL` | ダッシュボードの公開URL(例: `https://nonibot.example.com`)
+`BETTER_AUTH_SECRET` | セッションの暗号化に使うランダムな文字列<br/>`openssl rand -base64 32` コマンドなどで生成することもできます。
+`DISCORD_CLIENT_ID` | DiscordアプリケーションのクライアントID
+`DISCORD_CLIENT_SECRET` | Discordアプリケーションのクライアントシークレット
+`DISCORD_INVITE_PERMISSION` | Botの招待時に要求する権限の値
+`INTERNAL_API_URL` | Botの内部APIのURL（例: `http://localhost:3001`）
+`INTERNAL_API_SECRET` | Botの`INTERNAL_API_SECRET`と同じ値を設定します
+`NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Cloudflare Turnstileのサイトキー
+`TURNSTILE_SECRETKEY` | Cloudflare Turnstileのシークレットキー
+
+<Callout type="info">
+`NEXT_PUBLIC_` から始まる変数はビルド時にコードへ埋め込まれます。値を変更した場合は、再度ビルドしてください。
+</Callout>
+
+#### データベース (`packages/database/.env`)
+
+変数名 | 説明
+--- | ---
+`DATABASE_URL` | PostgreSQLの接続URL
+
+<Callout type="error">
+内部APIは、メッセージの送信やサーバーの情報の取得に使用されます。外部からの悪用を防止するため、内部APIのポートはインターネットに公開しないでください。
+</Callout>
+
+### データベースを初期化する
+
+テーブルを作成するため、マイグレーションを実行します。
+
+```bash
+pnpm database migrate
+```
+
+### ビルドと起動
+
+<Steps>
+  <Step>
+    ### ビルドする
+    ルートで次のコマンドを実行すると、Bot・ダッシュボード・共通パッケージがまとめてビルドされます。
+
+    ```bash
+    pnpm build
+    ```
+  </Step>
+  <Step>
+    ### 起動する
+    BotとダッシュボードはそれぞれNode.jsのプロセスとして起動します。
+
+    ```bash
+    # Bot
+    pnpm bot start
+
+    # Bot （スラッシュコマンドを登録する場合）
+    pnpm bot start --register
+
+    # ダッシュボード
+    pnpm web start
+    ```
+
+    長期運用する場合は、[PM2](https://pm2.keymetrics.io)やsystemd、Dockerなどでプロセスを常駐させ、異常終了時に再起動されるようにしてください。
+  </Step>
+  <Step>
+    ### リバースプロキシを設定する
+    ダッシュボードをインターネットに公開する場合は、NginxやCaddyなどでHTTPS化し、`BETTER_AUTH_URL` と同じURLでアクセスできるようにします。
+    Discord Developer Portalの `OAuth2` → `Redirects` には、次のURLを登録してください。
+
+    ```
+    https://<ダッシュボードのURL>/api/auth/callback/discord
+    ```
+    ```
+    https://<ダッシュボードのURL>/api/invite/callback
+    ```
+  </Step>
+</Steps>
+
+---
+
+## ビルド時間を改善する
+
+nonibotは[Turborepo](https://turborepo.com)を採用しているため、[Remote Cache](https://turborepo.com/docs/core-concepts/remote-caching)を有効にすることでビルド時間を短縮できます。
+一度ビルドした結果がクラウド上に保存され、同じ内容のビルドは再実行されずキャッシュから復元されます。
+
+<Steps>
+  <Step>
+    ### Vercelにログインする
+    ```bash
+    npx turbo login
+    ```
+  </Step>
+  <Step>
+    ### リポジトリをリンクする
+    ```bash
+    npx turbo link
+    ```
+  </Step>
+</Steps>
+
+CIやデプロイ環境など、対話的なログインができない場合は、環境変数 `TURBO_TOKEN` と `TURBO_TEAM` を設定することで有効にできます。
+
+変数名 | 説明
+--- | ---
+`TURBO_TOKEN` | Vercelで発行したアクセストークン。
+`TURBO_TEAM` | VercelのチームのSlug。
