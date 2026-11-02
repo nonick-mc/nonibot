@@ -24,14 +24,38 @@ Bot | Discordに接続して機能を提供します。ダッシュボード向�
 
 ---
 
+## 事前準備
+
+<Steps>
+  <Step>
+    ### Discordアプリケーションを作成する
+    [Discord Developer Portal](https://discord.com/developers/applications)でアプリケーションを作成します。
+  </Step>
+  <Step>
+    ### Cloudflare Turnstileのキーを取得する
+    <Callout>
+      [メンバー認証](/docs/features/verification)を使用しない場合は、このステップを省略することができます。
+    </Callout>
+    [Cloudflare Turnstile](https://www.cloudflare.com/ja-jp/application-services/products/turnstile/)でサイトキーとシークレットキーを取得します。
+  </Step>
+  <Step>
+    ### アプリ絵文字を追加する
+    1. [GitHubの最新リリース](https://github.com/nonick-mc/nonibot/releases/latest)を開き、`Assets` から `application-emojis_バージョン.zip` をダウンロードして展開します。
+
+    ![](https://cdn.nonick.net/nonibot/self-host/preparation-step2.png)
+
+    2. [Discord Developer Portal](https://discord.com/developers/applications)で作成したアプリケーションの `Emojis` を開きます。
+    3. 展開した画像をすべてアップロードします。
+
+    {/* TODO: スクリーンショット - Discord Developer PortalのEmojis画面 */}
+  </Step>
+</Steps>
+
+---
+
 ## 方法1. Railway Templateを使用してホスティングする（推奨）
 
 [Railway](https://railway.com)のテンプレートを使うと、Bot・ダッシュボード・データベースをまとめて構築できます。
-
-### 必要なもの
-
-- [Discord Developer Portal](https://discord.com/developers/applications)で作成したアプリケーション
-- [Cloudflare Turnstile](https://www.cloudflare.com/ja-jp/application-services/products/turnstile/)のサイトキーとシークレットキー （[メンバー認証](/docs/features/verification)で使用）
 
 <Button
   variant="outline"
@@ -97,8 +121,6 @@ VPSなど、任意のサーバーでホスティングすることもできま�
 - [Node.js](https://nodejs.org) 22以上
 - [pnpm](https://pnpm.io) 10以上
 - PostgreSQL
-- [Discord Developer Portal](https://discord.com/developers/applications)で作成したアプリケーション
-- [Cloudflare Turnstile](https://www.cloudflare.com/ja-jp/application-services/products/turnstile/)のサイトキーとシークレットキー （[メンバー認証](/docs/features/verification)で使用）
 
 ### セットアップ
 
