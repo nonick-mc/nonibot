@@ -295,6 +295,13 @@
       "when": 1793311850284,
       "tag": "0041_audit_log_guild_created_idx",
       "breakpoints": true
+    },
+    {
+      "idx": 42,
+      "version": "7",
+      "when": 1793616249463,
+      "tag": "0042_fix_empty_join_leave_message_components",
+      "breakpoints": true
     }
   ]
 }
