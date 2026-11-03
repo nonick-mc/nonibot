@@ -1,6 +1,6 @@
 import { createHash, timingSafeEqual } from 'node:crypto';
 import { SnowflakeRegex } from '@repo/shared/constants';
-import type { InternalApiError } from '@repo/shared/types';
+import type { InternalApiError, InternalApiGuildSummary } from '@repo/shared/types';
 import {
   ChannelFlags,
   type Client,
@@ -14,6 +14,7 @@ import {
   serializeChannel,
   serializeEmoji,
   serializeGuild,
+  serializeGuildSummary,
   serializeMember,
   serializeRole,
   serializeUser,
@@ -40,6 +41,16 @@ export function createApp(client: Client<true>, secret: string) {
       return c.json({ error: 'Unauthorized' } satisfies InternalApiError, 401);
     }
     return next();
+  });
+
+  app.get('/guilds', (c) => {
+    const ids = (c.req.query('ids') ?? '').split(',').filter(Boolean);
+    if (ids.length === 0 || ids.length > 50 || !ids.every((id) => SnowflakeRegex.test(id))) {
+      return c.json({ error: 'Invalid ids' } satisfies InternalApiError, 400);
+    }
+
+    const guilds = ids.flatMap((id) => client.guilds.cache.get(id) ?? []);
+    return c.json(guilds.map(serializeGuildSummary) satisfies InternalApiGuildSummary[]);
   });
 
   app.get('/guilds/:guildId', (c) => {

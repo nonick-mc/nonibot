@@ -35,6 +35,7 @@ Hono製。`ready` 時に `startApi(client)` が起動し、Web(`apps/web`)が `A
 
 - ギルド・ロール・チャンネル・絵文字・メンバー・ユーザーは Discord API ではなく **Bot のキャッシュ**(`client.guilds.cache` など)から返す。チャンネルには Bot の権限(`bot_permissions`)を含める
 - レスポンスの整形は `serializers.ts`、型は `@repo/shared/types`。ルートを足す・返す形を変えるときは `packages/shared` の型も変更し、`pnpm -C packages/shared build` する(Web 側が同じ型を参照する)
+- `GET /guilds?ids=a,b,c`(最大50件、不正なIDは400): 指定したサーバーの概要(名前・アイコン・オーナーID・メンバー数)を返す。管理者ページ用で、一覧・ページング・検索は Web が DB で行う。キャッシュにないIDは結果に含めない
 - 送信系(`POST /guilds/:guildId/channels/:channelId/messages`)は、チャンネルが指定ギルドのものかを確認してから送る
 - 待受は既定で `127.0.0.1:3001`(`INTERNAL_API_HOST` / `INTERNAL_API_PORT`)。listen に失敗するとプロセスごと終了する
 

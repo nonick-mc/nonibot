@@ -3,7 +3,7 @@ import { cache } from 'react';
 import 'server-only';
 import { PermissionFlagsBits } from 'discord-api-types/v10';
 import { headers } from 'next/headers';
-import { redirect } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { auth } from './auth';
 import { db } from './db';
 import { getGuild, getGuildMember } from './discord/api';
@@ -20,6 +20,22 @@ export const getCachedSession = cache(async () => {
 export const verifySession = cache(async () => {
   const session = await getCachedSession();
   if (!session) redirect('/login');
+});
+
+const AdminDiscordUserIds = (process.env.ADMIN_DISCORD_USER_IDS ?? '')
+  .split(',')
+  .map((id) => id.trim())
+  .filter(Boolean);
+
+/** Botの管理者であるか **/
+export const isBotAdmin = cache(async () => {
+  const session = await getCachedSession();
+  return !!session && AdminDiscordUserIds.includes(session.user.discordUserId);
+});
+
+/** Botの管理者でなければ404 **/
+export const verifyAdminPermission = cache(async () => {
+  if (!(await isBotAdmin())) notFound();
 });
 
 export const canAccessDashboard = cache(async (guildId: string) => {
