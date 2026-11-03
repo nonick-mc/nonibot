@@ -8,7 +8,6 @@ import {
   LogOutIcon,
   MessageCircleQuestionIcon,
   PaletteIcon,
-  ShieldIcon,
 } from 'lucide-react';
 import type { Route } from 'next';
 import Link from 'next/link';
@@ -28,7 +27,7 @@ import {
 import { authClient } from '@/lib/auth-client';
 import { CurrentUserAvatar } from './current-user-avatar';
 
-export function CurrentUserDropdownMenu({ isAdmin = false }: { isAdmin?: boolean }) {
+export function CurrentUserDropdownMenu() {
   const router = useRouter();
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
@@ -62,17 +61,6 @@ export function CurrentUserDropdownMenu({ isAdmin = false }: { isAdmin?: boolean
               <Link href='/dashboard'>
                 <LayoutDashboardIcon strokeWidth={2} className='mt-0.5' />
                 ダッシュボード
-              </Link>
-            }
-            nativeButton={false}
-          />
-        )}
-        {isAdmin && (
-          <DropdownMenuItem
-            render={
-              <Link href='/admin/guilds'>
-                <ShieldIcon className='mt-0.5' />
-                管理者ページ
               </Link>
             }
             nativeButton={false}
