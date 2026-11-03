@@ -5,6 +5,7 @@ import type {
   InternalApiChannel,
   InternalApiEmoji,
   InternalApiGuild,
+  InternalApiGuildSummary,
   InternalApiMember,
   InternalApiRole,
   InternalApiUser,
@@ -72,6 +73,11 @@ export const getUserGuilds = cache(
 export const getGuild = cache((guildId: string) => {
   return internalFetch<InternalApiGuild, false>(`/guilds/${encodeURIComponent(guildId)}`);
 });
+export function getGuildSummaries(ids: string[]) {
+  return internalFetch<InternalApiGuildSummary[], false>('/guilds', {
+    query: { ids: ids.join(',') },
+  });
+}
 export const getGuildMember = cache((guildId: string, userId: string) => {
   return internalFetch<InternalApiMember, false>(
     `/guilds/${encodeURIComponent(guildId)}/members/${encodeURIComponent(userId)}`,

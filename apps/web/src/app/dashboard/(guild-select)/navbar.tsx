@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-export function Navbar() {
+export function Navbar({ isAdmin = false }: { isAdmin?: boolean }) {
   const isDashboardTop = usePathname() === '/dashboard';
 
   return (
@@ -29,7 +29,7 @@ export function Navbar() {
             <DropdownMenu>
               <DropdownMenuTrigger render={<CurrentUserAvatar />} nativeButton={false} />
               <DropdownMenuContent align='end'>
-                <CurrentUserDropdownMenu />
+                <CurrentUserDropdownMenu isAdmin={isAdmin} />
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

@@ -25,6 +25,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ユーザー向けのエラー文は `ActionClientError` を投げる(それ以外の例外は汎用メッセージに置き換わる)。
 
+## 管理者ページ(`app/admin/`)
+
+- 管理者は環境変数 `ADMIN_DISCORD_USER_IDS`(Discord ユーザーIDのカンマ区切り)で判定する(`lib/dal.ts` の `isBotAdmin`)。DB にロール列はない
+- `verifyAdminPermission()` は非管理者に 404 を返す(存在を隠すため)。`admin/layout.tsx` と各 `page.tsx` の両方で呼ぶ(レイアウトは遷移時に再評価されない)。`proxy.ts` の matcher にも `/admin/:path*` がある
+- 入口は、管理者にだけ出るユーザーメニューの「管理者ページ」(`(guild-select)/layout.tsx` が `isBotAdmin` の結果を渡す)
+- `admin/guilds`: DB の `guild` テーブルを正とする一覧。並び(`createdAt` 降順)・件数・サーバーID検索(`?q=`、部分一致、数字以外は0件)・ページ(`?page=&pageSize=`)は `page.tsx` が SQL で処理し、表示中の ID だけを Bot の内部API `GET /guilds?ids=` に渡して名前・アイコン・オーナーID・メンバー数を補い、オーナーは `getUser` で表示名とアイコンを取得する。Bot のキャッシュにないサーバーは ID と追加日時のみ表示する。追加日時は `guild.createdAt`(DBに登録された日時)
+
 ## Discord 情報の取得
 
 Web から Discord API を直接叩いてギルド情報を取ることはしない。`lib/discord/api.ts` の `internalFetch` が Bot の内部API(`INTERNAL_API_URL`)に Bearer で問い合わせ、ロール・チャンネル・絵文字・メンバー・ユーザーを返す。`React.cache` 済みなので、同じリクエスト内の重複呼び出しは1回にまとまる。例外はログインユーザー本人の OAuth トークンで取るギルド一覧(`getUserGuilds`)。Bot 側のルートを足したら、`packages/shared` の型を変更して `pnpm -C packages/shared build` する。
