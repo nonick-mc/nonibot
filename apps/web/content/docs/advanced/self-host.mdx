@@ -7,7 +7,7 @@ import { Step, Steps } from 'fumadocs-ui/components/steps';
 import { ExternalLinkIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-nonibotはオープンソースで開発されており、ユーザーが独自のサーバー上でBotとダッシュボードを運用(セルフホスト)することができます。
+nonibotはオープンソースで開発されており、ユーザーが独自のサーバー上でBotとダッシュボードを運用（セルフホスト）することができます。
 このページでは、セルフホストの方法を解説します。
 
 <Callout type="warn">
@@ -46,8 +46,6 @@ Bot | Discordに接続して機能を提供します。ダッシュボード向�
 
     2. [Discord Developer Portal](https://discord.com/developers/applications)で作成したアプリケーションの `Emojis` を開きます。
     3. 展開した画像をすべてアップロードします。
-
-    {/* TODO: スクリーンショット - Discord Developer PortalのEmojis画面 */}
   </Step>
 </Steps>
 
@@ -83,8 +81,6 @@ Bot | Discordに接続して機能を提供します。ダッシュボード向�
   <Step>
     ### 環境変数を入力する
     画面の指示に従って環境変数の入力を行った後、「Deploy」をクリックします。
-
-    {/* TODO: スクリーンショット - 環境変数の入力画面 */}
   </Step>
   <Step>
     ### ダッシュボードのURLを設定する
@@ -173,6 +169,7 @@ cp packages/database/.env.sample packages/database/.env
 `INTERNAL_API_SECRET` | Botの`INTERNAL_API_SECRET`と同じ値を設定します
 `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Cloudflare Turnstileのサイトキー
 `TURNSTILE_SECRETKEY` | Cloudflare Turnstileのシークレットキー
+`ADMIN_DISCORD_USER_IDS` | 管理者ページにアクセスできるDiscordユーザーID(カンマ区切り)
 
 <Callout type="info">
 `NEXT_PUBLIC_` から始まる変数はビルド時にコードへ埋め込まれます。値を変更した場合は、再度ビルドしてください。
