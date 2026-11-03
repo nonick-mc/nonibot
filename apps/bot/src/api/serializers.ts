@@ -2,6 +2,7 @@ import type {
   InternalApiChannel,
   InternalApiEmoji,
   InternalApiGuild,
+  InternalApiGuildSummary,
   InternalApiMember,
   InternalApiRole,
   InternalApiUser,
@@ -25,6 +26,16 @@ export function serializeGuild(guild: Guild): InternalApiGuild {
     features: guild.features,
     bot_highest_role_position: guild.members.me?.roles.highest.rawPosition ?? 0,
     bot_permissions: guild.members.me?.permissions.bitfield.toString() ?? '0',
+  };
+}
+
+export function serializeGuildSummary(guild: Guild): InternalApiGuildSummary {
+  return {
+    id: guild.id,
+    name: guild.name,
+    icon: guild.icon,
+    owner_id: guild.ownerId,
+    member_count: guild.memberCount,
   };
 }
 

@@ -10,6 +10,15 @@ export type InternalApiGuild = {
   bot_permissions: string;
 };
 
+/** `GET /guilds?ids=`の1件。管理者ページの一覧用 */
+export type InternalApiGuildSummary = {
+  id: string;
+  name: string;
+  icon: string | null;
+  owner_id: string;
+  member_count: number;
+};
+
 export type InternalApiRoleColors = {
   primary_color: number;
   secondary_color: number | null;
