@@ -6,7 +6,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
-  DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
@@ -17,6 +16,7 @@ import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui
 import { Skeleton } from '@/components/ui/skeleton';
 import { getGuild, getManageableGuilds } from '@/lib/discord/api';
 import { getInviteUrl } from '@/lib/discord/invite';
+import { GuildSwitcherContent } from './guild-switcher-content';
 
 type GuildSwitcherProps = {
   currentGuildId: string;
@@ -33,7 +33,7 @@ export async function GuildSwitcher({ currentGuildId }: GuildSwitcherProps) {
             render={
               <SidebarMenuButton
                 size='lg'
-                className='h-12 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground border'
+                className='h-12 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground border group-data-[collapsible=icon]:justify-center'
               >
                 <Avatar className='size-6 rounded-lg'>
                   <AvatarImage
@@ -46,12 +46,12 @@ export async function GuildSwitcher({ currentGuildId }: GuildSwitcherProps) {
                   />
                   <AvatarFallback>{currentGuild.name.slice(0, 2)}</AvatarFallback>
                 </Avatar>
-                <span>{currentGuild.name}</span>
-                <ChevronsUpDown className='ml-auto' />
+                <span className='group-data-[collapsible=icon]:hidden'>{currentGuild.name}</span>
+                <ChevronsUpDown className='ml-auto group-data-[collapsible=icon]:hidden' />
               </SidebarMenuButton>
             }
           />
-          <DropdownMenuContent className='w-(--anchor-width)' align='center' side='bottom'>
+          <GuildSwitcherContent>
             <DropdownMenuGroup>
               <DropdownMenuCheckboxItem checked>
                 <Avatar className='size-6'>
@@ -85,7 +85,7 @@ export async function GuildSwitcher({ currentGuildId }: GuildSwitcherProps) {
               }
               nativeButton={false}
             />
-          </DropdownMenuContent>
+          </GuildSwitcherContent>
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
