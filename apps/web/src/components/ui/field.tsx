@@ -57,7 +57,7 @@ const fieldVariants = cva('group/field flex w-full gap-3 data-[invalid=true]:tex
       horizontal:
         'flex-row items-center *:data-[slot=field-label]:flex-auto has-[>[data-slot=field-content]]:[&>[role=checkbox],[role=radio]]:mt-px',
       responsive:
-        'flex-col *:w-full @md/field-group:flex-row @md/field-group:items-center @md/field-group:*:w-auto @md/field-group:*:data-[slot=field-label]:flex-auto [&>.sr-only]:w-auto @md/field-group:has-[>[data-slot=field-content]]:[&>[role=checkbox],[role=radio]]:mt-px',
+        'flex-col *:w-full @2xl/field-group:flex-row @2xl/field-group:items-center @2xl/field-group:*:w-auto @2xl/field-group:*:data-[slot=field-label]:flex-auto [&>.sr-only]:w-auto @2xl/field-group:has-[>[data-slot=field-content]]:[&>[role=checkbox],[role=radio]]:mt-px',
     },
     align: {
       start: '',
@@ -78,12 +78,12 @@ const fieldVariants = cva('group/field flex w-full gap-3 data-[invalid=true]:tex
     {
       orientation: 'responsive',
       align: 'start',
-      class: '@md/field-group:has-[>[data-slot=field-content]]:items-start',
+      class: '@2xl/field-group:has-[>[data-slot=field-content]]:items-start',
     },
     {
       orientation: 'responsive',
       align: 'center',
-      class: '@md/field-group:has-[>[data-slot=field-content]]:items-center',
+      class: '@2xl/field-group:has-[>[data-slot=field-content]]:items-center',
     },
   ],
   defaultVariants: {

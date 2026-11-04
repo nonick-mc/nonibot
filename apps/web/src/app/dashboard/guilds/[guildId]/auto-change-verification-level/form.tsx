@@ -79,7 +79,7 @@ function LevelLabel({ level }: { level: (typeof levels)[number] }) {
 function LevelSelect() {
   return (
     <ControlledSelect>
-      <ControlledSelectTrigger className='min-h-16 *:data-[slot=select-value]:line-clamp-none *:data-[slot=select-value]:min-w-0 data-[size=default]:h-auto @md/field-group:max-w-100 @md/field-group:min-w-0 @md/field-group:flex-[1_1_400px]'>
+      <ControlledSelectTrigger className='min-h-16 *:data-[slot=select-value]:line-clamp-none *:data-[slot=select-value]:min-w-0 data-[size=default]:h-auto @2xl/field-group:max-w-100 @2xl/field-group:min-w-0 @2xl/field-group:flex-[1_1_400px]'>
         <SelectValue placeholder='認証レベルを選択'>
           {(value: number) => {
             const level = levels.find((l) => l.value === value);
@@ -210,7 +210,7 @@ export function SettingForm({ channels, defaultValues }: FormProps) {
                       orientation='responsive'
                       disabled={!enabled}
                     >
-                      <FieldContent className='@md/field-group:min-w-0 @md/field-group:flex-[1_1_400px]'>
+                      <FieldContent className='@2xl/field-group:min-w-0 @2xl/field-group:flex-[1_1_400px]'>
                         <ControlledFieldLabel>認証レベル</ControlledFieldLabel>
                         <FieldDescription>
                           期間内に設定する認証レベルを変更します。
