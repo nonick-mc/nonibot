@@ -4,6 +4,7 @@ import { mergeProps } from '@base-ui/react/merge-props';
 import { useRender } from '@base-ui/react/use-render';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { PanelLeftIcon } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -155,6 +156,12 @@ function Sidebar({
   collapsible?: 'offcanvas' | 'icon' | 'none';
 }) {
   const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
+  const pathname = usePathname();
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: 遷移時にSheet を閉じる
+  React.useEffect(() => {
+    setOpenMobile(false);
+  }, [pathname]);
 
   if (collapsible === 'none') {
     return (
