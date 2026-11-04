@@ -32,3 +32,33 @@ export function Logo({ width, height, ...props }: LogoProps) {
     </svg>
   );
 }
+
+export function LogoIcon({ width, height, ...props }: LogoProps) {
+  return (
+    <svg
+      xmlns='http://www.w3.org/2000/svg'
+      xmlSpace='preserve'
+      strokeMiterlimit={10}
+      width={width}
+      height={height}
+      style={{
+        fillRule: 'nonzero',
+        clipRule: 'evenodd',
+        strokeLinecap: 'round',
+        strokeLinejoin: 'round',
+      }}
+      viewBox='0 0 128.04 132'
+      {...props}
+    >
+      <title>nonibot</title>
+      <path
+        className='fill-[#0b111f] dark:fill-[#f5f8ff]'
+        d='M47.469 21c-7.307-.143-14.546 1.065-20.688 3.344C10.404 30.42 0 45 0 45v75h15V53.5c14.535-20.606 39.404-20.414 50.688-9.187 11.283 11.226 8.724 26.494 9.218 61.468V120h15v-14.219c0-34.974 1.996-57.11-10.25-71.531C72.003 25.236 59.646 21.239 47.47 21'
+      />
+      <path
+        fill='#2563eb'
+        d='M98.027 31c0-8.284 6.716-15 15-15s15 6.716 15 15-6.716 15-15 15-15-6.716-15-15'
+      />
+    </svg>
+  );
+}
