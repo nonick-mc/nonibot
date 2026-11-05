@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 概要
 
-nonibot(Discord BOT + Webダッシュボード)の v6 モノレポ。pnpm workspaces + Turborepo。Node >=22、pnpm 10。レビューや応答は日本語で行う(PRレビューも日本語)。コミットメッセージは `type(scope): 日本語の説明` の1行(`.claude/commands/commit.md` 参照)。
+nonibot(Discord BOT + Webダッシュボード)の v6 モノレポ。pnpm workspaces + Turborepo。Node >=22、pnpm 11(設定は `.npmrc` ではなく `pnpm-workspace.yaml`)。レビューや応答は日本語で行う(PRレビューも日本語)。コミットメッセージは `type(scope): 日本語の説明` の1行(`.claude/commands/commit.md` 参照)。
 
 `README.md` は旧構成(`apps/dashboard`, `packages/bot`)の記述が残っており、現状とは異なる。
 
