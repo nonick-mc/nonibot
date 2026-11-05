@@ -36,6 +36,7 @@ const targetName = [
   'auto_public',
   'auto_create_thread',
   'auto_mod',
+  'level',
   'verification',
   'custom_message',
   'custom_action',
