@@ -68,6 +68,12 @@ execute(slash, async (interaction) => {
       flags: MessageFlags.Ephemeral,
     });
 
+  if (!interaction.options.getMember('user'))
+    return interaction.reply({
+      content: errorMessage('このサーバーのメンバーではないユーザーのレベルは変更できません'),
+      flags: MessageFlags.Ephemeral,
+    });
+
   const need = getNeedXP(lv);
   if (xp >= need)
     return interaction.reply({
