@@ -2,6 +2,7 @@
   "pages": [
     "join-message",
     "leave-message",
+    "level",
     "report",
     "log",
     "message-expand",
