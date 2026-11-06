@@ -30,6 +30,8 @@ execute(signal, async (message) => {
   const guild = message.guild;
   if (!guild) return;
   if (message.partial || message.flags.has(MessageFlags.Ephemeral)) return;
+  if (message.applicationId === message.client.user.id) return;
+
   // AutoMod Plusによる削除は、AutoMod Plus側のログで通知される
   if (consumeAutoModDeleted(message.id)) return;
 
