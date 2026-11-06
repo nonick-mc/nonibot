@@ -3,6 +3,7 @@ export * from './schema/auth';
 export * from './schema/custom-action';
 export * from './schema/custom-message';
 export * from './schema/guild';
+export * from './schema/level';
 export * from './schema/report';
 export * from './schema/rule';
 export * from './schema/setting';

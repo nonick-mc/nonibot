@@ -302,6 +302,13 @@
       "when": 1793616249463,
       "tag": "0042_fix_empty_join_leave_message_components",
       "breakpoints": true
+    },
+    {
+      "idx": 43,
+      "version": "7",
+      "when": 1793858208114,
+      "tag": "0043_wandering_sinister_six",
+      "breakpoints": true
     }
   ]
 }

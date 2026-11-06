@@ -14,6 +14,7 @@ import {
   ShieldCheckIcon,
   SpoolIcon,
   SquarePenIcon,
+  TrophyIcon,
   ZapIcon,
 } from 'lucide-react';
 import type { ReactNode } from 'react';
@@ -72,6 +73,13 @@ export const SidebarNavigationItems: SidebarGroupItem<string>[] = [
         title: '退室メッセージ',
         url: (guildId) => `/dashboard/guilds/${guildId}/leave-message`,
         icon: LogOutIcon,
+      },
+      {
+        key: 'level',
+        title: 'レベルシステム',
+        url: (guildId) => `/dashboard/guilds/${guildId}/level`,
+        icon: TrophyIcon,
+        badge: <Badge variant='warning-outline'>Beta</Badge>,
       },
       {
         key: 'report',

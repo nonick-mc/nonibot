@@ -74,6 +74,7 @@ export function permToText(...perms: PermissionName[]) {
 export const featurePermissions = {
   joinMessage: [] as bigint[],
   leaveMessage: [] as bigint[],
+  level: [] as bigint[],
   report: [
     PermissionFlagsBits.CreatePublicThreads,
     PermissionFlagsBits.ManageThreads,

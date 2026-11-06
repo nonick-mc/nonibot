@@ -109,15 +109,23 @@ export function SidebarNavigation({ featureStatuses }: SidebarNavigationProps) {
                             )
                           }
                         />
-                        {item.badge && <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>}
-                        {item.key && item.key in featureStatuses && (
-                          <SidebarMenuBadge title={featureStatuses[item.key] ? '有効' : '無効'}>
-                            <span
-                              className={`size-1.5 rounded-full ${featureStatuses[item.key] ? 'bg-success' : 'bg-muted-foreground/40'}`}
-                            />
-                            <span className='sr-only'>
-                              {featureStatuses[item.key] ? '有効' : '無効'}
-                            </span>
+                        {(item.badge || (item.key && item.key in featureStatuses)) && (
+                          <SidebarMenuBadge className='gap-1.5'>
+                            {item.badge}
+                            {item.key && item.key in featureStatuses && (
+                              // バッジの有無でドットの位置がずれないよう、固定幅の枠に入れる
+                              <span
+                                title={featureStatuses[item.key] ? '有効' : '無効'}
+                                className='flex size-3 items-center justify-center'
+                              >
+                                <span
+                                  className={`size-1.5 rounded-full ${featureStatuses[item.key] ? 'bg-success' : 'bg-muted-foreground/40'}`}
+                                />
+                                <span className='sr-only'>
+                                  {featureStatuses[item.key] ? '有効' : '無効'}
+                                </span>
+                              </span>
+                            )}
                           </SidebarMenuBadge>
                         )}
                       </>

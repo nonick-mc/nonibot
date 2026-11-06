@@ -50,7 +50,7 @@ export function createCaptcha() {
     ctx.translate(15 + gap * (i + 0.2), rand(30, H - 30));
     ctx.transform(1, Math.random(), rand(0, 0.2), 1, 0, 0);
     ctx.rotate(rand(-0.15, 0.15));
-    ctx.fillText(text[i], 0, 0);
+    ctx.fillText(text.charAt(i), 0, 0);
     ctx.restore();
   }
 

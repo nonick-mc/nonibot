@@ -148,3 +148,24 @@ export const verificationSetting = settingSchema.table('verification', {
   ...timestamps,
 });
 // #endregion
+
+// #region Level
+export const levelNotifyModeEnum = pgEnum('level_notify_mode', [
+  'sameChannel',
+  'fixedChannel',
+  'none',
+]);
+export const levelSetting = settingSchema.table('level', {
+  guildId,
+  enabled: boolean('enabled').notNull(),
+  notifyMode: levelNotifyModeEnum('notify_mode').notNull(),
+  notifyChannel: text('notify_channel'),
+  notifyMessageComponents: jsonb('notify_message_components')
+    .array()
+    .$type<APIMessageTopLevelComponent[]>()
+    .notNull(),
+  ignoreChannels: text('ignore_channels').array().notNull(),
+  ignoreRoles: text('ignore_roles').array().notNull(),
+  ...timestamps,
+});
+// #endregion

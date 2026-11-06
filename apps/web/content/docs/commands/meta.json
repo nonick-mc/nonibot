@@ -5,7 +5,9 @@
     "help",
     "info",
     "pauseinvite",
+    "rank",
     "ratelimit",
+    "setlevel",
     "timeout"
   ]
 }
