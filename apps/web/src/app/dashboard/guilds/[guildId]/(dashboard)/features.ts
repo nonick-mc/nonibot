@@ -13,6 +13,7 @@ import {
   ShieldIcon,
   SpoolIcon,
   SquarePenIcon,
+  TrophyIcon,
   UsersIcon,
   WrenchIcon,
   ZapIcon,
@@ -51,6 +52,13 @@ export const DashboardFeatureCategories: {
         title: '退室メッセージ',
         description: 'サーバーからユーザーが退室した際にメッセージを送信します。',
         icon: LogOutIcon,
+        hasStatus: true,
+      },
+      {
+        key: 'level',
+        title: 'レベルシステム',
+        description: 'メッセージを送信したユーザーに経験値を付与します。',
+        icon: TrophyIcon,
         hasStatus: true,
       },
       {

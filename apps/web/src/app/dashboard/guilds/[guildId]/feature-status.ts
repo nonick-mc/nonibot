@@ -7,6 +7,7 @@ import {
   joinMessageSetting,
   kickLogSetting,
   leaveMessageSetting,
+  levelSetting,
   msgDeleteLogSetting,
   msgEditLogSetting,
   msgExpandSetting,
@@ -22,6 +23,7 @@ import { db } from '@/lib/db';
 type SettingTable =
   | typeof joinMessageSetting
   | typeof leaveMessageSetting
+  | typeof levelSetting
   | typeof reportSetting
   | typeof banLogSetting
   | typeof kickLogSetting
@@ -49,6 +51,7 @@ export const getFeatureStatuses = cache(
     const [
       joinMessage,
       leaveMessage,
+      level,
       report,
       eventLogs,
       messageExpand,
@@ -60,6 +63,7 @@ export const getFeatureStatuses = cache(
     ] = await Promise.all([
       isEnabled(joinMessageSetting),
       isEnabled(leaveMessageSetting),
+      isEnabled(levelSetting),
       isEnabled(reportSetting),
       Promise.all(
         [
@@ -89,6 +93,7 @@ export const getFeatureStatuses = cache(
     return {
       'join-message': joinMessage,
       'leave-message': leaveMessage,
+      level,
       report,
       'event-log': eventLogs.some(Boolean),
       'message-expand': messageExpand,
