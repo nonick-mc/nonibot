@@ -4,6 +4,7 @@ import type {
   customActionBasePlaceholders,
   joinMessagePlaceholders,
   leaveMessagePlaceholders,
+  levelNotifyMessagePlaceholders,
   PlaceholderParams,
 } from '@repo/placeholders';
 import type { ButtonInteraction, GuildMember, Message, PartialGuildMember } from 'discord.js';
@@ -32,6 +33,19 @@ export function getLeaveMessagePlaceholderParams(
     userName: member.user.username,
     userTag: member.user.tag,
     userAvatar: member.user.displayAvatarURL(),
+  };
+}
+
+export function getLevelNotifyMessagePlaceholderParams(
+  member: GuildMember,
+  level: number,
+): PlaceholderParams<typeof levelNotifyMessagePlaceholders> {
+  return {
+    serverName: member.guild.name,
+    user: `${member}`,
+    userName: member.user.username,
+    userAvatar: member.user.displayAvatarURL(),
+    level: level.toString(),
   };
 }
 
