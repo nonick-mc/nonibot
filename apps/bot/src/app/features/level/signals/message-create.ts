@@ -1,6 +1,7 @@
 import { memberLevel } from '@repo/database';
 import { renderPlaceholders } from '@repo/placeholders';
 import { Events, MessageFlags } from 'discord.js';
+import { and, eq } from 'drizzle-orm';
 import { execute, Signal } from 'sunar';
 import { db } from '@/src/lib/db';
 import { getLevelNotifyMessagePlaceholderParams } from '@/src/lib/placeholder';
@@ -40,13 +41,27 @@ execute(signal, async (message) => {
   const before = current?.lv ?? 0;
   const { lv, xp } = addXP({ lv: before, xp: current?.xp ?? 0 }, getExp());
 
-  await db
-    .insert(memberLevel)
-    .values({ guildId: guild.id, userId: member.id, lv, xp, lastGainedAt: now })
-    .onConflictDoUpdate({
-      target: [memberLevel.guildId, memberLevel.userId],
-      set: { lv, xp, lastGainedAt: now },
-    });
+  // 読み取った時点の値と一致する場合だけ書き込む(楽観ロック)。
+  const [saved] = current
+    ? await db
+        .update(memberLevel)
+        .set({ lv, xp, lastGainedAt: now })
+        .where(
+          and(
+            eq(memberLevel.guildId, guild.id),
+            eq(memberLevel.userId, member.id),
+            eq(memberLevel.lv, current.lv),
+            eq(memberLevel.xp, current.xp),
+            eq(memberLevel.lastGainedAt, current.lastGainedAt),
+          ),
+        )
+        .returning({ lv: memberLevel.lv })
+    : await db
+        .insert(memberLevel)
+        .values({ guildId: guild.id, userId: member.id, lv, xp, lastGainedAt: now })
+        .onConflictDoNothing()
+        .returning({ lv: memberLevel.lv });
+  if (!saved) return;
 
   if (lv === before || setting.notifyMode === 'none') return;
 
