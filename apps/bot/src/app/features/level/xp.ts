@@ -36,7 +36,7 @@ export function isValidContent(content: string) {
     .replaceAll(/`[^`].*?`/g, '') // インラインコードブロック
     .replaceAll(/\[.+\]\(.+\)/g, '') // リンク
     .replaceAll(/\s+/g, ''); // 空白
-  const normalized = escaped.replaceAll(/[^a-zぁ-んァ-ヶ\p{sc=Han}]/giu, '');
+  const normalized = escaped.replaceAll(/[^a-zぁ-んァ-ヶー々\p{sc=Han}]/giu, '');
   if (escaped.length - normalized.length > 6) return false;
   return new Set(normalized).size >= 2;
 }
