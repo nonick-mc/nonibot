@@ -73,7 +73,6 @@ execute(slash, async (interaction) => {
     flags: interaction.options.getBoolean('public') ? undefined : MessageFlags.Ephemeral,
   });
 
-  // サーバーを抜けたユーザーでもデータが残っていれば表示
   const member = await guild.members.fetch(user.id).catch(() => null);
   const card = await createRankCard({
     name: member?.displayName ?? user.displayName,
