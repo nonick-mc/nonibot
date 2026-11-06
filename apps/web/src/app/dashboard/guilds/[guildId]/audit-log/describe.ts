@@ -22,7 +22,12 @@ export type Change =
   | { kind: 'valueMessage'; label: string; value: MessageValue };
 
 const IgnoredKeys = new Set(['id', 'guildId', 'createdAt', 'updatedAt']);
-const MessageKeys = new Set(['messageComponents', 'dmMessageComponents', 'components']);
+const MessageKeys = new Set([
+  'messageComponents',
+  'dmMessageComponents',
+  'notifyMessageComponents',
+  'components',
+]);
 
 type TargetName = typeof auditLog.$inferSelect.targetName;
 
@@ -112,6 +117,14 @@ const targetLabels: Partial<Record<TargetName, Record<string, string>>> = {
     enableLog: 'ログを有効にする',
     logChannel: 'ログを送信するチャンネル',
   },
+  level: {
+    enabled: 'レベル機能を有効にする',
+    notifyMode: '通知の送信先',
+    notifyChannel: '通知を送信するチャンネル',
+    notifyMessageComponents: '通知メッセージ',
+    ignoreChannels: '経験値を付与しないチャンネル',
+    ignoreRoles: '経験値を付与しないロール',
+  },
   verification: {
     enabled: 'メンバー認証を有効にする',
     role: '認証成功時に付与するロール',
@@ -128,12 +141,24 @@ const targetLabels: Partial<Record<TargetName, Record<string, string>>> = {
   custom_action: { name: 'アクション名', steps: 'アクション' },
 };
 
-const ChannelKeys = new Set(['channel', 'channelId', 'channels', 'logChannel', 'ignoreChannels']);
+const ChannelKeys = new Set([
+  'channel',
+  'channelId',
+  'channels',
+  'logChannel',
+  'notifyChannel',
+  'ignoreChannels',
+]);
 const RoleKeys = new Set(['role', 'ignoreRoles', 'mentionRoles']);
 const ForumTagKeys = new Set(['resolvedForumTag', 'ignoredForumTag']);
 
 const enums: Record<string, Record<string | number, string>> = {
   sendTrigger: { joined: 'サーバー参加時', passedMembershipGate: 'メンバーシップ認証通過時' },
+  notifyMode: {
+    sameChannel: 'メッセージを送信したチャンネル',
+    fixedChannel: '指定したチャンネル',
+    none: '通知しない',
+  },
   captchaType: { button: 'ボタン', image: '画像', web: 'Web' },
   initialThreadState: {
     open: 'オープン',

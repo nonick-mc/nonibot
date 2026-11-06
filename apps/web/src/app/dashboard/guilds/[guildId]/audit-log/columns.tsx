@@ -38,6 +38,7 @@ export const targetNameTexts: Record<AuditLog['targetName'], string> = {
   auto_public: '自動アナウンス公開',
   auto_create_thread: '自動スレッド作成',
   auto_mod: 'AutoMod Plus',
+  level: 'レベル',
   verification: 'メンバー認証',
   custom_message: 'カスタムメッセージ',
   custom_action: 'カスタムアクション',
