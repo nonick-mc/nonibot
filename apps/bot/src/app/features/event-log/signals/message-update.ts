@@ -24,9 +24,8 @@ export const signal = new Signal(Events.MessageUpdate);
 execute(signal, async (oldMessage, newMessage) => {
   const guild = newMessage.guild;
   if (!guild) return;
-  if (newMessage.partial) return;
-  if (!oldMessage.partial && oldMessage.flags.has(MessageFlags.Ephemeral)) return;
-  if (newMessage.author.id === newMessage.client.user.id) return;
+  if (oldMessage.partial || oldMessage.flags.has(MessageFlags.Ephemeral)) return;
+  if (oldMessage.applicationId === oldMessage.client.user.id) return;
 
   const setting = await db.query.msgEditLogSetting.findFirst({
     where: (setting, { eq }) => eq(setting.guildId, guild.id),
