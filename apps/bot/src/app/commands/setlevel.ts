@@ -3,6 +3,7 @@ import {
   ApplicationCommandOptionType,
   ApplicationIntegrationType,
   InteractionContextType,
+  inlineCode,
   MessageFlags,
   PermissionFlagsBits,
 } from 'discord.js';
@@ -46,6 +47,16 @@ const format = (lv: number, xp: number) => `Lv.${lv} (${siUnit(xp)} XP)`;
 
 execute(slash, async (interaction) => {
   if (!interaction.inCachedGuild()) return;
+  const guildId = interaction.guild.id;
+
+  const setting = await db.query.levelSetting.findFirst({
+    where: (setting, { eq }) => eq(setting.guildId, guildId),
+  });
+  if (!setting?.enabled)
+    return interaction.reply({
+      content: errorMessage('このサーバーではレベル機能が無効です'),
+      flags: MessageFlags.Ephemeral,
+    });
 
   const user = interaction.options.getUser('user', true);
   const lv = interaction.options.getInteger('level', true);
@@ -61,12 +72,11 @@ execute(slash, async (interaction) => {
   if (xp >= need)
     return interaction.reply({
       content: errorMessage(
-        `レベル${lv}の場合、経験値は${need}未満にしてください(${need}以上だとレベルアップするため)`,
+        `レベル${lv}の場合、経験値は${inlineCode(`${need}`)}未満にしてください`,
       ),
       flags: MessageFlags.Ephemeral,
     });
 
-  const guildId = interaction.guild.id;
   const before = await db.query.memberLevel.findFirst({
     where: (t, { and, eq }) => and(eq(t.guildId, guildId), eq(t.userId, user.id)),
   });
