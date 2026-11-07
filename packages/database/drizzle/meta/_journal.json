@@ -309,6 +309,13 @@
       "when": 1793858208114,
       "tag": "0043_wandering_sinister_six",
       "breakpoints": true
+    },
+    {
+      "idx": 44,
+      "version": "7",
+      "when": 1794077012449,
+      "tag": "0044_bright_randall",
+      "breakpoints": true
     }
   ]
 }

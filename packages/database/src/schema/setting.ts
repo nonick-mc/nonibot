@@ -166,6 +166,13 @@ export const levelSetting = settingSchema.table('level', {
     .notNull(),
   ignoreChannels: text('ignore_channels').array().notNull(),
   ignoreRoles: text('ignore_roles').array().notNull(),
+  roleRewards: jsonb('role_rewards').array().$type<LevelRoleReward[]>().notNull(),
   ...timestamps,
 });
+
+export type LevelRoleReward = {
+  level: number;
+  roleId: string;
+  mode: 'add' | 'replace';
+};
 // #endregion
