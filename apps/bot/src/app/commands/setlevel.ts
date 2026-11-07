@@ -8,6 +8,7 @@ import {
   PermissionFlagsBits,
 } from 'discord.js';
 import { execute, Slash } from 'sunar';
+import { applyRoleRewards } from '@/src/app/features/level/role-rewards';
 import { getNeedXP, siUnit } from '@/src/app/features/level/xp';
 import { db } from '@/src/lib/db';
 import { errorMessage, successMessage, unorderedListTable } from '@/src/lib/format';
@@ -36,6 +37,11 @@ export const slash = new Slash({
       type: ApplicationCommandOptionType.Integer,
       minValue: 0,
       required: true,
+    },
+    {
+      name: 'role_sync',
+      description: 'レベルに応じてロール報酬を付与・剥奪するか',
+      type: ApplicationCommandOptionType.Boolean,
     },
   ],
   integrationTypes: [ApplicationIntegrationType.GuildInstall],
@@ -68,7 +74,8 @@ execute(slash, async (interaction) => {
       flags: MessageFlags.Ephemeral,
     });
 
-  if (!interaction.options.getMember('user'))
+  const member = interaction.options.getMember('user');
+  if (!member)
     return interaction.reply({
       content: errorMessage('このサーバーのメンバーではないユーザーのレベルは変更できません'),
       flags: MessageFlags.Ephemeral,
@@ -91,6 +98,11 @@ execute(slash, async (interaction) => {
     .insert(memberLevel)
     .values({ guildId, userId: user.id, lv, xp, lastGainedAt: new Date(0) })
     .onConflictDoUpdate({ target: [memberLevel.guildId, memberLevel.userId], set: { lv, xp } });
+
+  const beforeLv = before?.lv ?? 0;
+  if (interaction.options.getBoolean('role_sync') !== false && lv !== beforeLv) {
+    await applyRoleRewards(member, setting.roleRewards, beforeLv, lv);
+  }
 
   interaction.reply({
     content: [
