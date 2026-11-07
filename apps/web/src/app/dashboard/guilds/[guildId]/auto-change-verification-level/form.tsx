@@ -16,9 +16,8 @@ import {
   ControlledFieldError,
   ControlledFieldLabel,
   ControlledFieldProvider,
-  useControlledField,
 } from '@/components/rhf/field';
-import { ControlledInputGroupInput } from '@/components/rhf/input-group';
+import { ControlledInputGroupNumberInput } from '@/components/rhf/number-input';
 import { ControlledSelect, ControlledSelectTrigger } from '@/components/rhf/select';
 import { ControlledSwitch } from '@/components/rhf/switch';
 import { Button } from '@/components/ui/button';
@@ -101,18 +100,9 @@ function LevelSelect() {
 }
 
 function HourInput() {
-  const { field } = useControlledField();
   return (
     <InputGroup className='sm:w-28'>
-      <ControlledInputGroupInput
-        type='number'
-        inputMode='numeric'
-        min={0}
-        max={23}
-        step={1}
-        value={Number.isNaN(field.value) ? '' : field.value}
-        onChange={(e) => field.onChange(e.target.valueAsNumber)}
-      />
+      <ControlledInputGroupNumberInput min={0} max={23} step={1} />
       <InputGroupAddon align='inline-end'>
         <span className='text-muted-foreground'>:00</span>
       </InputGroupAddon>

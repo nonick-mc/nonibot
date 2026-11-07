@@ -28,6 +28,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FieldContent, FieldDescription, FieldGroup, FieldSeparator } from '@/components/ui/field';
 import { SelectContent, SelectGroup, SelectItem, SelectValue } from '@/components/ui/select';
 import { updateSettingAction } from './action';
+import { RoleRewardsField } from './role-rewards';
 import { formSchema } from './schema';
 
 const notifyModeLabels: Record<(typeof levelNotifyModeEnum.enumValues)[number], string> = {
@@ -38,10 +39,17 @@ const notifyModeLabels: Record<(typeof levelNotifyModeEnum.enumValues)[number], 
 
 type FormProps = {
   channels: InternalApiChannel[];
+  botHighestRolePosition: number;
   setting?: z.infer<typeof formSchema>;
 } & Pick<MessageResources, 'emojis' | 'roles'>;
 
-export function SettingForm({ setting, channels, emojis, roles }: FormProps) {
+export function SettingForm({
+  setting,
+  channels,
+  emojis,
+  roles,
+  botHighestRolePosition,
+}: FormProps) {
   const { guildId }: { guildId: string } = useParams();
   const bindUpdateSettingAction = updateSettingAction.bind(null, guildId);
 
@@ -192,6 +200,25 @@ export function SettingForm({ setting, channels, emojis, roles }: FormProps) {
                           </ControlledField>
                         </>
                       )}
+                    />
+                  </FieldGroup>
+                </CardContent>
+              </Card>
+              <Card className='bg-card/50'>
+                <CardHeader>
+                  <CardTitle>ロール報酬</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <FieldGroup>
+                    <RoleRewardsField
+                      roles={(roles ?? []).filter(
+                        (role) =>
+                          !role.managed &&
+                          role.id !== guildId &&
+                          role.position <= botHighestRolePosition,
+                      )}
+                      allRoles={roles ?? []}
+                      disabled={!enabled}
                     />
                   </FieldGroup>
                 </CardContent>
