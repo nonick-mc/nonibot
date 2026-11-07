@@ -5,6 +5,7 @@ import { and, eq } from 'drizzle-orm';
 import { execute, Signal } from 'sunar';
 import { db } from '@/src/lib/db';
 import { getLevelNotifyMessagePlaceholderParams } from '@/src/lib/placeholder';
+import { applyRoleRewards } from '../role-rewards';
 import { addXP, getExp, isValidContent } from '../xp';
 
 export const signal = new Signal(Events.MessageCreate);
@@ -61,9 +62,11 @@ execute(signal, async (message) => {
         .values({ guildId: guild.id, userId: member.id, lv, xp, lastGainedAt: now })
         .onConflictDoNothing()
         .returning({ lv: memberLevel.lv });
-  if (!saved) return;
+  if (!saved || lv === before) return;
 
-  if (lv === before || setting.notifyMode === 'none') return;
+  await applyRoleRewards(member, setting.roleRewards, before, lv);
+
+  if (setting.notifyMode === 'none') return;
 
   const target =
     setting.notifyMode === 'fixedChannel' && setting.notifyChannel
@@ -71,7 +74,6 @@ execute(signal, async (message) => {
       : channel;
   if (!target?.isSendable()) return;
 
-  // 送信権限がない場合などは、経験値は保存済みなので通知だけ諦める
   await target
     .send({
       components: renderPlaceholders(

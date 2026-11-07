@@ -124,6 +124,7 @@ const targetLabels: Partial<Record<TargetName, Record<string, string>>> = {
     notifyMessageComponents: '通知メッセージ',
     ignoreChannels: '経験値を付与しないチャンネル',
     ignoreRoles: '経験値を付与しないロール',
+    roleRewards: 'ロール報酬',
   },
   verification: {
     enabled: 'メンバー認証を有効にする',
@@ -166,6 +167,7 @@ const enums: Record<string, Record<string | number, string>> = {
     locked: 'ロック',
     archived_locked: 'アーカイブ&ロック',
   },
+  roleRewardMode: { add: '付け足す', replace: '直前の報酬と入れ替える' },
   level: { 1: '低', 2: '中', 3: '高', 4: '最高' },
   defaultLevel: { 0: '設定無し', 1: '低', 2: '中', 3: '高', 4: '最高' },
   ignoreChannelTypes: {
@@ -207,6 +209,11 @@ function formatScalar(
 /** 配列の要素を表示用の文字列にする。オブジェクトは`label`があればそれを使う */
 function formatItem(key: string, item: unknown, resources: Resources): Value {
   if (item && typeof item === 'object' && 'label' in item) return String(item.label);
+  if (key === 'roleRewards' && item && typeof item === 'object' && 'roleId' in item) {
+    const { level, roleId, mode } = item as { level: number; roleId: string; mode: string };
+    const role = resources.roles.find((r) => r.id === roleId)?.name ?? `不明なロール(${roleId})`;
+    return `Lv.${level}: @${role}(${enums.roleRewardMode[mode] ?? mode})`;
+  }
   return formatScalar(key, item, resources);
 }
 

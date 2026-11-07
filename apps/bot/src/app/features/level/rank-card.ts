@@ -41,10 +41,9 @@ const BarPadding = 5;
 const ContentX = PaddingX + AvatarRingSize + Gap;
 const ContentRight = Width - PaddingX;
 const ContentWidth = ContentRight - ContentX;
-// 各行の下端のy座標(textBaseline: 'bottom'で描画する)
-const HeadingBottom = 92;
-const BarTop = 108; // 見出しとの間隔は16px
-const StatsBottom = 177;
+// 縦の間隔(文字は数字の上端〜ベースラインを高さとして扱う)
+const HeadingGap = 3; // 見出しの文字枠の下端〜バーの上端
+const BarToStats = 18; // バーの下端〜数値の上端
 
 type RankCardOptions = {
   name: string;
@@ -93,7 +92,19 @@ export async function createRankCard({
 
   ctx.fillStyle = Color.background;
   ctx.fillRect(0, 0, Width, Height);
-  ctx.textBaseline = 'bottom';
+  ctx.textBaseline = 'alphabetic';
+
+  // 右側の要素全体(見出しの数字の上端〜数値のベースライン)をアバターと上下中央に揃える
+  setFont(ctx, 48, Weight.regular);
+  const headingMetrics = ctx.measureText('0');
+  const headingCap = headingMetrics.actualBoundingBoxAscent;
+  const headingToBar = headingMetrics.fontBoundingBoxDescent + HeadingGap;
+  setFont(ctx, 20, Weight.regular);
+  const statsCap = ctx.measureText('0').actualBoundingBoxAscent;
+  const contentHeight = headingCap + headingToBar + BarHeight + BarToStats + statsCap;
+  const baseline = (Height - contentHeight) / 2 + headingCap;
+  const barTop = baseline + headingToBar;
+  const statsBaseline = barTop + BarHeight + BarToStats + statsCap;
 
   // アバター(枠つき)
   const cy = Height / 2;
@@ -114,8 +125,6 @@ export async function createRankCard({
   setFont(ctx, 48, Weight.regular);
   const rankText = String(rank);
   const rankWidth = ctx.measureText(`#${rankText}`).width;
-  const baseline = HeadingBottom - ctx.measureText(rankText).fontBoundingBoxDescent;
-  ctx.textBaseline = 'alphabetic';
   drawRight(ctx, ContentRight, baseline, [
     ['#', Color.muted],
     [rankText, Color.text],
@@ -135,16 +144,15 @@ export async function createRankCard({
     ctx.fillStyle = Color.muted;
     ctx.fillText(fit(ctx, username, usernameWidth), ContentX + nameWidth + NameGap, baseline);
   }
-  ctx.textBaseline = 'bottom';
 
   // プログレスバー
   ctx.beginPath();
-  ctx.roundRect(ContentX, BarTop, ContentWidth, BarHeight, BarHeight / 2);
+  ctx.roundRect(ContentX, barTop, ContentWidth, BarHeight, BarHeight / 2);
   ctx.fillStyle = Color.surface;
   ctx.fill();
 
   const trackX = ContentX + BarPadding;
-  const trackY = BarTop + BarPadding;
+  const trackY = barTop + BarPadding;
   const trackWidth = ContentWidth - BarPadding * 2;
   const trackHeight = BarHeight - BarPadding * 2;
   ctx.beginPath();
@@ -164,12 +172,12 @@ export async function createRankCard({
   setFont(ctx, 20, Weight.regular);
   ctx.textAlign = 'left';
   ctx.fillStyle = Color.muted;
-  ctx.fillText('Lv.', ContentX, StatsBottom);
+  ctx.fillText('Lv.', ContentX, statsBaseline);
   const lvLabelWidth = ctx.measureText('Lv.').width;
   ctx.fillStyle = Color.text;
-  ctx.fillText(String(lv), ContentX + lvLabelWidth, StatsBottom);
+  ctx.fillText(String(lv), ContentX + lvLabelWidth, statsBaseline);
 
-  drawRight(ctx, ContentRight, StatsBottom, [
+  drawRight(ctx, ContentRight, statsBaseline, [
     [siUnit(xp), Color.text],
     [` / ${siUnit(need)} XP`, Color.muted],
   ]);

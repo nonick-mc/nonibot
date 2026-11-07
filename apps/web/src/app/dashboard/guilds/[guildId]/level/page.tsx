@@ -8,7 +8,7 @@ import { Alert, AlertAction, AlertDescription, AlertTitle } from '@/components/r
 import { Button } from '@/components/ui/button';
 import { verifyDashboardAccessPermission } from '@/lib/dal';
 import { db } from '@/lib/db';
-import { getChannels, getGuildEmojis, getRoles } from '@/lib/discord/api';
+import { getChannels, getGuild, getGuildEmojis, getRoles } from '@/lib/discord/api';
 import { sortChannels, sortRoles } from '@/lib/discord/utils';
 import { SettingForm } from './form';
 import { formSchema } from './schema';
@@ -21,7 +21,8 @@ export default async function Page({ params }: PageProps<'/dashboard/guilds/[gui
   const { guildId } = await params;
   await verifyDashboardAccessPermission(guildId);
 
-  const [channels, emojis, roles, setting] = await Promise.all([
+  const [guild, channels, emojis, roles, setting] = await Promise.all([
+    getGuild(guildId),
     getChannels(guildId),
     getGuildEmojis(guildId),
     getRoles(guildId),
@@ -58,6 +59,7 @@ export default async function Page({ params }: PageProps<'/dashboard/guilds/[gui
         channels={sortChannels(channels)}
         emojis={emojis}
         roles={sortRoles(roles)}
+        botHighestRolePosition={guild.bot_highest_role_position}
         setting={formSchema.safeParse(setting ?? {}).data}
       />
     </>
