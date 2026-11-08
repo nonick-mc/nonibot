@@ -7,7 +7,7 @@ import { Header } from '@/components/header';
 import { Button } from '@/components/ui/button';
 import { verifyDashboardAccessPermission } from '@/lib/dal';
 import { db } from '@/lib/db';
-import { getChannels, getGuildEmojis, getRoles } from '@/lib/discord/api';
+import { getApplicationEmojis, getChannels, getGuildEmojis, getRoles } from '@/lib/discord/api';
 import { getCurrentAssignableRoleRules } from '@/lib/discord/assignable-role';
 import { sortChannels, sortRoles } from '@/lib/discord/utils';
 import type { Steps } from '../steps-editor';
@@ -26,19 +26,21 @@ export default async function Page({
   const { template } = await searchParams;
   await verifyDashboardAccessPermission(guildId);
 
-  const [roles, channels, emojis, assignableRoleRules, action, messages] = await Promise.all([
-    getRoles(guildId),
-    getChannels(guildId),
-    getGuildEmojis(guildId),
-    getCurrentAssignableRoleRules(guildId),
-    db.query.customAction.findFirst({
-      where: (action, { and, eq }) => and(eq(action.guildId, guildId), eq(action.id, actionId)),
-    }),
-    db.query.customMessage.findMany({
-      where: (message, { eq }) => eq(message.guildId, guildId),
-      columns: { components: true },
-    }),
-  ]);
+  const [roles, channels, guildEmojis, applicationEmojis, assignableRoleRules, action, messages] =
+    await Promise.all([
+      getRoles(guildId),
+      getChannels(guildId),
+      getGuildEmojis(guildId),
+      getApplicationEmojis(),
+      getCurrentAssignableRoleRules(guildId),
+      db.query.customAction.findFirst({
+        where: (action, { and, eq }) => and(eq(action.guildId, guildId), eq(action.id, actionId)),
+      }),
+      db.query.customMessage.findMany({
+        where: (message, { eq }) => eq(message.guildId, guildId),
+        columns: { components: true },
+      }),
+    ]);
 
   if (!action) notFound();
 
@@ -71,7 +73,12 @@ export default async function Page({
           steps: action.steps as Steps,
         }}
         roles={sortRoles(roles)}
-        resources={{ roles: sortRoles(roles), channels: sortChannels(channels), emojis }}
+        resources={{
+          roles: sortRoles(roles),
+          channels: sortChannels(channels),
+          guildEmojis,
+          applicationEmojis,
+        }}
         assignableRoleRules={assignableRoleRules}
         usageCount={usageCount}
         template={isCustomActionTemplate(template) ? template : undefined}

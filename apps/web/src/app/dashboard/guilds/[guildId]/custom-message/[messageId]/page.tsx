@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { getCustomActionAllowedComponents } from '@/lib/custom-action';
 import { verifyDashboardAccessPermission } from '@/lib/dal';
 import { db } from '@/lib/db';
-import { getChannels, getGuildEmojis, getRoles } from '@/lib/discord/api';
+import { getApplicationEmojis, getChannels, getGuildEmojis, getRoles } from '@/lib/discord/api';
 import { sortChannels, sortRoles } from '@/lib/discord/utils';
 import type { editorFormSchema } from '../schema';
 import { SettingForm } from './form';
@@ -23,16 +23,19 @@ export default async function Page({
   const { guildId, messageId } = await params;
   await verifyDashboardAccessPermission(guildId);
 
-  const [channels, emojis, roles, allowedComponents, message] = await Promise.all([
-    getChannels(guildId),
-    getGuildEmojis(guildId),
-    getRoles(guildId),
-    getCustomActionAllowedComponents(guildId),
-    db.query.customMessage.findFirst({
-      where: (message, { and, eq }) => and(eq(message.guildId, guildId), eq(message.id, messageId)),
-      columns: { id: true, name: true, channelId: true, components: true },
-    }),
-  ]);
+  const [channels, guildEmojis, applicationEmojis, roles, allowedComponents, message] =
+    await Promise.all([
+      getChannels(guildId),
+      getGuildEmojis(guildId),
+      getApplicationEmojis(),
+      getRoles(guildId),
+      getCustomActionAllowedComponents(guildId),
+      db.query.customMessage.findFirst({
+        where: (message, { and, eq }) =>
+          and(eq(message.guildId, guildId), eq(message.id, messageId)),
+        columns: { id: true, name: true, channelId: true, components: true },
+      }),
+    ]);
 
   if (!message) notFound();
 
@@ -59,7 +62,8 @@ export default async function Page({
           components: message.components as z.input<typeof editorFormSchema>['components'],
         }}
         channels={sortChannels(channels)}
-        emojis={emojis}
+        guildEmojis={guildEmojis}
+        applicationEmojis={applicationEmojis}
         roles={sortRoles(roles)}
         allowedComponents={allowedComponents}
       />

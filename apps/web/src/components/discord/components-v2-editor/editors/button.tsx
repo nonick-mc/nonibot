@@ -103,7 +103,7 @@ function parseEmoji(value: string) {
 
 function EmojiField({ name }: { name: string }) {
   const { control } = useFormContext();
-  const { emojis } = useEditorResources();
+  const { guildEmojis, applicationEmojis } = useEditorResources();
   const [pickerOpen, setPickerOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const openPickerAfterMenuClose = useRef(false);
@@ -114,7 +114,8 @@ function EmojiField({ name }: { name: string }) {
       name={name}
       render={({ field }) => (
         <DiscordEmojiPicker
-          guildEmojis={emojis}
+          guildEmojis={guildEmojis}
+          applicationEmojis={applicationEmojis}
           open={pickerOpen}
           onOpenChange={(open) => {
             if (open && field.value) return;

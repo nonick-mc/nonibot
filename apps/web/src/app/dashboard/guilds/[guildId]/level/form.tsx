@@ -41,12 +41,13 @@ type FormProps = {
   channels: InternalApiChannel[];
   botHighestRolePosition: number;
   setting?: z.infer<typeof formSchema>;
-} & Pick<MessageResources, 'emojis' | 'roles'>;
+} & Pick<MessageResources, 'guildEmojis' | 'applicationEmojis' | 'roles'>;
 
 export function SettingForm({
   setting,
   channels,
-  emojis,
+  guildEmojis,
+  applicationEmojis,
   roles,
   botHighestRolePosition,
 }: FormProps) {
@@ -69,7 +70,8 @@ export function SettingForm({
   const resources: MessageResources = {
     roles: roles?.filter((role) => role.id !== guildId),
     channels,
-    emojis,
+    guildEmojis,
+    applicationEmojis,
     placeholders: levelNotifyMessagePlaceholders,
   };
 

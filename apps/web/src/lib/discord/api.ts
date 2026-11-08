@@ -97,6 +97,9 @@ export const getChannels = cache((guildId: string) => {
 export const getGuildEmojis = cache((guildId: string) => {
   return internalFetch<InternalApiEmoji[], false>(`/guilds/${encodeURIComponent(guildId)}/emojis`);
 });
+export const getApplicationEmojis = cache(() => {
+  return internalFetch<InternalApiEmoji[], false>('/application/emojis');
+});
 
 /** Botとしてメンバーにロールを付与 **/
 export function addGuildMemberRole(guildId: string, userId: string, roleId: string) {
