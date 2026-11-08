@@ -5,6 +5,7 @@ import {
   type Guild,
   HeadingLevel,
   heading,
+  hyperlink,
   type Message,
   MessageFlags,
   SectionBuilder,
@@ -40,6 +41,11 @@ execute(signal, async (message) => {
   });
 
   const executor = await resolveExecutor(guild, message);
+  const beforeMsg = await message.channel.messages
+    .fetch({ before: message.id, limit: 1 })
+    .then((v) => v.first())
+    .catch(() => null);
+  const contentsLabel = 'メッセージの内容';
 
   const container = new ContainerBuilder()
     .addSectionComponents(
@@ -60,7 +66,15 @@ execute(signal, async (message) => {
         ),
     )
     .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Large))
-    .addTextDisplayComponents(new TextDisplayBuilder().setContent(subtext('メッセージの内容')));
+    .addTextDisplayComponents(
+      new TextDisplayBuilder().setContent(
+        subtext(
+          beforeMsg?.url
+            ? `${contentsLabel}（${hyperlink('直前のメッセージに移動', beforeMsg.url)}）`
+            : contentsLabel,
+        ),
+      ),
+    );
 
   const files = await addMessageContent(container, message);
 
