@@ -3,7 +3,8 @@ import type { AllowedComponent } from '@repo/shared';
 import type { InternalApiChannel, InternalApiEmoji, InternalApiRole } from '@repo/shared/types';
 
 export type MessageResources = {
-  emojis?: InternalApiEmoji[];
+  guildEmojis?: InternalApiEmoji[];
+  applicationEmojis?: InternalApiEmoji[];
   roles?: InternalApiRole[];
   channels?: InternalApiChannel[];
   allowedComponents?: AllowedComponent[];

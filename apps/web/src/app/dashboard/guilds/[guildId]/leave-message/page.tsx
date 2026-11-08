@@ -4,7 +4,7 @@ import { MissingPermissionAlert } from '@/components/discord/missing-permission-
 import { Header } from '@/components/header';
 import { verifyDashboardAccessPermission } from '@/lib/dal';
 import { db } from '@/lib/db';
-import { getChannels, getGuildEmojis, getRoles } from '@/lib/discord/api';
+import { getApplicationEmojis, getChannels, getGuildEmojis, getRoles } from '@/lib/discord/api';
 import { sortChannels, sortRoles } from '@/lib/discord/utils';
 import { SettingForm } from './form';
 import { formSchema } from './schema';
@@ -19,9 +19,10 @@ export default async function Page({
   const { guildId } = await params;
   await verifyDashboardAccessPermission(guildId);
 
-  const [channels, emojis, roles, setting] = await Promise.all([
+  const [channels, guildEmojis, applicationEmojis, roles, setting] = await Promise.all([
     getChannels(guildId),
     getGuildEmojis(guildId),
+    getApplicationEmojis(),
     getRoles(guildId),
     db.query.leaveMessageSetting.findFirst({
       where: (setting, { eq }) => eq(setting.guildId, guildId),
@@ -37,7 +38,8 @@ export default async function Page({
       <MissingPermissionAlert guildId={guildId} permissions={featurePermissions.leaveMessage} />
       <SettingForm
         channels={sortChannels(channels)}
-        emojis={emojis}
+        guildEmojis={guildEmojis}
+        applicationEmojis={applicationEmojis}
         roles={sortRoles(roles)}
         defaultValues={formSchema.safeParse(setting ?? {}).data}
       />

@@ -4,7 +4,13 @@ import { MissingPermissionAlert } from '@/components/discord/missing-permission-
 import { Header } from '@/components/header';
 import { verifyDashboardAccessPermission } from '@/lib/dal';
 import { db } from '@/lib/db';
-import { getChannels, getGuild, getGuildEmojis, getRoles } from '@/lib/discord/api';
+import {
+  getApplicationEmojis,
+  getChannels,
+  getGuild,
+  getGuildEmojis,
+  getRoles,
+} from '@/lib/discord/api';
 import { sortChannels, sortRoles } from '@/lib/discord/utils';
 import { SettingForm } from './form';
 import { formSchema } from './schema';
@@ -19,10 +25,11 @@ export default async function Page({
   const { guildId } = await params;
   await verifyDashboardAccessPermission(guildId);
 
-  const [guild, channels, emojis, roles, setting] = await Promise.all([
+  const [guild, channels, guildEmojis, applicationEmojis, roles, setting] = await Promise.all([
     getGuild(guildId),
     getChannels(guildId),
     getGuildEmojis(guildId),
+    getApplicationEmojis(),
     getRoles(guildId),
     db.query.verificationSetting.findFirst({
       where: (setting, { eq }) => eq(setting.guildId, guildId),
@@ -35,7 +42,8 @@ export default async function Page({
       <MissingPermissionAlert guildId={guildId} permissions={featurePermissions.verification} />
       <SettingForm
         channels={sortChannels(channels)}
-        emojis={emojis}
+        guildEmojis={guildEmojis}
+        applicationEmojis={applicationEmojis}
         roles={sortRoles(roles)}
         botHighestRolePosition={guild.bot_highest_role_position}
         setting={formSchema.safeParse(setting ?? {}).data}

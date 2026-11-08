@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { getCustomActionAllowedComponents } from '@/lib/custom-action';
 import { verifyDashboardAccessPermission } from '@/lib/dal';
 import { db } from '@/lib/db';
-import { getChannels, getGuildEmojis, getRoles } from '@/lib/discord/api';
+import { getApplicationEmojis, getChannels, getGuildEmojis, getRoles } from '@/lib/discord/api';
 import { sortChannels, sortRoles } from '@/lib/discord/utils';
 import { CreateDialog } from './create-dialog';
 import { MessageList } from './message-list';
@@ -22,17 +22,19 @@ export default async function Page({
   const { guildId } = await params;
   await verifyDashboardAccessPermission(guildId);
 
-  const [channels, emojis, roles, savedMessages, allowedComponents] = await Promise.all([
-    getChannels(guildId),
-    getGuildEmojis(guildId),
-    getRoles(guildId),
-    db.query.customMessage.findMany({
-      where: (message, { eq }) => eq(message.guildId, guildId),
-      columns: { id: true, name: true, channelId: true, createdAt: true },
-      orderBy: (message, { desc }) => desc(message.createdAt),
-    }),
-    getCustomActionAllowedComponents(guildId),
-  ]);
+  const [channels, guildEmojis, applicationEmojis, roles, savedMessages, allowedComponents] =
+    await Promise.all([
+      getChannels(guildId),
+      getGuildEmojis(guildId),
+      getApplicationEmojis(),
+      getRoles(guildId),
+      db.query.customMessage.findMany({
+        where: (message, { eq }) => eq(message.guildId, guildId),
+        columns: { id: true, name: true, channelId: true, createdAt: true },
+        orderBy: (message, { desc }) => desc(message.createdAt),
+      }),
+      getCustomActionAllowedComponents(guildId),
+    ]);
 
   return (
     <>
@@ -51,7 +53,8 @@ export default async function Page({
           </div>
           <CreateDialog
             channels={sortChannels(channels)}
-            emojis={emojis}
+            guildEmojis={guildEmojis}
+            applicationEmojis={applicationEmojis}
             roles={sortRoles(roles)}
             allowedComponents={allowedComponents}
             isFull={savedMessages.length >= maxSavedMessages}

@@ -29,9 +29,15 @@ import { formSchema } from './schema';
 type FormProps = {
   channels: InternalApiChannel[];
   defaultValues?: z.infer<typeof formSchema>;
-} & Pick<MessageResources, 'emojis' | 'roles'>;
+} & Pick<MessageResources, 'guildEmojis' | 'applicationEmojis' | 'roles'>;
 
-export function SettingForm({ channels, defaultValues, roles, emojis }: FormProps) {
+export function SettingForm({
+  channels,
+  defaultValues,
+  roles,
+  guildEmojis,
+  applicationEmojis,
+}: FormProps) {
   const { guildId }: { guildId: string } = useParams();
   const bindUpdateSettingAction = updateSettingAction.bind(null, guildId);
 
@@ -51,7 +57,8 @@ export function SettingForm({ channels, defaultValues, roles, emojis }: FormProp
   const resources: MessageResources = {
     roles: roles?.filter((role) => role.id !== guildId),
     channels,
-    emojis,
+    guildEmojis,
+    applicationEmojis,
     placeholders: leaveMessagePlaceholders,
   };
 

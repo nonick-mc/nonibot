@@ -32,13 +32,20 @@ type FormProps = {
     components: z.input<typeof editorFormSchema>['components'];
   };
   channels: InternalApiChannel[];
-} & Pick<MessageResources, 'emojis' | 'roles' | 'allowedComponents'>;
+} & Pick<MessageResources, 'guildEmojis' | 'applicationEmojis' | 'roles' | 'allowedComponents'>;
 
 const formSchema = updateFormSchema.omit({ id: true });
 
-export function SettingForm({ message, channels, emojis, roles, allowedComponents }: FormProps) {
+export function SettingForm({
+  message,
+  channels,
+  guildEmojis,
+  applicationEmojis,
+  roles,
+  allowedComponents,
+}: FormProps) {
   const { guildId } = useParams<{ guildId: string }>();
-  const resources = { emojis, roles, channels, allowedComponents };
+  const resources = { guildEmojis, applicationEmojis, roles, channels, allowedComponents };
 
   const form = useForm({
     resolver: zodResolver(formSchema),

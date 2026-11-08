@@ -58,7 +58,7 @@ type CreateDialogProps = {
   channels: InternalApiChannel[];
   isFull: boolean;
   names: string[];
-} & Pick<MessageResources, 'emojis' | 'roles' | 'allowedComponents'>;
+} & Pick<MessageResources, 'guildEmojis' | 'applicationEmojis' | 'roles' | 'allowedComponents'>;
 
 export function CreateDialog({ children, ...props }: CreateDialogProps) {
   const [open, setOpen] = useState(false);
@@ -93,7 +93,8 @@ function AnswerMarker({ filled }: { filled: boolean }) {
 
 function CreateForm({
   channels,
-  emojis,
+  guildEmojis,
+  applicationEmojis,
   roles,
   allowedComponents,
   isFull,
@@ -101,7 +102,7 @@ function CreateForm({
   onSent,
 }: Omit<CreateDialogProps, 'children'> & { onSent: () => void }) {
   const { guildId } = useParams<{ guildId: string }>();
-  const resources = { emojis, roles, channels, allowedComponents };
+  const resources = { guildEmojis, applicationEmojis, roles, channels, allowedComponents };
   const [step, setStep] = useState<Step>('channel');
   const [direction, setDirection] = useState<1 | -1 | 0>(0);
   const itemMotion =

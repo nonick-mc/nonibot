@@ -21,10 +21,9 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { groupChannelsByCategory } from '@/lib/discord/utils';
 import { ChannelTypeIcon } from '../../channel-type-icon';
 import { RoleColor } from '../../role-color';
-import { useComponentEditorContext } from '../context';
+import { useComponentEditorContext, useEditorResources } from '../context';
 import { EditorCard } from '../editor-card';
 import { EditorPlaceholderPicker } from '../placeholder-picker';
-import { useEditorResources } from '../context';
 
 export function TextDisplayEditor() {
   const { control } = useFormContext();
@@ -176,12 +175,13 @@ function ChannelMentionInsertButton({ textareaRef }: TextareaInsertComponentProp
 }
 
 function EmojiInsertButton({ textareaRef }: TextareaInsertComponentProps) {
-  const { emojis } = useEditorResources();
+  const { guildEmojis, applicationEmojis } = useEditorResources();
   const { open, setOpen, handleSelect } = useTextInputInsert(textareaRef);
 
   return (
     <DiscordEmojiPicker
-      guildEmojis={emojis}
+      guildEmojis={guildEmojis}
+      applicationEmojis={applicationEmojis}
       onEmojiSelect={handleSelect}
       open={open}
       onOpenChange={setOpen}
