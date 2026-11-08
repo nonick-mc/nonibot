@@ -81,6 +81,10 @@ export function createApp(client: Client<true>, secret: string) {
     return c.json(guild.emojis.cache.map(serializeEmoji));
   });
 
+  app.get('/application/emojis', (c) => {
+    return c.json(client.application.emojis.cache.map(serializeEmoji));
+  });
+
   app.get('/guilds/:guildId/members/:userId', async (c) => {
     const userId = c.req.param('userId');
     const guild = client.guilds.cache.get(c.req.param('guildId'));
