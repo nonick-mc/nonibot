@@ -16,6 +16,8 @@ const actionType = [
   'create_custom_action',
   'update_custom_action',
   'delete_custom_action',
+  'import_member_level',
+  'reset_member_level',
 ] as const;
 
 const targetName = [
@@ -40,6 +42,8 @@ const targetName = [
   'verification',
   'custom_message',
   'custom_action',
+  // level.ts
+  'member_level',
 ] as const;
 
 export const actionTypeEnum = pgEnum('action_type', actionType);

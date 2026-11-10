@@ -42,6 +42,7 @@ export const targetNameTexts: Record<AuditLog['targetName'], string> = {
   verification: 'メンバー認証',
   custom_message: 'カスタムメッセージ',
   custom_action: 'カスタムアクション',
+  member_level: 'メンバーのレベル',
 };
 
 export const actionTypeTexts: Record<AuditLog['actionType'], string> = {
@@ -56,6 +57,8 @@ export const actionTypeTexts: Record<AuditLog['actionType'], string> = {
   create_custom_action: 'アクションを作成しました',
   update_custom_action: 'アクションを更新しました',
   delete_custom_action: 'アクションを削除しました',
+  import_member_level: 'レベルをインポートしました',
+  reset_member_level: 'レベルをリセットしました',
 };
 
 /** 先頭2つの文字(グラフェム単位)。絵文字や国旗を途中で切らない */

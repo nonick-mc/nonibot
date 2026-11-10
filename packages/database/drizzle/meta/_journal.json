@@ -316,6 +316,13 @@
       "when": 1794077012449,
       "tag": "0044_bright_randall",
       "breakpoints": true
+    },
+    {
+      "idx": 45,
+      "version": "7",
+      "when": 1794290435552,
+      "tag": "0045_unusual_eddie_brock",
+      "breakpoints": true
     }
   ]
 }

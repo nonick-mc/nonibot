@@ -352,6 +352,10 @@ export function describeChanges(
   after: unknown,
   resources: Resources,
 ): Change[] {
+  if (typeof after === 'number') {
+    return [{ kind: 'value', label: '変更したメンバーの人数', value: `${after}人` }];
+  }
+
   const b = (before && typeof before === 'object' ? before : null) as Record<
     string,
     unknown
