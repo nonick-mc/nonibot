@@ -3,7 +3,6 @@
 import { useTable } from '@tanstack/react-table';
 import type { Route } from 'next';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
 import {
   DataGrid,
   DataGridContainer,
@@ -13,6 +12,7 @@ import { DataGridPagination } from '@/components/reui/data-grid/data-grid-pagina
 import { DataGridTable } from '@/components/reui/data-grid/data-grid-table';
 import { CardContent, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { useDialogState } from '@/hooks/use-dialog-state';
 import { type CustomizedAuditLog, columns } from './columns';
 import type { Resources } from './describe';
 import { DetailSheet } from './detail-sheet';
@@ -26,7 +26,7 @@ type Props = {
 };
 
 export function DataTable({ data, total, page, pageSize, resources }: Props) {
-  const [selected, setSelected] = useState<CustomizedAuditLog | null>(null);
+  const detail = useDialogState<CustomizedAuditLog>();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -57,7 +57,7 @@ export function DataTable({ data, total, page, pageSize, resources }: Props) {
         table={table}
         recordCount={total}
         emptyMessage='ログがありません。'
-        onRowClick={setSelected}
+        onRowClick={detail.show}
         tableClassNames={{ base: 'min-w-180' }}
       >
         <CardContent>
@@ -76,7 +76,7 @@ export function DataTable({ data, total, page, pageSize, resources }: Props) {
           />
         </CardFooter>
       </DataGrid>
-      <DetailSheet log={selected} resources={resources} onClose={() => setSelected(null)} />
+      <DetailSheet log={detail.value} resources={resources} {...detail.props} />
     </>
   );
 }
