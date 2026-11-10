@@ -11,13 +11,37 @@
     <a href="https://bot.nonick.net/docs"><strong>ドキュメントを見る »</strong></a>
     <br />
     <br />
+    <a href="https://discord.gg/nonick-mc">サポートサーバー</a>
+    &middot;
     <a href="https://github.com/nonick-mc/nonibot/issues/new?template=bug-report.yaml">バグを報告する</a>
     &middot;
     <a href="https://github.com/nonick-mc/nonibot/issues/new?template=new-feature.yaml">機能をリクエストする</a>
   </p>
 </div>
 
-<!-- ABOUT THE PROJECT -->
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>目次</summary>
+  <ol>
+    <li><a href="#このプロジェクトについて">このプロジェクトについて</a></li>
+    <li><a href="#使用技術">使用技術</a></li>
+    <li>
+      <a href="#はじめる">はじめる</a>
+      <ul>
+        <li><a href="#インストール">インストール</a></li>
+      </ul>
+    </li>
+    <li><a href="#ロードマップ">ロードマップ</a></li>
+    <li>
+      <a href="#コントリビューション">コントリビューション</a>
+      <ul>
+        <li><a href="#主なコントリビューター">主なコントリビューター</a></li>
+      </ul>
+    </li>
+    <li><a href="#ライセンス">ライセンス</a></li>
+  </ol>
+</details>
+
 ## このプロジェクトについて
 
 ![banner](https://cdn.nonick.net/nonibot/twitter-banner.png)
