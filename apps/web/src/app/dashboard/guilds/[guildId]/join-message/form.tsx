@@ -34,12 +34,13 @@ type FormProps = {
   channels: InternalApiChannel[];
   setting?: z.infer<typeof formSchema>;
   enabledVerificationGate: boolean;
-} & Pick<MessageResources, 'emojis' | 'roles'>;
+} & Pick<MessageResources, 'guildEmojis' | 'applicationEmojis' | 'roles'>;
 
 export function SettingForm({
   setting,
   channels,
-  emojis,
+  guildEmojis,
+  applicationEmojis,
   roles,
   enabledVerificationGate,
 }: FormProps) {
@@ -62,7 +63,8 @@ export function SettingForm({
   const resources: MessageResources = {
     roles: roles?.filter((role) => role.id !== guildId),
     channels,
-    emojis,
+    guildEmojis,
+    applicationEmojis,
     placeholders: joinMessagePlaceholders,
   };
 

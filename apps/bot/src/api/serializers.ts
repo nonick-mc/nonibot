@@ -8,6 +8,7 @@ import type {
   InternalApiUser,
 } from '@repo/shared/types';
 import {
+  type ApplicationEmoji,
   type Guild,
   type GuildBasedChannel,
   type GuildEmoji,
@@ -83,7 +84,7 @@ export function serializeChannel(
   return { ...base, type: channel.type };
 }
 
-export function serializeEmoji(emoji: GuildEmoji): InternalApiEmoji {
+export function serializeEmoji(emoji: GuildEmoji | ApplicationEmoji): InternalApiEmoji {
   return {
     id: emoji.id,
     name: emoji.name,

@@ -4,16 +4,20 @@ import type { InternalApiEmoji } from '@repo/shared/types';
 import { CDNRoutes, ImageFormat, RouteBases } from 'discord-api-types/v10';
 import { type ComponentProps, type ReactNode, type RefObject, useMemo } from 'react';
 import twemoji from 'twemoji';
+import { useCurrentGuild } from '@/components/discord/current-guild';
+import { LogoIcon } from '@/components/logo';
 import {
   EMOJI_PICKER_CATEGORIES,
   EmojiPicker,
   EmojiPickerContent,
   EmojiPickerTrigger,
 } from '@/components/reui/emoji-picker';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 
 type DiscordEmojiPickerProps = {
   guildEmojis?: InternalApiEmoji[];
+  applicationEmojis?: InternalApiEmoji[];
   onEmojiSelect?: (emoji: string) => void;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -45,9 +49,24 @@ export function DiscordEmojiPickerTrigger({
 }
 
 const GuildCategory = 'guild';
-const CustomCategory = [{ id: GuildCategory, label: 'サーバー絵文字' }];
-const NoGuildEmojis: InternalApiEmoji[] = [];
-const CategoriesWithGuild = [GuildCategory, ...EMOJI_PICKER_CATEGORIES];
+const AppCategory = 'application';
+const CustomCategory = [
+  { id: GuildCategory, label: 'サーバー絵文字' },
+  { id: AppCategory, label: 'nonibot', icon: <LogoIcon aria-hidden='true' /> },
+];
+const NoEmojis: InternalApiEmoji[] = [];
+
+function toCustomEmojis(emojis: InternalApiEmoji[], category: string) {
+  return [...emojis]
+    .sort((a, b) => (a.name as string).localeCompare(b.name as string))
+    .map((emoji) => ({
+      id: emoji.id,
+      label: emoji.name as string,
+      shortcodes: [emoji.name as string],
+      category,
+      src: `${RouteBases.cdn}/${CDNRoutes.emoji(emoji.id, emoji.animated ? ImageFormat.GIF : ImageFormat.WebP)}`,
+    }));
+}
 
 const i18n = {
   labels: {
@@ -77,7 +96,8 @@ function renderEmoji(emoji: { src?: string }, value: string) {
 }
 
 export function DiscordEmojiPicker({
-  guildEmojis = NoGuildEmojis,
+  guildEmojis = NoEmojis,
+  applicationEmojis = NoEmojis,
   onEmojiSelect,
   open,
   onOpenChange,
@@ -86,18 +106,50 @@ export function DiscordEmojiPicker({
   side = 'top',
   align = 'start',
 }: DiscordEmojiPickerProps) {
-  const customEmojis = useMemo(
+  const guild = useCurrentGuild();
+  const customCategories = useMemo(
     () =>
-      [...guildEmojis]
-        .sort((a, b) => (a.name as string).localeCompare(b.name as string))
-        .map((emoji) => ({
-          id: emoji.id as string,
-          label: emoji.name as string,
-          shortcodes: [emoji.name as string],
-          category: GuildCategory,
-          src: `${RouteBases.cdn}/${CDNRoutes.emoji(emoji.id as string, emoji.animated ? ImageFormat.GIF : ImageFormat.WebP)}`,
-        })),
-    [guildEmojis],
+      guild
+        ? CustomCategory.map((category) =>
+            category.id === GuildCategory
+              ? {
+                  ...category,
+                  icon: (
+                    <Avatar className='size-4'>
+                      <AvatarImage
+                        src={
+                          guild.icon
+                            ? RouteBases.cdn +
+                              CDNRoutes.guildIcon(guild.id, guild.icon, ImageFormat.WebP)
+                            : undefined
+                        }
+                      />
+                      <AvatarFallback className='text-[0.5rem]'>
+                        {guild.name.slice(0, 2)}
+                      </AvatarFallback>
+                    </Avatar>
+                  ),
+                }
+              : category,
+          )
+        : CustomCategory,
+    [guild],
+  );
+  const customEmojis = useMemo(
+    () => [
+      ...toCustomEmojis(guildEmojis, GuildCategory),
+      ...toCustomEmojis(applicationEmojis, AppCategory),
+    ],
+    [guildEmojis, applicationEmojis],
+  );
+  const categories = useMemo(
+    () => [
+      ...CustomCategory.map((c) => c.id).filter((id) =>
+        customEmojis.some((e) => e.category === id),
+      ),
+      ...EMOJI_PICKER_CATEGORIES,
+    ],
+    [customEmojis],
   );
 
   return (
@@ -106,8 +158,8 @@ export function DiscordEmojiPicker({
       locale='ja'
       i18n={i18n}
       customEmojis={customEmojis}
-      customCategories={CustomCategory}
-      categories={customEmojis.length ? CategoriesWithGuild : EMOJI_PICKER_CATEGORIES}
+      customCategories={customCategories}
+      categories={categories}
       value={null}
       emojiVersion={14}
       renderEmoji={renderEmoji}
@@ -116,12 +168,15 @@ export function DiscordEmojiPicker({
       recentLimit={0}
       recentStorageKey={null}
       onEmojiSelect={({ value, emoji }) => {
-        const guildEmoji =
-          emoji.category === GuildCategory ? guildEmojis.find((e) => e.id === emoji.id) : undefined;
+        const source =
+          emoji.category === GuildCategory
+            ? guildEmojis
+            : emoji.category === AppCategory
+              ? applicationEmojis
+              : undefined;
+        const custom = source?.find((e) => e.id === emoji.id);
         onEmojiSelect?.(
-          guildEmoji
-            ? `<${guildEmoji.animated ? 'a' : ''}:${guildEmoji.name}:${guildEmoji.id}>`
-            : value,
+          custom ? `<${custom.animated ? 'a' : ''}:${custom.name}:${custom.id}>` : value,
         );
       }}
     >

@@ -43,7 +43,8 @@ type SettingFormProps = {
   targetChannelName: string;
   roles: InternalApiRole[];
   channels: InternalApiChannel[];
-  emojis: MessageResources['emojis'];
+  guildEmojis: MessageResources['guildEmojis'];
+  applicationEmojis: MessageResources['applicationEmojis'];
   rule: InferSelectModel<typeof autoCreateThreadRule>;
   defaultValues?: z.infer<typeof updateRuleFormSchema>;
   disabled?: boolean;
@@ -53,7 +54,8 @@ export function SettingForm({
   targetChannelName,
   roles,
   channels,
-  emojis,
+  guildEmojis,
+  applicationEmojis,
   rule,
   defaultValues,
   disabled,
@@ -83,7 +85,8 @@ export function SettingForm({
   const resources: MessageResources = {
     roles: roles.filter((role) => role.id !== rule.guildId),
     channels,
-    emojis,
+    guildEmojis,
+    applicationEmojis,
     allowedComponents: autoCreateThreadAllowedComponents,
     placeholders: autoCreateThreadMessagePlaceholders,
   };

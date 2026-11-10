@@ -89,12 +89,12 @@ function RoleSelectMultiple({
       <ComboboxContent anchor={anchor}>
         <ComboboxEmpty>ロールが見つかりません</ComboboxEmpty>
         <ComboboxList>
-          {items.map((role) => (
+          {(role: InternalApiRole) => (
             <ComboboxItem key={role.id} value={role} disabled={disabledItemFilter?.(role)}>
               <RoleColor colors={role.colors} />
               <span className='truncate'>{role.name}</span>
             </ComboboxItem>
-          ))}
+          )}
         </ComboboxList>
       </ComboboxContent>
     </Combobox>
@@ -144,12 +144,12 @@ function RoleSelectSingle({
       <ComboboxContent anchor={anchor}>
         <ComboboxEmpty>ロールが見つかりません</ComboboxEmpty>
         <ComboboxList>
-          {items.map((role) => (
+          {(role: InternalApiRole) => (
             <ComboboxItem key={role.id} value={role} disabled={disabledItemFilter?.(role)}>
               <RoleColor colors={role.colors} />
               <span className='truncate'>{role.name}</span>
             </ComboboxItem>
-          ))}
+          )}
         </ComboboxList>
       </ComboboxContent>
     </Combobox>
