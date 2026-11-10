@@ -26,9 +26,10 @@ import {
 } from './describe';
 
 type Props = {
-  log: CustomizedAuditLog | null;
+  log: CustomizedAuditLog | undefined;
   resources: Resources;
-  onClose: () => void;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 };
 
 function Val({ value }: { value: Value }) {
@@ -199,7 +200,7 @@ function ChangeList({
   );
 }
 
-export function DetailSheet({ log, resources, onClose }: Props) {
+export function DetailSheet({ log, resources, open, onOpenChange }: Props) {
   const changes = log ? describeChanges(log.targetName, log.before, log.after, resources) : [];
   // 変更後がないログ(削除など)は詳細を表示しない
   const hasAfter = log?.after != null;
@@ -207,7 +208,7 @@ export function DetailSheet({ log, resources, onClose }: Props) {
 
   return (
     <PreviewResourcesContext.Provider value={resources}>
-      <Sheet open={log !== null} onOpenChange={(open) => !open && onClose()}>
+      <Sheet open={open} onOpenChange={onOpenChange}>
         <SheetContent className='data-[side=right]:sm:max-w-xl'>
           {log && (
             <>
