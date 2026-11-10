@@ -4,7 +4,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import type { InternalApiRole } from '@repo/shared/types';
 import { type ColumnDef, useTable } from '@tanstack/react-table';
 import { PencilIcon, PlusIcon, Trash2Icon } from 'lucide-react';
-import { useState } from 'react';
 import { FormProvider, useFieldArray, useForm, useFormContext } from 'react-hook-form';
 import type { z } from 'zod';
 import { RoleColor } from '@/components/discord/role-color';
@@ -36,6 +35,7 @@ import {
 import { Field, FieldContent, FieldDescription, FieldGroup } from '@/components/ui/field';
 import { SelectContent, SelectGroup, SelectItem, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
+import { useDialogState } from '@/hooks/use-dialog-state';
 import { cn } from '@/lib/utils';
 import { type formSchema, roleRewardSchema } from './schema';
 
@@ -62,8 +62,9 @@ export function RoleRewardsField({ roles, allRoles, disabled }: RoleRewardsField
     control: form.control,
     name: 'roleRewards',
   });
-  // null: 閉じている / -1: 新規追加 / 0以上: 編集中の行
-  const [editing, setEditing] = useState<number | null>(null);
+  // -1: 新規追加 / 0以上: 編集中の行
+  const dialog = useDialogState<number>();
+  const editing = dialog.value ?? -1;
 
   const columns: ColumnDef<DataGridFeatures, Row>[] = [
     { id: 'level', header: 'レベル', cell: ({ row }) => `Lv.${row.original.level}` },
@@ -94,7 +95,7 @@ export function RoleRewardsField({ roles, allRoles, disabled }: RoleRewardsField
             size='icon-sm'
             variant='outline'
             aria-label='編集'
-            onClick={() => setEditing(row.original.index)}
+            onClick={() => dialog.show(row.original.index)}
             disabled={disabled}
           >
             <PencilIcon />
@@ -153,7 +154,7 @@ export function RoleRewardsField({ roles, allRoles, disabled }: RoleRewardsField
           type='button'
           className='w-full text-foreground!'
           variant='outline'
-          onClick={() => setEditing(-1)}
+          onClick={() => dialog.show(-1)}
           disabled={fields.length >= MaxRewards || disabled}
         >
           <PlusIcon />
@@ -161,10 +162,9 @@ export function RoleRewardsField({ roles, allRoles, disabled }: RoleRewardsField
         </Button>
       </div>
       <RewardDialog
-        key={editing}
-        open={editing !== null}
-        onOpenChange={(open) => !open && setEditing(null)}
-        defaultValues={editing !== null && editing >= 0 ? (fields[editing] as Reward) : undefined}
+        key={dialog.key}
+        {...dialog.props}
+        defaultValues={editing >= 0 ? (fields[editing] as Reward) : undefined}
         // 他の報酬で使っているロールは選択できない
         roles={roles.filter(
           (role) => !fields.some((f, i) => i !== editing && (f as Reward).roleId === role.id),
@@ -173,9 +173,9 @@ export function RoleRewardsField({ roles, allRoles, disabled }: RoleRewardsField
         usedLevels={fields.filter((_, i) => i !== editing).map((f) => (f as Reward).level)}
         onSave={(reward) => {
           const rewards = (form.getValues('roleRewards') ?? []) as Reward[];
-          const next = editing === -1 ? [...rewards, reward] : rewards.with(editing ?? 0, reward);
+          const next = editing === -1 ? [...rewards, reward] : rewards.with(editing, reward);
           replace(next.toSorted((a, b) => a.level - b.level));
-          setEditing(null);
+          dialog.close();
         }}
       />
     </Field>

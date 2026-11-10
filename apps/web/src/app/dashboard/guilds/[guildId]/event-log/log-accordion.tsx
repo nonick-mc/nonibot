@@ -27,6 +27,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { useDialogState } from '@/hooks/use-dialog-state';
 import { SettingForm as BanForm } from './ban/form';
 import { SettingForm as KickForm } from './kick/form';
 import { SettingForm as MessageDeleteForm } from './message-delete/form';
@@ -75,7 +76,8 @@ type LogAccordionProps = {
 
 export function LogAccordion({ channels, roles, defaultValues }: LogAccordionProps) {
   const [value, setValue] = useState<Key[]>([]);
-  const [pendingValue, setPendingValue] = useState<Key[] | null>(null);
+  // 未保存の変更があるときに、移動しようとした先を持つ
+  const pending = useDialogState<Key[]>();
   const formsRef = useRef<
     Partial<Record<Key, UseFormReturn<LogFormInput, unknown, LogFormValues>>>
   >({});
@@ -85,7 +87,7 @@ export function LogAccordion({ channels, roles, defaultValues }: LogAccordionPro
 
   function handleValueChange(next: Key[]) {
     if (openKey && dirtyRef.current[openKey]) {
-      setPendingValue(next);
+      pending.show(next);
       return;
     }
     setValue(next);
@@ -93,8 +95,8 @@ export function LogAccordion({ channels, roles, defaultValues }: LogAccordionPro
 
   function handleDiscard() {
     if (openKey) formsRef.current[openKey]?.reset();
-    setValue(pendingValue ?? []);
-    setPendingValue(null);
+    setValue(pending.value ?? []);
+    pending.close();
   }
 
   return (
@@ -200,12 +202,7 @@ export function LogAccordion({ channels, roles, defaultValues }: LogAccordionPro
         ))}
       </Accordion>
 
-      <Dialog
-        open={pendingValue !== null}
-        onOpenChange={(open) => {
-          if (!open) setPendingValue(null);
-        }}
-      >
+      <Dialog {...pending.props}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>未保存の変更があります</DialogTitle>
@@ -214,7 +211,7 @@ export function LogAccordion({ channels, roles, defaultValues }: LogAccordionPro
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant='outline' onClick={() => setPendingValue(null)}>
+            <Button variant='outline' onClick={pending.close}>
               キャンセル
             </Button>
             <Button variant='destructive' onClick={handleDiscard}>
