@@ -1,11 +1,8 @@
+import { getNeedXP } from '@repo/shared';
+
 /** 1回のメッセージで付与する経験値(13〜19) */
 export function getExp() {
   return Math.floor(Math.random() * 7 + 13);
-}
-
-/** レベルlvから次のレベルに上がるために必要な経験値 */
-export function getNeedXP(lv: number) {
-  return 5 * lv ** 2 + 50 * lv + 100;
 }
 
 /** 経験値を加算し、レベルアップを繰り返し反映した結果を返す */

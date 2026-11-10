@@ -1,6 +1,7 @@
 import { resolve } from 'node:path';
 import { createCanvas, GlobalFonts, loadImage, type SKRSContext2D } from '@napi-rs/canvas';
-import { getNeedXP, siUnit } from './xp';
+import { getNeedXP } from '@repo/shared';
+import { siUnit } from './xp';
 
 // 開発時(src)とビルド後(dist)のどちらでも、パッケージルートのassetsを参照する
 const root = import.meta.dirname.match(/^(.*)[/\\](?:src|dist)\b/)?.[1] ?? process.cwd();

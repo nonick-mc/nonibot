@@ -1,4 +1,5 @@
 import { memberLevel } from '@repo/database';
+import { getNeedXP } from '@repo/shared';
 import {
   ApplicationCommandOptionType,
   ApplicationIntegrationType,
@@ -9,7 +10,7 @@ import {
 } from 'discord.js';
 import { execute, Slash } from 'sunar';
 import { applyRoleRewards } from '@/src/app/features/level/role-rewards';
-import { getNeedXP, siUnit } from '@/src/app/features/level/xp';
+import { siUnit } from '@/src/app/features/level/xp';
 import { db } from '@/src/lib/db';
 import { errorMessage, successMessage, unorderedListTable } from '@/src/lib/format';
 
