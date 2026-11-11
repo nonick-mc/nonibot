@@ -77,7 +77,7 @@ export function SettingForm({
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className='flex flex-col gap-6 pb-24'>
+      <form onSubmit={form.handleSubmit(onSubmit)} className='flex flex-col gap-6'>
         <Card className='bg-card/50'>
           <CardContent>
             <FieldGroup>

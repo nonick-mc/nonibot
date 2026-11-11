@@ -171,134 +171,133 @@ function DataGridPagination(props: DataGridPaginationProps): JSX.Element {
   );
 
   return (
-    <div
-      data-slot='data-grid-pagination'
-      className={cn(
-        'flex grow flex-col flex-wrap items-center justify-between gap-2.5 py-2.5 sm:flex-row sm:py-0',
-        mergedProps.className,
-      )}
-    >
-      <div className='order-2 flex flex-wrap items-center gap-x-2.5 pb-2.5 sm:order-1 sm:pb-0'>
-        {isLoading ? (
-          mergedProps.sizesSkeleton
-        ) : (
-          <>
-            <div className='text-muted-foreground text-sm'>{mergedProps.rowsPerPageLabel}</div>
-            <Select
-              value={`${pageSize}`}
-              onValueChange={(value) => {
-                const newPageSize = Number(value);
-                table.setPageSize(newPageSize);
-              }}
-            >
-              {/* w-fit with a min, never a fixed width: a fixed w-16 clipped
+    // 画面幅ではなく自身の幅で並びを決める
+    <div data-slot='data-grid-pagination' className={cn('@container grow', mergedProps.className)}>
+      <div className='flex flex-col flex-wrap items-center justify-between gap-2.5 py-2.5 @2xl:flex-row @2xl:py-0'>
+        {/* 選択肢が1つ以下なら件数は固定なので、メニューを置く領域ごと出さない*/}
+        {(mergedProps.sizes?.length ?? 0) > 1 && (
+          <div className='order-2 flex flex-wrap items-center gap-x-2.5 pb-2.5 @2xl:order-1 @2xl:pb-0'>
+            {isLoading ? (
+              mergedProps.sizesSkeleton
+            ) : (
+              <>
+                <div className='text-muted-foreground text-sm'>{mergedProps.rowsPerPageLabel}</div>
+                <Select
+                  value={`${pageSize}`}
+                  onValueChange={(value) => {
+                    const newPageSize = Number(value);
+                    table.setPageSize(newPageSize);
+                  }}
+                >
+                  {/* w-fit with a min, never a fixed width: a fixed w-16 clipped
                   the value "100" by 1px at nova's paddings, while fit-content
                   grows the trigger for 3-digit sizes and the min keeps the
                   1-2 digit ones from collapsing narrower than 64px. */}
-              <SelectTrigger
-                aria-label={mergedProps.rowsPerPageLabel}
-                className='w-fit min-w-16'
-                size='sm'
-              >
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent
-                align='start'
-                alignItemWithTrigger={false}
-                className='min-w-(--anchor-width)'
-              >
-                <SelectGroup>
-                  {mergedProps.sizes?.map((size: number) => (
-                    <SelectItem key={size} value={`${size}`}>
-                      {size}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </>
+                  <SelectTrigger
+                    aria-label={mergedProps.rowsPerPageLabel}
+                    className='w-fit min-w-16'
+                    size='sm'
+                  >
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent
+                    align='start'
+                    alignItemWithTrigger={false}
+                    className='min-w-(--anchor-width)'
+                  >
+                    <SelectGroup>
+                      {mergedProps.sizes?.map((size: number) => (
+                        <SelectItem key={size} value={`${size}`}>
+                          {size}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </>
+            )}
+          </div>
         )}
-      </div>
-      <div className='order-1 flex flex-col items-center justify-center gap-2.5 pt-2.5 sm:order-2 sm:flex-row sm:justify-end sm:pt-0'>
-        {isLoading ? (
-          mergedProps.infoSkeleton
-        ) : (
-          <>
-            <div className='text-muted-foreground order-2 text-sm text-nowrap sm:order-1'>
-              {paginationInfo}
-            </div>
-            {pageCount > 1 && (
-              <div className='order-1 flex flex-wrap items-center justify-center gap-1 sm:flex-nowrap'>
-                <Button
-                  size='icon-sm'
-                  variant='ghost'
-                  className={btnArrowClasses}
-                  onClick={() => table.previousPage()}
-                  disabled={!table.getCanPreviousPage()}
-                >
-                  <span className='sr-only'>{mergedProps.previousPageLabel}</span>
-                  <ChevronLeftIcon className='size-4' />
-                </Button>
+        <div className='order-1 flex flex-col items-center justify-center gap-2.5 pt-2.5 @lg:flex-row @lg:justify-end @2xl:order-2 @2xl:pt-0'>
+          {isLoading ? (
+            mergedProps.infoSkeleton
+          ) : (
+            <>
+              <div className='text-muted-foreground order-2 text-sm text-nowrap @lg:order-1'>
+                {paginationInfo}
+              </div>
+              {pageCount > 1 && (
+                <div className='order-1 flex flex-wrap items-center justify-center gap-1 @lg:flex-nowrap'>
+                  <Button
+                    size='icon-sm'
+                    variant='ghost'
+                    className={btnArrowClasses}
+                    onClick={() => table.previousPage()}
+                    disabled={!table.getCanPreviousPage()}
+                  >
+                    <span className='sr-only'>{mergedProps.previousPageLabel}</span>
+                    <ChevronLeftIcon className='size-4' />
+                  </Button>
 
-                {paginationItems.map((item) =>
-                  item.type === 'page' ? (
-                    <Button
-                      key={`page-${item.index}`}
-                      size='sm'
-                      variant='ghost'
-                      aria-label={i18n.labels.goToPage(item.index + 1)}
-                      aria-current={pageIndex === item.index ? 'page' : undefined}
-                      className={cn(
-                        PAGE_BUTTON_WIDTH_CLASS,
-                        'px-1.5 text-sm',
-                        'text-muted-foreground',
-                        {
-                          'bg-accent text-accent-foreground': pageIndex === item.index,
-                        },
-                      )}
-                      onClick={() => {
-                        if (pageIndex !== item.index) {
-                          table.setPageIndex(item.index);
-                        }
-                      }}
-                    >
-                      {item.index + 1}
-                    </Button>
-                  ) : (
-                    /* Clickable, unlike the shadcn PaginationEllipsis, which is
+                  {paginationItems.map((item) =>
+                    item.type === 'page' ? (
+                      <Button
+                        key={`page-${item.index}`}
+                        size='sm'
+                        variant='ghost'
+                        aria-label={i18n.labels.goToPage(item.index + 1)}
+                        aria-current={pageIndex === item.index ? 'page' : undefined}
+                        className={cn(
+                          PAGE_BUTTON_WIDTH_CLASS,
+                          'px-1.5 text-sm',
+                          'text-muted-foreground',
+                          {
+                            'bg-accent text-accent-foreground': pageIndex === item.index,
+                          },
+                        )}
+                        onClick={() => {
+                          if (pageIndex !== item.index) {
+                            table.setPageIndex(item.index);
+                          }
+                        }}
+                      >
+                        {item.index + 1}
+                      </Button>
+                    ) : (
+                      /* Clickable, unlike the shadcn PaginationEllipsis, which is
                        an aria-hidden span. This one MOVES the user, so it needs
                        a name saying where. */
-                    <Button
-                      key={`ellipsis-${item.direction}`}
-                      size='icon-sm'
-                      className={btnBaseClasses}
-                      variant='ghost'
-                      aria-label={i18n.labels.goToPage(item.target + 1)}
-                      onClick={() => table.setPageIndex(item.target)}
-                    >
-                      {mergedProps.ellipsisText}
-                    </Button>
-                  ),
-                )}
+                      <Button
+                        key={`ellipsis-${item.direction}`}
+                        size='icon-sm'
+                        className={btnBaseClasses}
+                        variant='ghost'
+                        aria-label={i18n.labels.goToPage(item.target + 1)}
+                        onClick={() => table.setPageIndex(item.target)}
+                      >
+                        {mergedProps.ellipsisText}
+                      </Button>
+                    ),
+                  )}
 
-                <Button
-                  size='icon-sm'
-                  variant='ghost'
-                  className={btnArrowClasses}
-                  onClick={() => table.nextPage()}
-                  disabled={!table.getCanNextPage()}
-                >
-                  <span className='sr-only'>{mergedProps.nextPageLabel}</span>
-                  <ChevronRightIcon className='size-4' />
-                </Button>
-              </div>
-            )}
-          </>
-        )}
+                  <Button
+                    size='icon-sm'
+                    variant='ghost'
+                    className={btnArrowClasses}
+                    onClick={() => table.nextPage()}
+                    disabled={!table.getCanNextPage()}
+                  >
+                    <span className='sr-only'>{mergedProps.nextPageLabel}</span>
+                    <ChevronRightIcon className='size-4' />
+                  </Button>
+                </div>
+              )}
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
 }
 
 export { DataGridPagination, type DataGridPaginationProps };
-

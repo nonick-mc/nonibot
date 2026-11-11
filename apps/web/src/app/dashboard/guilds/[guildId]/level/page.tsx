@@ -16,6 +16,7 @@ import {
   getRoles,
 } from '@/lib/discord/api';
 import { sortChannels, sortRoles } from '@/lib/discord/utils';
+import { DangerZone } from './danger-zone';
 import { SettingForm } from './form';
 import { formSchema } from './schema';
 
@@ -27,16 +28,21 @@ export default async function Page({ params }: PageProps<'/dashboard/guilds/[gui
   const { guildId } = await params;
   await verifyDashboardAccessPermission(guildId);
 
-  const [guild, channels, guildEmojis, applicationEmojis, roles, setting] = await Promise.all([
-    getGuild(guildId),
-    getChannels(guildId),
-    getGuildEmojis(guildId),
-    getApplicationEmojis(),
-    getRoles(guildId),
-    db.query.levelSetting.findFirst({
-      where: (setting, { eq }) => eq(setting.guildId, guildId),
-    }),
-  ]);
+  const [guild, channels, guildEmojis, applicationEmojis, roles, setting, memberLevel] =
+    await Promise.all([
+      getGuild(guildId),
+      getChannels(guildId),
+      getGuildEmojis(guildId),
+      getApplicationEmojis(),
+      getRoles(guildId),
+      db.query.levelSetting.findFirst({
+        where: (setting, { eq }) => eq(setting.guildId, guildId),
+      }),
+      db.query.memberLevel.findFirst({
+        where: (level, { eq }) => eq(level.guildId, guildId),
+        columns: { userId: true },
+      }),
+    ]);
 
   return (
     <>
@@ -70,6 +76,7 @@ export default async function Page({ params }: PageProps<'/dashboard/guilds/[gui
         botHighestRolePosition={guild.bot_highest_role_position}
         setting={formSchema.safeParse(setting ?? {}).data}
       />
+      <DangerZone className='mb-24' hasLevelData={memberLevel !== undefined} />
     </>
   );
 }
