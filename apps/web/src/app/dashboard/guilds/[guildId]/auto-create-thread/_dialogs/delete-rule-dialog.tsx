@@ -34,9 +34,10 @@ export function DeleteRuleDialog({ targetChannelName, rule }: DeleteRuleDialogPr
 
   async function handleAction() {
     setIsLoading(true);
-    const res = await bindDeleteRuleAction();
+    // 通信エラーなどの例外もエラーとして扱う
+    const res = await bindDeleteRuleAction().catch(() => undefined);
     setIsLoading(false);
-    if (res.serverError || res.validationErrors) {
+    if (!res || res.serverError || res.validationErrors) {
       return toast.error('チャンネルの削除に失敗しました。');
     }
     router.push(`/dashboard/guilds/${rule.guildId}/auto-create-thread`);

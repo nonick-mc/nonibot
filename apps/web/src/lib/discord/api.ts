@@ -101,6 +101,14 @@ export const getApplicationEmojis = cache(() => {
   return internalFetch<InternalApiEmoji[], false>('/application/emojis');
 });
 
+/** 指定したIDのうち、サーバーに在籍しているメンバーのIDを取得 **/
+export function searchGuildMembers(guildId: string, ids: string[]) {
+  return internalFetch<string[], false>(`/guilds/${encodeURIComponent(guildId)}/members/search`, {
+    method: 'POST',
+    body: { ids },
+  });
+}
+
 /** Botとしてメンバーにロールを付与 **/
 export function addGuildMemberRole(guildId: string, userId: string, roleId: string) {
   return internalFetch<null, false>(

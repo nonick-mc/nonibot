@@ -1,5 +1,6 @@
 import { levelSetting } from '@repo/database';
 import { levelNotifyMessagePlaceholders } from '@repo/placeholders';
+import { getNeedXP } from '@repo/shared';
 import { ComponentType } from 'discord-api-types/v10';
 import { createInsertSchema } from 'drizzle-zod';
 import z from 'zod';
@@ -74,3 +75,34 @@ export const formSchema = createInsertSchema(levelSetting, {
       });
     }
   });
+
+const Int32Max = 2 ** 31 - 1;
+
+/** インポート・エクスポートするレベルデータのJSON */
+export const levelDataSchema = z.strictObject({
+  guildId: z.string().regex(SnowflakeRegex, '無効なIDです').optional(),
+  data: z
+    .array(
+      z
+        .strictObject({
+          userId: z.string().regex(SnowflakeRegex, '無効なIDです'),
+          lv: z.int().min(0).max(Int32Max),
+          xp: z.int().min(0).max(Int32Max),
+        })
+        .refine((v) => v.xp < getNeedXP(v.lv), {
+          path: ['xp'],
+          error: '経験値がレベルアップに必要な量以上です',
+        }),
+    )
+    .superRefine((data, ctx) => {
+      const seen = new Set<string>();
+      data.forEach(({ userId }, i) => {
+        if (seen.has(userId)) {
+          ctx.addIssue({ code: 'custom', path: [i, 'userId'], message: '重複したIDです' });
+        }
+        seen.add(userId);
+      });
+    }),
+});
+
+export type LevelData = z.infer<typeof levelDataSchema>;

@@ -25,5 +25,10 @@ export default function rateLimit(options?: Options) {
 
         return isRateLimited ? reject() : resolve();
       }),
+    // check で数えた1回分を取り消す
+    release: (token: string) => {
+      const tokenCount = tokenCache.get(token) as number[] | undefined;
+      if (tokenCount && tokenCount[0] > 0) tokenCount[0] -= 1;
+    },
   };
 }

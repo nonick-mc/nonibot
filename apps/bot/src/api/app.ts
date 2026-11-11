@@ -5,6 +5,7 @@ import {
   ChannelFlags,
   type Client,
   DiscordAPIError,
+  GatewayRateLimitError,
   PermissionFlagsBits,
   RESTJSONErrorCodes,
   Routes,
@@ -98,6 +99,39 @@ export function createApp(client: Client<true>, secret: string) {
     });
     if (!member) return c.json(notFound, 404);
     return c.json(serializeMember(member));
+  });
+
+  // 指定したIDのうち、サーバーに在籍しているメンバーのIDを返す
+  app.post('/guilds/:guildId/members/search', async (c) => {
+    const guild = client.guilds.cache.get(c.req.param('guildId'));
+    if (!guild) return c.json(notFound, 404);
+
+    const body = await c.req.json<{ ids?: unknown }>().catch(() => null);
+    const ids = body?.ids;
+    if (
+      !Array.isArray(ids) ||
+      !ids.every((id): id is string => typeof id === 'string' && SnowflakeRegex.test(id))
+    ) {
+      return c.json({ error: 'Invalid ids' } satisfies InternalApiError, 400);
+    }
+
+    try {
+      const missing = ids.filter((id) => !guild.members.cache.has(id));
+      const fetched =
+        missing.length === 0
+          ? null
+          : missing.length <= 100
+            ? await guild.members.fetch({ user: missing })
+            : await guild.members.fetch();
+      return c.json(
+        ids.filter((id) => guild.members.cache.has(id) || fetched?.has(id)) satisfies string[],
+      );
+    } catch (error) {
+      if (error instanceof GatewayRateLimitError) {
+        return c.json({ error: 'Rate Limited', retry_after: error.data.retry_after }, 429);
+      }
+      throw error;
+    }
   });
 
   app.get('/users/:userId', async (c) => {

@@ -4,6 +4,8 @@ import { createMDX } from 'fumadocs-mdx/next';
 const nextConfig = {
   experimental: {
     typedEnv: true,
+    // レベルデータのインポート
+    serverActions: { bodySizeLimit: '5mb' },
   },
   images: {
     remotePatterns: [new URL('https://cdn.nonick.net/**')],
