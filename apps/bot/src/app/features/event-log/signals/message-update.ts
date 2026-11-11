@@ -3,6 +3,7 @@ import {
   Events,
   HeadingLevel,
   heading,
+  hyperlink,
   MessageFlags,
   SectionBuilder,
   SeparatorBuilder,
@@ -55,7 +56,11 @@ execute(signal, async (oldMessage, newMessage) => {
 
   container
     .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Large))
-    .addTextDisplayComponents(new TextDisplayBuilder().setContent(subtext('編集後のメッセージ')));
+    .addTextDisplayComponents(
+      new TextDisplayBuilder().setContent(
+        subtext(`編集後のメッセージ（${hyperlink('メッセージに移動', newMessage.url)}）`),
+      ),
+    );
 
   const newFiles = await addMessageContent(container, newMessage);
 
