@@ -150,6 +150,7 @@ cp packages/database/.env.sample packages/database/.env
 `INTERNAL_API_SECRET` | 内部APIの認証に使う任意の文字列。<br/>`openssl rand -base64 32` コマンドなどで生成することもできます。
 `INTERNAL_API_PORT` | 内部APIのポート番号（例: `3001`）
 `INTERNAL_API_HOST` | 内部APIがリッスンするホスト（例: `127.0.0.1`）<br/>別のマシンやコンテナからアクセスさせる場合は `0.0.0.0` にします。
+`HEARTBEAT_URL` | 死活監視用のHeartbeat URL(任意)<br/>Discordに接続している間、60秒ごとにこのURLへGETリクエストを送ります。[Better Stack](https://betterstack.com)などのHeartbeatモニターと組み合わせると、Botの停止を検知できます。
 
 #### ダッシュボード (`apps/web/.env.local`)
 
