@@ -42,11 +42,13 @@ export function DeleteDialog({
   const [isLoading, setIsLoading] = useState(false);
 
   async function onDelete() {
+    const bindDeleteCustomAction = deleteCustomAction.bind(null, guildId);
     setIsLoading(true);
-    const res = await deleteCustomAction.bind(null, guildId)({ id });
-    if (res.serverError || res.validationErrors) {
+    // 通信エラーなどの例外もエラーとして扱う
+    const res = await bindDeleteCustomAction({ id }).catch(() => undefined);
+    if (!res || res.serverError || res.validationErrors) {
       setIsLoading(false);
-      return toast.error(res.serverError ?? 'アクションの削除中に問題が発生しました。');
+      return toast.error(res?.serverError ?? 'アクションの削除中に問題が発生しました。');
     }
     toast.success('アクションを削除しました。');
     router.push(`/dashboard/guilds/${guildId}/custom-action`);

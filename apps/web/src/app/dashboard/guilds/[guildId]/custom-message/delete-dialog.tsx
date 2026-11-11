@@ -35,11 +35,15 @@ export function DeleteDialog({ id, name, children, open, onOpenChange }: DeleteD
   const [deleteDiscordMessage, setDeleteDiscordMessage] = useState(false);
 
   async function onDelete() {
+    const bindDeleteSavedMessageAction = deleteSavedMessageAction.bind(null, guildId);
     setIsLoading(true);
-    const res = await deleteSavedMessageAction.bind(null, guildId)({ id, deleteDiscordMessage });
-    if (res.serverError || res.validationErrors) {
+    // 通信エラーなどの例外もエラーとして扱う
+    const res = await bindDeleteSavedMessageAction({ id, deleteDiscordMessage }).catch(
+      () => undefined,
+    );
+    if (!res || res.serverError || res.validationErrors) {
       setIsLoading(false);
-      return toast.error(res.serverError ?? 'メッセージの削除中に問題が発生しました。');
+      return toast.error(res?.serverError ?? 'メッセージの削除中に問題が発生しました。');
     }
     toast.success('保存したメッセージを削除しました。');
     router.push(`/dashboard/guilds/${guildId}/custom-message`);
