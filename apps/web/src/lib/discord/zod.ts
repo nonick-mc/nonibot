@@ -6,6 +6,7 @@ import {
 } from '@repo/shared';
 import { ButtonStyle, ComponentType, SeparatorSpacingSize } from 'discord-api-types/v10';
 import z from 'zod';
+import emojiRegex from '@/lib/twemoji-regex';
 import { countTotalComponents } from './utils';
 
 export const SnowflakeRegex = /^\d{17,19}$/;
@@ -15,6 +16,15 @@ export const snowflakeIdSchema = z.string().regex(SnowflakeRegex, '無効なID�
 export const snowflakeArraySchema = z
   .array(z.string().regex(SnowflakeRegex, '無効なIDです'))
   .refine((v) => new Set(v).size === v.length, '重複した値が含まれています。');
+
+const UnicodeEmojiRegex = new RegExp(`^(?:${emojiRegex.source})$`);
+const CustomEmojiNameRegex = /^\w{2,32}$/;
+
+function isValidEmoji({ id, name }: { id?: string; name: string }) {
+  if (id) return CustomEmojiNameRegex.test(name);
+  const bare = name.replaceAll('\ufe0f', '');
+  return bare !== '' && (UnicodeEmojiRegex.test(name) || UnicodeEmojiRegex.test(bare));
+}
 
 function escapeRegExp(value: string) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -93,9 +103,10 @@ function createUserComponentV2Schema(
     emoji: z
       .object({
         id: z.string().regex(SnowflakeRegex).optional(),
-        name: z.string().min(1),
+        name: z.string().min(1).max(32),
         animated: z.boolean().optional(),
       })
+      .refine(isValidEmoji, '無効な絵文字です。')
       .nullish()
       .transform((v) => v ?? undefined),
   });

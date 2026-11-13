@@ -6,10 +6,10 @@ import { type parse, rules, SimpleMarkdown } from 'discord-markdown-parser';
 import type { ParserRules } from 'discord-markdown-parser/dist/simple-markdown';
 import type { PropsWithChildren } from 'react';
 import { Fragment, type ReactNode, useContext, useState } from 'react';
-import twemoji from 'twemoji';
-import { PreviewResourcesContext } from './context';
+import { Twemoji as TwemojiImage } from '@/components/twemoji';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
+import { PreviewResourcesContext } from './context';
 import { ChannelMention, GuildNavigationMention, Mention, RoleMention } from './mention';
 
 // Component
@@ -97,11 +97,9 @@ export function PlainText({ children }: PropsWithChildren) {
 
 export function Twemoji({ name }: { name: string }) {
   return (
-    <span
-      className='[&_img]:inline-block [&_img]:h-[1.5em] [&_img]:w-[1.5em] [&_img]:align-text-bottom'
-      // biome-ignore lint/security/noDangerouslySetInnerHtml: Twemoji
-      dangerouslySetInnerHTML={{ __html: twemoji.parse(name) }}
-    />
+    <TwemojiImage className='m-0 inline-block h-[1.5em] w-[1.5em] align-text-bottom'>
+      {name}
+    </TwemojiImage>
   );
 }
 
