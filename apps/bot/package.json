@@ -21,7 +21,7 @@
     "discord.js": "^14.28.1",
     "dotenv": "^17.4.2",
     "drizzle-orm": "catalog:",
-    "hono": "^4.13.13",
+    "hono": "^4.13.16",
     "node-cron": "^4.6.0",
     "pg": "catalog:",
     "picocolors": "^1.1.1",
