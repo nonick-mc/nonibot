@@ -43,7 +43,7 @@ export default function Page() {
           <Button
             size='lg'
             variant='secondary'
-            render={<Link href='/docs/tutorial/introduction'>ログインについて</Link>}
+            render={<Link href='/docs/tutorial/getting-started'>ログインについて</Link>}
             nativeButton={false}
           />
         </CardContent>
