@@ -1,3 +1,4 @@
+import { isDeepStrictEqual } from 'node:util';
 import {
   ContainerBuilder,
   Events,
@@ -27,6 +28,15 @@ execute(signal, async (oldMessage, newMessage) => {
   if (!guild) return;
   if (oldMessage.partial || oldMessage.flags.has(MessageFlags.Ephemeral)) return;
   if (oldMessage.applicationId === oldMessage.client.user.id) return;
+
+  // content / embeds / files / components のいずれかに変更があった場合のみログを送信
+  const snapshot = (m: typeof oldMessage) => [
+    m.content,
+    m.embeds.map((e) => e.toJSON()),
+    [...m.attachments.keys()],
+    m.components.map((c) => c.toJSON()),
+  ];
+  if (isDeepStrictEqual(snapshot(oldMessage), snapshot(newMessage))) return;
 
   const setting = await db.query.msgEditLogSetting.findFirst({
     where: (setting, { eq }) => eq(setting.guildId, guild.id),
