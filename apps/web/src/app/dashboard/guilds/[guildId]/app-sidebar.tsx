@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { Logo, LogoIcon } from '@/components/logo';
-import { Sidebar, SidebarContent, SidebarHeader, SidebarRail } from '@/components/shadcn/sidebar';
-import { Skeleton } from '@/components/shadcn/skeleton';
+import { Sidebar, SidebarContent, SidebarHeader, SidebarRail } from '@/components/ui/sidebar';
+import { Skeleton } from '@/components/ui/skeleton';
 import { GuildSwitcher } from './guild-switcher';
 import { SidebarNavigation } from './sidebar-navigation';
 

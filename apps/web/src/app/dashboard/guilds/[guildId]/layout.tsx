@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import { CurrentGuildProvider } from '@/components/discord/current-guild';
-import { SidebarInset, SidebarProvider } from '@/components/shadcn/sidebar';
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { verifyDashboardAccessPermission } from '@/lib/dal';
 import { getGuild } from '@/lib/discord/api';
 import { AppSidebar } from './app-sidebar';

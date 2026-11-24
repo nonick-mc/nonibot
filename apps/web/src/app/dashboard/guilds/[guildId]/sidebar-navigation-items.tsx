@@ -1,24 +1,26 @@
 import {
-  CalendarClockIcon,
-  ClipboardListIcon,
-  FlagIcon,
-  HammerIcon,
-  LayoutGridIcon,
-  Link2Icon,
-  LogInIcon,
-  LogOutIcon,
-  LogsIcon,
-  type LucideIcon,
-  MegaphoneIcon,
-  ScanQrCodeIcon,
-  ShieldCheckIcon,
-  SpoolIcon,
-  SquarePenIcon,
-  TrophyIcon,
-  ZapIcon,
-} from 'lucide-react';
-import type { ReactNode } from 'react';
-import { Badge } from '@/components/reui/badge';
+  ArrowRightFromSquare,
+  ArrowRightToSquare,
+  Clock,
+  Comments,
+  FileText,
+  Flag,
+  Hammer,
+  LayoutSplitSideContentLeft,
+  Link,
+  ListUl,
+  Medal,
+  Megaphone,
+  PencilToSquare,
+  QrCode,
+  ShieldCheck,
+  Star,
+  Thunderbolt,
+} from '@gravity-ui/icons';
+import type { ComponentType, ReactNode, SVGProps } from 'react';
+import { Badge } from '@/components/ui/badge';
+
+type SidebarIcon = ComponentType<SVGProps<SVGSVGElement>>;
 
 type SidebarGroupItem<T> = {
   title: string;
@@ -30,7 +32,7 @@ type SidebarItem<T> = {
   key?: string;
   url: (arg: T) => string;
   badge?: ReactNode;
-  icon: LucideIcon;
+  icon: SidebarIcon;
   subitems?: SidebarSubItem[];
   disabled?: boolean;
 };
@@ -49,13 +51,13 @@ export const SidebarNavigationItems: SidebarGroupItem<string>[] = [
       {
         title: 'ダッシュボード',
         url: (guildId) => `/dashboard/guilds/${guildId}`,
-        icon: LayoutGridIcon,
+        icon: LayoutSplitSideContentLeft,
       },
       {
         key: 'audit-log',
         title: '監査ログ',
         url: (guildId) => `/dashboard/guilds/${guildId}/audit-log`,
-        icon: LogsIcon,
+        icon: ListUl,
       },
     ],
   },
@@ -66,68 +68,68 @@ export const SidebarNavigationItems: SidebarGroupItem<string>[] = [
         key: 'join-message',
         title: '入室メッセージ',
         url: (guildId) => `/dashboard/guilds/${guildId}/join-message`,
-        icon: LogInIcon,
+        icon: ArrowRightToSquare,
       },
       {
         key: 'leave-message',
         title: '退室メッセージ',
         url: (guildId) => `/dashboard/guilds/${guildId}/leave-message`,
-        icon: LogOutIcon,
+        icon: ArrowRightFromSquare,
       },
       {
         key: 'level',
         title: 'レベルシステム',
         url: (guildId) => `/dashboard/guilds/${guildId}/level`,
-        icon: TrophyIcon,
-        badge: <Badge variant='warning-outline'>Beta</Badge>,
+        icon: Star,
+        badge: <Badge>Beta</Badge>,
       },
       {
         key: 'report',
         title: 'サーバー内通報',
         url: (guildId) => `/dashboard/guilds/${guildId}/report`,
-        icon: FlagIcon,
+        icon: Flag,
       },
       {
         key: 'event-log',
         title: 'イベントログ',
         url: (guildId) => `/dashboard/guilds/${guildId}/event-log`,
-        icon: ClipboardListIcon,
+        icon: FileText,
       },
       {
         key: 'message-expand',
         title: 'メッセージURL展開',
         url: (guildId) => `/dashboard/guilds/${guildId}/message-expand`,
-        icon: Link2Icon,
+        icon: Link,
       },
       {
         key: 'auto-change-verification-level',
         title: '自動認証レベル変更',
         url: (guildId) => `/dashboard/guilds/${guildId}/auto-change-verification-level`,
-        icon: ShieldCheckIcon,
+        icon: ShieldCheck,
       },
       {
         key: 'auto-public',
         title: '自動アナウンス公開',
         url: (guildId) => `/dashboard/guilds/${guildId}/auto-public`,
-        icon: MegaphoneIcon,
+        icon: Megaphone,
       },
       {
         key: 'auto-create-thread',
         title: '自動スレッド作成',
         url: (guildId) => `/dashboard/guilds/${guildId}/auto-create-thread`,
-        icon: SpoolIcon,
+        icon: Comments,
       },
       {
         key: 'automod-plus',
         title: 'AutoMod Plus',
         url: (guildId) => `/dashboard/guilds/${guildId}/automod-plus`,
-        icon: HammerIcon,
+        icon: Hammer,
       },
       {
         key: 'verification',
         title: 'メンバー認証',
         url: (guildId) => `/dashboard/guilds/${guildId}/verification`,
-        icon: ScanQrCodeIcon,
+        icon: QrCode,
       },
     ],
   },
@@ -138,19 +140,19 @@ export const SidebarNavigationItems: SidebarGroupItem<string>[] = [
         key: 'custom-message',
         title: 'カスタムメッセージ',
         url: (guildId) => `/dashboard/guilds/${guildId}/custom-message`,
-        icon: SquarePenIcon,
+        icon: PencilToSquare,
       },
       {
         key: 'custom-action',
         title: 'カスタムアクション',
         url: (guildId) => `/dashboard/guilds/${guildId}/custom-action`,
-        icon: ZapIcon,
+        icon: Thunderbolt,
       },
       {
         key: 'scheduled-post',
         title: '予約投稿',
         url: (guildId) => `/dashboard/guilds/${guildId}/scheduled-post`,
-        icon: CalendarClockIcon,
+        icon: Clock,
         badge: <Badge variant='outline'>近日公開</Badge>,
         disabled: true,
       },

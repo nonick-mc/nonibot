@@ -2,7 +2,7 @@ import { CDNRoutes, ImageFormat, RouteBases } from 'discord-api-types/v10';
 import { ChevronsUpDown, PlusIcon } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/shadcn/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -11,9 +11,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/shadcn/dropdown-menu';
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/shadcn/sidebar';
-import { Skeleton } from '@/components/shadcn/skeleton';
+} from '@/components/ui/dropdown-menu';
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
+import { Skeleton } from '@/components/ui/skeleton';
 import { getGuild, getManageableGuilds } from '@/lib/discord/api';
 import { getInviteUrl } from '@/lib/discord/invite';
 import { GuildSwitcherContent } from './guild-switcher-content';
@@ -53,7 +53,7 @@ export async function GuildSwitcher({ currentGuildId }: GuildSwitcherProps) {
           />
           <GuildSwitcherContent>
             <DropdownMenuGroup>
-              <DropdownMenuCheckboxItem checked>
+              <DropdownMenuCheckboxItem indicator='end' checked>
                 <Avatar className='size-6'>
                   <AvatarImage
                     src={
@@ -97,7 +97,7 @@ function GuildsMenuFallback() {
     <>
       {Array.from({ length: 2 }).map((_, index) => (
         // biome-ignore lint/suspicious/noArrayIndexKey: Skeleton
-        <DropdownMenuCheckboxItem disabled key={index}>
+        <DropdownMenuCheckboxItem indicator='end' disabled key={index}>
           <Skeleton className='size-6 rounded-full' />
           <Skeleton className='flex-1 h-4' />
         </DropdownMenuCheckboxItem>
