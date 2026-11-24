@@ -5,9 +5,9 @@ import {
   RouteBases,
 } from 'discord-api-types/v10';
 import Link from 'next/link';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Card } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/shadcn/avatar';
+import { Card } from '@/components/shadcn/card';
+import { Skeleton } from '@/components/shadcn/skeleton';
 
 type GuildCardProps = {
   guild: RESTAPIPartialCurrentUserGuild;

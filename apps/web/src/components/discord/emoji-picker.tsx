@@ -12,7 +12,7 @@ import {
   EmojiPickerContent,
   EmojiPickerTrigger,
 } from '@/components/reui/emoji-picker';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/shadcn/avatar';
 import { cn } from '@/lib/utils';
 
 type DiscordEmojiPickerProps = {

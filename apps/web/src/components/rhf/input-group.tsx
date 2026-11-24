@@ -2,7 +2,7 @@
 
 import type { ComponentProps } from 'react';
 import { mergeRefs } from '@/lib/utils';
-import { InputGroupInput, InputGroupTextarea } from '../ui/input-group';
+import { InputGroupInput, InputGroupTextarea } from '../shadcn/input-group';
 import { useControlledField } from './field';
 
 export function ControlledInputGroupInput({

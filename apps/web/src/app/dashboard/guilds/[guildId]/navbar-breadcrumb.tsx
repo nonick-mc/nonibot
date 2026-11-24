@@ -10,7 +10,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
+} from '@/components/shadcn/breadcrumb';
 import { SidebarNavigationItems } from './sidebar-navigation-items';
 
 type NavbarBreadcrumbProps = {

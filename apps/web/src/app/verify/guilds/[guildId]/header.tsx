@@ -1,5 +1,5 @@
 import { Logo } from '@/components/logo';
-import { CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { CardDescription, CardHeader, CardTitle } from '@/components/shadcn/card';
 
 export function VerificationHeader() {
   return (

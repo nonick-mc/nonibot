@@ -15,7 +15,7 @@ import {
   ControlledFieldError,
   ControlledFieldLabel,
 } from '@/components/rhf/field';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/shadcn/button';
 import {
   Dialog,
   DialogContent,
@@ -23,10 +23,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { FieldContent, FieldDescription, FieldGroup } from '@/components/ui/field';
-import { Spinner } from '@/components/ui/spinner';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+} from '@/components/shadcn/dialog';
+import { FieldContent, FieldDescription, FieldGroup } from '@/components/shadcn/field';
+import { Spinner } from '@/components/shadcn/spinner';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/shadcn/tooltip';
 import { sendPanelAction } from './action';
 import { sendPanelFormSchema } from './schema';
 

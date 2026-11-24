@@ -6,7 +6,7 @@ import type z from 'zod';
 import { PreviewResourcesContext } from './context';
 import type { MessageUserComponentsSchema } from '@/lib/discord/zod';
 import { cn } from '@/lib/utils';
-import { Separator as ShadcnSeparator } from '../../ui/separator';
+import { Separator as ShadcnSeparator } from '../../shadcn/separator';
 import { DiscordButton } from './button';
 import { DiscordImage, resolveUrlPlaceholder } from './image';
 import { DiscordMarkdown } from './markdown';

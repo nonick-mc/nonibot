@@ -1,4 +1,4 @@
-import { Separator } from '@/components/ui/separator';
+import { Separator } from '@/components/shadcn/separator';
 import { CtaSection } from './_section/cta';
 import { FaqSection } from './_section/faq';
 import { FeatureSection } from './_section/feature';

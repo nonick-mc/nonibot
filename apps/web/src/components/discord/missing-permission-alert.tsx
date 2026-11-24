@@ -3,7 +3,7 @@ import { PermissionFlagsBits } from 'discord-api-types/v10';
 import { ExternalLinkIcon, TriangleAlertIcon } from 'lucide-react';
 import { Fragment } from 'react';
 import { Alert, AlertAction, AlertDescription, AlertTitle } from '@/components/reui/alert';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/shadcn/button';
 import { getGuild } from '@/lib/discord/api';
 import { getGuildInviteUrl } from '@/lib/discord/invite';
 import { hasPermission } from '@/lib/discord/utils';

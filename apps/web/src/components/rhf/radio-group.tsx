@@ -1,7 +1,7 @@
 'use client';
 
 import type { ComponentProps } from 'react';
-import { RadioGroup } from '../ui/radio-group';
+import { RadioGroup } from '../shadcn/radio-group';
 import { useControlledField } from './field';
 
 export function ControlledRadioGroup(props: ComponentProps<typeof RadioGroup>) {

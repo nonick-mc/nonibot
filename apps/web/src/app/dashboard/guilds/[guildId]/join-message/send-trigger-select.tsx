@@ -1,7 +1,7 @@
 import { sendTriggerEnum } from '@repo/database';
 import z from 'zod';
 import { ControlledSelect, ControlledSelectTrigger } from '@/components/rhf/select';
-import { SelectContent, SelectGroup, SelectItem, SelectValue } from '@/components/ui/select';
+import { SelectContent, SelectGroup, SelectItem, SelectValue } from '@/components/shadcn/select';
 
 const { enum: SendTrigger } = z.enum(sendTriggerEnum.enumValues);
 

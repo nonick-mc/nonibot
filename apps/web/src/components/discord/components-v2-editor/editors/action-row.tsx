@@ -15,14 +15,14 @@ import {
   ControlledFieldError,
   ControlledFieldLabel,
 } from '@/components/rhf/field';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/shadcn/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
+} from '@/components/shadcn/dropdown-menu';
+import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/shadcn/empty';
 import { useComponentEditorContext } from '../context';
 import { EditorCard } from '../editor-card';
 import {

@@ -33,15 +33,15 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+} from '@/components/shadcn/alert-dialog';
+import { Button } from '@/components/shadcn/button';
+import { Card, CardContent } from '@/components/shadcn/card';
 import {
   CodeBlock,
   CodeBlockActions,
   CodeBlockContent,
   CodeBlockCopyButton,
-} from '@/components/ui/code-block';
+} from '@/components/shadcn/code-block';
 import {
   Field,
   FieldContent,
@@ -50,9 +50,9 @@ import {
   FieldLabel,
   FieldSeparator,
   FieldTitle,
-} from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
-import { Spinner } from '@/components/ui/spinner';
+} from '@/components/shadcn/field';
+import { Input } from '@/components/shadcn/input';
+import { Spinner } from '@/components/shadcn/spinner';
 import { useDialogState } from '@/hooks/use-dialog-state';
 import {
   exportMemberLevelsAction,

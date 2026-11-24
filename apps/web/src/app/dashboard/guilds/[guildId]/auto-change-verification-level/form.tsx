@@ -20,8 +20,8 @@ import {
 import { ControlledInputGroupNumberInput } from '@/components/rhf/number-input';
 import { ControlledSelect, ControlledSelectTrigger } from '@/components/rhf/select';
 import { ControlledSwitch } from '@/components/rhf/switch';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/shadcn/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/shadcn/card';
 import {
   Field,
   FieldContent,
@@ -30,9 +30,9 @@ import {
   FieldGroup,
   FieldLabel,
   FieldSeparator,
-} from '@/components/ui/field';
-import { InputGroup, InputGroupAddon } from '@/components/ui/input-group';
-import { SelectContent, SelectGroup, SelectItem, SelectValue } from '@/components/ui/select';
+} from '@/components/shadcn/field';
+import { InputGroup, InputGroupAddon } from '@/components/shadcn/input-group';
+import { SelectContent, SelectGroup, SelectItem, SelectValue } from '@/components/shadcn/select';
 import { updateSettingAction } from './action';
 import { formSchema } from './schema';
 

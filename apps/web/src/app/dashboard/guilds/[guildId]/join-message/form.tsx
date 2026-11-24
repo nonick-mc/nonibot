@@ -23,9 +23,9 @@ import {
   ControlledFieldLabel,
 } from '@/components/rhf/field';
 import { ControlledSwitch } from '@/components/rhf/switch';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { FieldContent, FieldDescription, FieldGroup, FieldSeparator } from '@/components/ui/field';
+import { Button } from '@/components/shadcn/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/shadcn/card';
+import { FieldContent, FieldDescription, FieldGroup, FieldSeparator } from '@/components/shadcn/field';
 import { updateSettingAction } from './action';
 import { formSchema } from './schema';
 import { SendTriggerSelect } from './send-trigger-select';

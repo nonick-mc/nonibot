@@ -13,7 +13,7 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from '@/components/ui/empty';
+} from '@/components/shadcn/empty';
 import { cn } from '@/lib/utils';
 import { ComponentEditorByType } from './editors';
 

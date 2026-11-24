@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { z } from 'zod';
 import { Header } from '@/components/header';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/shadcn/button';
 import { getCustomActionAllowedComponents } from '@/lib/custom-action';
 import { verifyDashboardAccessPermission } from '@/lib/dal';
 import { db } from '@/lib/db';

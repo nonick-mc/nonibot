@@ -4,7 +4,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Header } from '@/components/header';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/shadcn/button';
 import { verifyDashboardAccessPermission } from '@/lib/dal';
 import { db } from '@/lib/db';
 import { getApplicationEmojis, getChannels, getGuildEmojis, getRoles } from '@/lib/discord/api';

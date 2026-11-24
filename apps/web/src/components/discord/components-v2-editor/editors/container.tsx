@@ -33,18 +33,18 @@ import {
   useControlledField,
 } from '@/components/rhf/field';
 import { ControlledSwitch } from '@/components/rhf/switch';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/shadcn/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
-import { FieldContent, FieldGroup } from '@/components/ui/field';
-import { InputGroupAddon, InputGroupButton } from '@/components/ui/input-group';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Separator } from '@/components/ui/separator';
+} from '@/components/shadcn/dropdown-menu';
+import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/shadcn/empty';
+import { FieldContent, FieldGroup } from '@/components/shadcn/field';
+import { InputGroupAddon, InputGroupButton } from '@/components/shadcn/input-group';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/shadcn/popover';
+import { Separator } from '@/components/shadcn/separator';
 import { useComponentEditorContext } from '../context';
 import { EditorCard } from '../editor-card';
 import { defaultComponentValues } from '../schema';

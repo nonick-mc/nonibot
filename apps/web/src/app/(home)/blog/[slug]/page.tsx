@@ -3,8 +3,8 @@ import defaultMdxComponents from 'fumadocs-ui/mdx';
 import { ArrowLeftIcon } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/shadcn/avatar';
+import { Button } from '@/components/shadcn/button';
 import { blog } from '@/lib/source';
 
 export default async function Page(props: { params: Promise<{ slug: string }> }) {

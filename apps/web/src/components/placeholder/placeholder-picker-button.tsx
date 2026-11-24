@@ -10,10 +10,10 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { InputGroupButton } from '@/components/ui/input-group';
-import { Item, ItemContent, ItemDescription, ItemMedia, ItemTitle } from '@/components/ui/item';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+} from '@/components/shadcn/dropdown-menu';
+import { InputGroupButton } from '@/components/shadcn/input-group';
+import { Item, ItemContent, ItemDescription, ItemMedia, ItemTitle } from '@/components/shadcn/item';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/shadcn/tooltip';
 
 export type TextInputRef = RefObject<HTMLInputElement | HTMLTextAreaElement | null>;
 export type TextInputInsertMode = 'insert' | 'replace';

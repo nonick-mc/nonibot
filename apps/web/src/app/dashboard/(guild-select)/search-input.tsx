@@ -7,7 +7,7 @@ import {
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
-} from '@/components/ui/input-group';
+} from '@/components/shadcn/input-group';
 
 export function SearchInput() {
   const [query, setQuery] = useQueryState('q');

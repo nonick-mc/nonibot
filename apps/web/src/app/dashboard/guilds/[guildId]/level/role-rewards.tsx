@@ -23,18 +23,18 @@ import {
 import { ControlledNumberInput } from '@/components/rhf/number-input';
 import { ControlledRoleSelect } from '@/components/rhf/role-select';
 import { ControlledSelect, ControlledSelectTrigger } from '@/components/rhf/select';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Button } from '@/components/shadcn/button';
+import { Card } from '@/components/shadcn/card';
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Field, FieldContent, FieldDescription, FieldGroup } from '@/components/ui/field';
-import { SelectContent, SelectGroup, SelectItem, SelectValue } from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
+} from '@/components/shadcn/dialog';
+import { Field, FieldContent, FieldDescription, FieldGroup } from '@/components/shadcn/field';
+import { SelectContent, SelectGroup, SelectItem, SelectValue } from '@/components/shadcn/select';
+import { Separator } from '@/components/shadcn/separator';
 import { useDialogState } from '@/hooks/use-dialog-state';
 import { cn } from '@/lib/utils';
 import { type formSchema, roleRewardSchema } from './schema';

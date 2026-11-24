@@ -13,14 +13,14 @@ import {
 import { type ReactNode, useState } from 'react';
 import { useFieldArray, useFormContext, Watch } from 'react-hook-form';
 import type { z } from 'zod';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/shadcn/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+} from '@/components/shadcn/dropdown-menu';
+import { Tabs, TabsList, TabsTrigger } from '@/components/shadcn/tabs';
 import type { MessageUserComponentsSchema } from '@/lib/discord/zod';
 import { cn } from '@/lib/utils';
 import { DiscordMessage } from '../preview/message';

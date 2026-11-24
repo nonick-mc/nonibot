@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { MissingPermissionAlert } from '@/components/discord/missing-permission-alert';
 import { Header } from '@/components/header';
 import { Alert, AlertAction, AlertDescription, AlertTitle } from '@/components/reui/alert';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/shadcn/button';
 import { verifyDashboardAccessPermission } from '@/lib/dal';
 import { db } from '@/lib/db';
 import {

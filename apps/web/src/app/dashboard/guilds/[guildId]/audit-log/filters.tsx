@@ -4,10 +4,10 @@ import { type LucideIcon, TargetIcon, UserIcon, ZapIcon } from 'lucide-react';
 import type { Route } from 'next';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Badge } from '@/components/reui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/shadcn/avatar';
+import { Button } from '@/components/shadcn/button';
+import { Checkbox } from '@/components/shadcn/checkbox';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/shadcn/popover';
 import { type AuditLogAuthor, actionTypeTexts, targetNameTexts } from './columns';
 
 type Option = { value: string; label: string; avatarUrl?: string };

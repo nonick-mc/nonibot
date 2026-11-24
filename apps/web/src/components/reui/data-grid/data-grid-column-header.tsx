@@ -15,7 +15,7 @@ import { Subscribe } from "@tanstack/react-table"
 import type { Column } from "@tanstack/react-table"
 
 import { cn } from "cn"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/shadcn/button"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -28,7 +28,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/shadcn/dropdown-menu"
 import { ArrowDownIcon, ArrowUpIcon, ChevronsUpDownIcon, CheckIcon, ArrowLeftToLineIcon, ArrowRightToLineIcon, ArrowLeftIcon, ArrowRightIcon, Settings2Icon, PinOffIcon } from "lucide-react"
 
 interface DataGridColumnHeaderProps<

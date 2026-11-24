@@ -2,7 +2,7 @@ import { featurePermissions } from '@repo/shared/constants';
 import type { Metadata } from 'next';
 import { MissingPermissionAlert } from '@/components/discord/missing-permission-alert';
 import { Header } from '@/components/header';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/shadcn/card';
 import { verifyDashboardAccessPermission } from '@/lib/dal';
 import { db } from '@/lib/db';
 import { getChannels } from '@/lib/discord/api';

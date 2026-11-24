@@ -17,9 +17,9 @@ import {
   ControlledFieldLabel,
 } from '@/components/rhf/field';
 import { ControlledInput } from '@/components/rhf/input';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { FieldContent, FieldGroup } from '@/components/ui/field';
+import { Button } from '@/components/shadcn/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/shadcn/card';
+import { FieldContent, FieldGroup } from '@/components/shadcn/field';
 import { updateCustomAction } from '../action';
 import { DeleteDialog } from '../delete-dialog';
 import { updateFormSchema } from '../schema';

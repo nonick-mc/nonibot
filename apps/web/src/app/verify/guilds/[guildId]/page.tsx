@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { CardContent } from '@/components/ui/card';
+import { CardContent } from '@/components/shadcn/card';
 import {
   canAccessVerifyPage,
   getCachedSession,

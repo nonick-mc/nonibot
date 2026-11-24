@@ -6,7 +6,7 @@ import {
   ServerIcon,
   WrenchIcon,
 } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/shadcn/card';
 import { Reveal } from '../reveal';
 
 const features = [

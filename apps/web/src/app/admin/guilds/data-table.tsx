@@ -10,8 +10,8 @@ import {
 } from '@/components/reui/data-grid/data-grid';
 import { DataGridPagination } from '@/components/reui/data-grid/data-grid-pagination';
 import { DataGridTable } from '@/components/reui/data-grid/data-grid-table';
-import { CardContent, CardFooter } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
+import { CardContent, CardFooter } from '@/components/shadcn/card';
+import { Separator } from '@/components/shadcn/separator';
 import { type AdminGuildRow, columns } from './columns';
 
 type Props = {

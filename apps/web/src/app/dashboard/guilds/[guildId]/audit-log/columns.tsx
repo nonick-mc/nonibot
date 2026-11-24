@@ -11,8 +11,8 @@ import utc from 'dayjs/plugin/utc';
 import { ClockIcon, TargetIcon, UserIcon, ZapIcon } from 'lucide-react';
 import type { DataGridFeatures } from '@/components/reui/data-grid/data-grid';
 import { DataGridColumnHeader } from '@/components/reui/data-grid/data-grid-column-header';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/shadcn/avatar';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/shadcn/tooltip';
 
 dayjs.locale('ja');
 dayjs.extend(relativeTime);

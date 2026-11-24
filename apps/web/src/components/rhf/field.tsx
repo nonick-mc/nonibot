@@ -9,7 +9,7 @@ import {
   useController,
   useFormState,
 } from 'react-hook-form';
-import { Field, FieldError, FieldLabel } from '../ui/field';
+import { Field, FieldError, FieldLabel } from '../shadcn/field';
 
 type ControlledFieldContextValue = UseControllerReturn<FieldValues> & {
   isSubmitting: boolean;

@@ -7,7 +7,7 @@ import type { ParserRules } from 'discord-markdown-parser/dist/simple-markdown';
 import type { PropsWithChildren } from 'react';
 import { Fragment, type ReactNode, useContext, useState } from 'react';
 import { Twemoji as TwemojiImage } from '@/components/twemoji';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/shadcn/tooltip';
 import { cn } from '@/lib/utils';
 import { PreviewResourcesContext } from './context';
 import { ChannelMention, GuildNavigationMention, Mention, RoleMention } from './mention';

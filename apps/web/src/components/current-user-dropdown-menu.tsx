@@ -23,7 +23,7 @@ import {
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '@/components/shadcn/dropdown-menu';
 import { authClient } from '@/lib/auth-client';
 import { CurrentUserAvatar } from './current-user-avatar';
 

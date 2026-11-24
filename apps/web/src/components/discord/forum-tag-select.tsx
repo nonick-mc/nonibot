@@ -10,8 +10,8 @@ import {
   ComboboxItem,
   ComboboxList,
   useComboboxAnchor,
-} from '../ui/combobox';
-import { InputGroupAddon } from '../ui/input-group';
+} from '../shadcn/combobox';
+import { InputGroupAddon } from '../shadcn/input-group';
 import { Emoji, Twemoji } from './preview/markdown';
 
 type ForumTagSelectProps = {

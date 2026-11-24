@@ -14,10 +14,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Field, FieldLabel } from '@/components/ui/field';
-import { Spinner } from '@/components/ui/spinner';
+} from '@/components/shadcn/alert-dialog';
+import { Checkbox } from '@/components/shadcn/checkbox';
+import { Field, FieldLabel } from '@/components/shadcn/field';
+import { Spinner } from '@/components/shadcn/spinner';
 import { deleteSavedMessageAction } from './action';
 
 type DeleteDialogProps = {

@@ -23,18 +23,18 @@ import {
 import { ControlledInputGroupInput } from '@/components/rhf/input-group';
 import { ControlledRoleSelect } from '@/components/rhf/role-select';
 import { ControlledSelect, ControlledSelectTrigger } from '@/components/rhf/select';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/shadcn/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { FieldContent, FieldDescription, FieldGroup, FieldSeparator } from '@/components/ui/field';
-import { InputGroup, InputGroupAddon } from '@/components/ui/input-group';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { SelectContent, SelectGroup, SelectItem, SelectValue } from '@/components/ui/select';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+} from '@/components/shadcn/dropdown-menu';
+import { FieldContent, FieldDescription, FieldGroup, FieldSeparator } from '@/components/shadcn/field';
+import { InputGroup, InputGroupAddon } from '@/components/shadcn/input-group';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/shadcn/popover';
+import { SelectContent, SelectGroup, SelectItem, SelectValue } from '@/components/shadcn/select';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/shadcn/tooltip';
 import { DiscordButtonEmoji } from '../../preview/button';
 import { ComponentEditorContext, useEditorResources } from '../context';
 import { EditorCard } from '../editor-card';

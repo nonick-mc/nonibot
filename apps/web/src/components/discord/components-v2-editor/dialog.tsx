@@ -5,7 +5,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import z from 'zod';
 import { FormDevTool } from '@/components/form';
 import { ControlledFieldError, ControlledFieldProvider } from '@/components/rhf/field';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/shadcn/button';
 import {
   Dialog,
   DialogContent,
@@ -13,7 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
+} from '@/components/shadcn/dialog';
 import {
   createMessageUserComponentsSchema,
   type MessageUserComponentsSchema,

@@ -21,9 +21,9 @@ import {
   ComboboxSeparator,
   useComboboxAnchor,
   useComboboxFilteredItems,
-} from '../ui/combobox';
-import { InputGroupAddon } from '../ui/input-group';
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
+} from '../shadcn/combobox';
+import { InputGroupAddon } from '../shadcn/input-group';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../shadcn/tooltip';
 import { ChannelTypeIcon } from './channel-type-icon';
 
 type ChannelSelectCommonProps = {

@@ -4,7 +4,7 @@ import { AlertCircleIcon, RotateCw } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { startTransition } from 'react';
 import { Alert, AlertAction, AlertDescription, AlertTitle } from '@/components/reui/alert';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/shadcn/button';
 import { Navbar } from '../(guild-select)/navbar';
 
 export default function ErrorPage({ reset }: { reset: () => void }) {

@@ -37,16 +37,16 @@ import { ControlledForumTagSelect } from '@/components/rhf/forum-tag-select';
 import { ControlledInput } from '@/components/rhf/input';
 import { ControlledRoleSelect } from '@/components/rhf/role-select';
 import { ControlledSwitch } from '@/components/rhf/switch';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
+import { Button } from '@/components/shadcn/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/shadcn/card';
+import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/shadcn/empty';
 import {
   Field,
   FieldContent,
   FieldDescription,
   FieldGroup,
   FieldSeparator,
-} from '@/components/ui/field';
+} from '@/components/shadcn/field';
 import { cn } from '@/lib/utils';
 import { updateSettingAction } from './action';
 import { formSchema } from './schema';

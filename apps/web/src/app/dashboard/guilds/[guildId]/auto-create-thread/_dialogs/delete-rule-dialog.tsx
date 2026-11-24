@@ -16,9 +16,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-import { Button } from '@/components/ui/button';
-import { Spinner } from '@/components/ui/spinner';
+} from '@/components/shadcn/alert-dialog';
+import { Button } from '@/components/shadcn/button';
+import { Spinner } from '@/components/shadcn/spinner';
 import { deleteRuleAction } from '../action';
 
 type DeleteRuleDialogProps = {

@@ -1,5 +1,5 @@
-import { CardContent } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
+import { CardContent } from '@/components/shadcn/card';
+import { Skeleton } from '@/components/shadcn/skeleton';
 import { VerificationHeader } from './header';
 
 export default function Loading() {

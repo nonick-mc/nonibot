@@ -1,4 +1,4 @@
-import { Card } from '@/components/ui/card';
+import { Card } from '@/components/shadcn/card';
 
 export default function Layout({ children }: LayoutProps<'/verify/guilds/[guildId]'>) {
   return (

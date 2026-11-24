@@ -1,7 +1,7 @@
 import type { ComponentProps } from 'react';
 import { ComponentsV2EditorDialog } from '../discord/components-v2-editor/dialog';
 import type { MessageResources } from '../discord/resources';
-import type { DialogTrigger } from '../ui/dialog';
+import type { DialogTrigger } from '../shadcn/dialog';
 import { useControlledField } from './field';
 
 export function ControlledComponentsV2EditorDialog({

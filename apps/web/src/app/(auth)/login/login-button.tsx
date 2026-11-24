@@ -3,8 +3,8 @@
 import { SiDiscord } from '@icons-pack/react-simple-icons';
 import { useSearchParams } from 'next/navigation';
 import { useBoolean } from 'usehooks-ts';
-import { Button } from '@/components/ui/button';
-import { Spinner } from '@/components/ui/spinner';
+import { Button } from '@/components/shadcn/button';
+import { Spinner } from '@/components/shadcn/spinner';
 import { authClient } from '@/lib/auth-client';
 
 export function LoginButton() {

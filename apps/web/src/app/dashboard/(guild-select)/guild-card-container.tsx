@@ -4,7 +4,7 @@ import type { RESTAPIPartialCurrentUserGuild } from 'discord-api-types/v10';
 import { PlusIcon, SearchIcon } from 'lucide-react';
 import { useQueryState } from 'nuqs';
 import { useDebounceValue } from 'usehooks-ts';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/shadcn/button';
 import {
   Empty,
   EmptyContent,
@@ -12,7 +12,7 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from '@/components/ui/empty';
+} from '@/components/shadcn/empty';
 import { GuildCard } from './guild-card';
 
 type GuildCardContainerProps = {

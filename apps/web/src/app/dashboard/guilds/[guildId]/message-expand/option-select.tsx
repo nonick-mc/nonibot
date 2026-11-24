@@ -12,7 +12,7 @@ import {
   ComboboxItem,
   ComboboxList,
   useComboboxAnchor,
-} from '@/components/ui/combobox';
+} from '@/components/shadcn/combobox';
 import { cn } from '@/lib/utils';
 
 type Option<T extends string | number> = {

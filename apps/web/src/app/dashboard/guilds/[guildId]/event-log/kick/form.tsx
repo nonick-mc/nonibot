@@ -17,7 +17,7 @@ import {
 } from '@/components/rhf/field';
 import { ControlledRoleSelect } from '@/components/rhf/role-select';
 import { ControlledSwitch } from '@/components/rhf/switch';
-import { FieldContent, FieldDescription, FieldGroup, FieldSeparator } from '@/components/ui/field';
+import { FieldContent, FieldDescription, FieldGroup, FieldSeparator } from '@/components/shadcn/field';
 import { updateSettingAction } from './action';
 import { formSchema } from './schema';
 

@@ -4,7 +4,7 @@ import { CheckIcon, CopyIcon } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { useCopyToClipboard } from 'usehooks-ts';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/shadcn/button';
 
 export function GuildInfoCardAction({ guildId }: { guildId: string }) {
   const [, copy] = useCopyToClipboard();

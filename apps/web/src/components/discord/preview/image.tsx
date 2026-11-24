@@ -4,7 +4,7 @@ import type { Placeholder } from '@repo/placeholders';
 import { ImageIcon } from 'lucide-react';
 import { useContext } from 'react';
 import { PreviewResourcesContext } from './context';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/shadcn/tooltip';
 import { cn } from '@/lib/utils';
 
 const PlaceHolderRegex = /^\{\{\s*(\w+)\s*\}\}$/;

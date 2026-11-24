@@ -15,9 +15,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { InputGroup, InputGroupAddon, InputGroupButton } from '@/components/ui/input-group';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+} from '@/components/shadcn/dropdown-menu';
+import { InputGroup, InputGroupAddon, InputGroupButton } from '@/components/shadcn/input-group';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/shadcn/tooltip';
 import { groupChannelsByCategory } from '@/lib/discord/utils';
 import { ChannelTypeIcon } from '../../channel-type-icon';
 import { RoleColor } from '../../role-color';

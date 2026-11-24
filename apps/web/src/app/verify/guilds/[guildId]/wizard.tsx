@@ -9,16 +9,16 @@ import { DEFAULT_SERVER_ERROR_MESSAGE } from 'next-safe-action';
 import { type ReactNode, useState } from 'react';
 import { toast } from 'sonner';
 import { Stepper, StepperContent, StepperPanel } from '@/components/reui/stepper';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/shadcn/avatar';
+import { Button } from '@/components/shadcn/button';
 import {
   Empty,
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from '@/components/ui/empty';
-import { Spinner } from '@/components/ui/spinner';
+} from '@/components/shadcn/empty';
+import { Spinner } from '@/components/shadcn/spinner';
 import { authClient } from '@/lib/auth-client';
 import { verifyAction } from './action';
 

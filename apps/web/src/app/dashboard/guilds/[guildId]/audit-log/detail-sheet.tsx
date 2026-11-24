@@ -6,15 +6,15 @@ import { useContext } from 'react';
 import { PreviewResourcesContext } from '@/components/discord/preview/context';
 import { ChannelMention, RoleMention } from '@/components/discord/preview/mention';
 import { DiscordMessage, type MessagePreviewProps } from '@/components/discord/preview/message';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Card } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/shadcn/avatar';
+import { Card } from '@/components/shadcn/card';
 import {
   Sheet,
   SheetContent,
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from '@/components/ui/sheet';
+} from '@/components/shadcn/sheet';
 import { cn } from '@/lib/utils';
 import { actionTypeTexts, type CustomizedAuditLog, initials, targetNameTexts } from './columns';
 import {

@@ -1,5 +1,5 @@
 import type { ComponentProps } from 'react';
-import { Toggle } from '../ui/toggle';
+import { Toggle } from '../shadcn/toggle';
 import { useControlledField } from './field';
 
 export function ControlledToggle(props: ComponentProps<typeof Toggle>) {

@@ -2,7 +2,7 @@ import { CDNRoutes, ImageFormat, RouteBases } from 'discord-api-types/v10';
 import { ChevronsUpDown, PlusIcon } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/shadcn/avatar';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -11,9 +11,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { Skeleton } from '@/components/ui/skeleton';
+} from '@/components/shadcn/dropdown-menu';
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/shadcn/sidebar';
+import { Skeleton } from '@/components/shadcn/skeleton';
 import { getGuild, getManageableGuilds } from '@/lib/discord/api';
 import { getInviteUrl } from '@/lib/discord/invite';
 import { GuildSwitcherContent } from './guild-switcher-content';

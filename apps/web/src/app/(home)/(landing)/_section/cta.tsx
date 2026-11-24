@@ -1,8 +1,8 @@
 import { ArrowRightIcon } from 'lucide-react';
 import type { Route } from 'next';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Button } from '@/components/shadcn/button';
+import { Card } from '@/components/shadcn/card';
 import { Reveal } from '../reveal';
 
 export function CtaSection() {

@@ -6,8 +6,8 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from '@/components/ui/accordion';
-import { Card, CardContent } from '@/components/ui/card';
+} from '@/components/shadcn/accordion';
+import { Card, CardContent } from '@/components/shadcn/card';
 import { Reveal } from '../reveal';
 
 const linkClass = 'text-foreground underline';

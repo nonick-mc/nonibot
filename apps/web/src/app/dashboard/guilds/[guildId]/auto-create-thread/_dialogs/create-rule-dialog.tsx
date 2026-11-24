@@ -18,7 +18,7 @@ import {
   ControlledFieldError,
   ControlledFieldLabel,
 } from '@/components/rhf/field';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/shadcn/button';
 import {
   Dialog,
   DialogContent,
@@ -26,9 +26,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { FieldContent, FieldDescription, FieldGroup } from '@/components/ui/field';
-import { Spinner } from '@/components/ui/spinner';
+} from '@/components/shadcn/dialog';
+import { FieldContent, FieldDescription, FieldGroup } from '@/components/shadcn/field';
+import { Spinner } from '@/components/shadcn/spinner';
 import { createRuleAction } from '../action';
 import { RulesMaxSize } from '../constants';
 import { createRuleFormSchema } from '../schema';

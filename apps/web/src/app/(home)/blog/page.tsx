@@ -1,8 +1,8 @@
 import dayjs from 'dayjs';
 import type { Route } from 'next';
 import Link from 'next/link';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Card, CardFooter, CardHeader } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/shadcn/avatar';
+import { Card, CardFooter, CardHeader } from '@/components/shadcn/card';
 import { blog } from '@/lib/source';
 
 export default function Home() {

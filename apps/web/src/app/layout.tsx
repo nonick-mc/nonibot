@@ -4,8 +4,8 @@ import { Geist_Mono, Noto_Sans_JP } from 'next/font/google';
 import './globals.css';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { RouterEventsProvider } from '@/components/router-events-provider';
-import { Toaster } from '@/components/ui/sonner';
-import { TooltipProvider } from '@/components/ui/tooltip';
+import { Toaster } from '@/components/shadcn/sonner';
+import { TooltipProvider } from '@/components/shadcn/tooltip';
 import { cn } from '@/lib/utils';
 
 const notoSansJP = Noto_Sans_JP({

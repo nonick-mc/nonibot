@@ -5,9 +5,9 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Separator } from '@/components/ui/separator';
-import { SidebarTrigger } from '@/components/ui/sidebar';
+} from '@/components/shadcn/dropdown-menu';
+import { Separator } from '@/components/shadcn/separator';
+import { SidebarTrigger } from '@/components/shadcn/sidebar';
 
 export function Navbar({ breadcrumb }: { breadcrumb: ReactNode }) {
   return (

@@ -7,7 +7,7 @@ import { cn } from 'cn';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import type { JSX, ReactNode } from 'react';
 import { useDataGrid } from '@/components/reui/data-grid/data-grid';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/shadcn/button';
 import {
   Select,
   SelectContent,
@@ -15,8 +15,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Skeleton } from '@/components/ui/skeleton';
+} from '@/components/shadcn/select';
+import { Skeleton } from '@/components/shadcn/skeleton';
 
 interface DataGridPaginationProps {
   sizes?: number[];

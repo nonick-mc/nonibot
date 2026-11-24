@@ -8,8 +8,8 @@ import {
   ControlledFieldError,
   ControlledFieldLabel,
 } from '@/components/rhf/field';
-import { InputGroup, InputGroupAddon, InputGroupButton } from '@/components/ui/input-group';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { InputGroup, InputGroupAddon, InputGroupButton } from '@/components/shadcn/input-group';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/shadcn/tooltip';
 import { ComponentEditorContext } from '../context';
 import { DebouncedUrlInput } from '../debounced-url-input';
 import { EditorCard } from '../editor-card';

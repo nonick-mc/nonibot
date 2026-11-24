@@ -24,9 +24,9 @@ import {
 import { ControlledRoleSelect } from '@/components/rhf/role-select';
 import { ControlledSelect, ControlledSelectTrigger } from '@/components/rhf/select';
 import { ControlledSwitch } from '@/components/rhf/switch';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { FieldContent, FieldDescription, FieldGroup, FieldSeparator } from '@/components/ui/field';
-import { SelectContent, SelectGroup, SelectItem, SelectValue } from '@/components/ui/select';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/shadcn/card';
+import { FieldContent, FieldDescription, FieldGroup, FieldSeparator } from '@/components/shadcn/field';
+import { SelectContent, SelectGroup, SelectItem, SelectValue } from '@/components/shadcn/select';
 import { updateSettingAction } from './action';
 import { RoleRewardsField } from './role-rewards';
 import { formSchema } from './schema';

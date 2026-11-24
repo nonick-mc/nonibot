@@ -10,7 +10,7 @@ import { CalendarIcon, CrownIcon, ServerIcon, UsersIcon } from 'lucide-react';
 import { initials } from '@/app/dashboard/guilds/[guildId]/audit-log/columns';
 import type { DataGridFeatures } from '@/components/reui/data-grid/data-grid';
 import { DataGridColumnHeader } from '@/components/reui/data-grid/data-grid-column-header';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/shadcn/avatar';
 
 dayjs.locale('ja');
 dayjs.extend(utc);

@@ -2,7 +2,7 @@ import { ButtonStyle } from 'discord-api-types/v10';
 import { ExternalLinkIcon } from 'lucide-react';
 import type { ComponentProps } from 'react';
 import { cn } from '@/lib/utils';
-import { Button } from '../../ui/button';
+import { Button } from '../../shadcn/button';
 import { Emoji, Twemoji } from './markdown';
 
 type DiscordButtonEmoji = { id?: string; name: string; animated?: boolean };

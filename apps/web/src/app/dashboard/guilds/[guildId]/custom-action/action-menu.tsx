@@ -2,13 +2,13 @@
 
 import { EllipsisIcon, Trash2Icon } from 'lucide-react';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/shadcn/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '@/components/shadcn/dropdown-menu';
 import { DeleteDialog } from './delete-dialog';
 
 type ActionMenuProps = {

@@ -10,11 +10,11 @@ import {
 } from '@/components/rhf/field';
 import { ControlledSelect, ControlledSelectTrigger } from '@/components/rhf/select';
 import { ControlledSwitch } from '@/components/rhf/switch';
-import { Button } from '@/components/ui/button';
-import { FieldContent, FieldGroup } from '@/components/ui/field';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { SelectContent, SelectGroup, SelectItem, SelectValue } from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
+import { Button } from '@/components/shadcn/button';
+import { FieldContent, FieldGroup } from '@/components/shadcn/field';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/shadcn/popover';
+import { SelectContent, SelectGroup, SelectItem, SelectValue } from '@/components/shadcn/select';
+import { Separator } from '@/components/shadcn/separator';
 import { useComponentEditorContext } from '../context';
 import { EditorCard } from '../editor-card';
 

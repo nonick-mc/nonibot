@@ -5,7 +5,7 @@ import type { Route } from 'next';
 import Link from 'next/link';
 import { useParams, useSelectedLayoutSegments } from 'next/navigation';
 import { Fragment } from 'react';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/shadcn/collapsible';
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -19,7 +19,7 @@ import {
   SidebarMenuSubItem,
   SidebarSeparator,
   useSidebar,
-} from '@/components/ui/sidebar';
+} from '@/components/shadcn/sidebar';
 import { SidebarNavigationItems } from './sidebar-navigation-items';
 
 type SidebarNavigationProps = {

@@ -1,5 +1,5 @@
 import type { ComponentProps } from 'react';
-import { Button } from '../ui/button';
+import { Button } from '../shadcn/button';
 import { useControlledField } from './field';
 
 export function ControlledButton({ disabled, ...props }: ComponentProps<typeof Button>) {

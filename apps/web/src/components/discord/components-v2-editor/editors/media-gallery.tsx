@@ -23,10 +23,10 @@ import {
   ControlledFieldError,
   ControlledFieldProvider,
 } from '@/components/rhf/field';
-import { Button } from '@/components/ui/button';
-import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
-import { InputGroup, InputGroupAddon, InputGroupButton } from '@/components/ui/input-group';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Button } from '@/components/shadcn/button';
+import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/shadcn/empty';
+import { InputGroup, InputGroupAddon, InputGroupButton } from '@/components/shadcn/input-group';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/shadcn/tooltip';
 import { useComponentEditorContext } from '../context';
 import { DebouncedUrlInput } from '../debounced-url-input';
 import { EditorCard } from '../editor-card';

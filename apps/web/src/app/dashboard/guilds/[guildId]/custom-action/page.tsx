@@ -2,8 +2,8 @@ import { collectInteractiveComponents, parseCustomActionCustomId } from '@repo/s
 import { PlusIcon } from 'lucide-react';
 import type { Metadata } from 'next';
 import { Header } from '@/components/header';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/shadcn/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/shadcn/card';
 import { verifyDashboardAccessPermission } from '@/lib/dal';
 import { db } from '@/lib/db';
 import { getRoles } from '@/lib/discord/api';

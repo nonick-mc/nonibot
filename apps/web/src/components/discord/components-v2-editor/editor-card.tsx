@@ -3,8 +3,8 @@
 import { GripVerticalIcon, type LucideIcon, Trash2Icon } from 'lucide-react';
 import type { PropsWithChildren, ReactNode } from 'react';
 import { SortableItemHandle } from '../../reui/sortable';
-import { Button } from '../../ui/button';
-import { Card } from '../../ui/card';
+import { Button } from '../../shadcn/button';
+import { Card } from '../../shadcn/card';
 import { useComponentEditorContext } from './context';
 
 type EditorCardProps = {

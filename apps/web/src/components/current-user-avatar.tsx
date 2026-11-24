@@ -2,8 +2,8 @@
 
 import { forwardRef } from 'react';
 import { authClient } from '@/lib/auth-client';
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import { Skeleton } from './ui/skeleton';
+import { Avatar, AvatarFallback, AvatarImage } from './shadcn/avatar';
+import { Skeleton } from './shadcn/skeleton';
 
 export const CurrentUserAvatar = forwardRef<
   HTMLSpanElement,

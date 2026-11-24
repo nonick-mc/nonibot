@@ -1,8 +1,8 @@
 import { CDNRoutes, GuildFeature, ImageFormat, RouteBases } from 'discord-api-types/v10';
 import { BadgeCheckIcon } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Card, CardContent } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/shadcn/avatar';
+import { Card, CardContent } from '@/components/shadcn/card';
+import { Skeleton } from '@/components/shadcn/skeleton';
 import { getGuild } from '@/lib/discord/api';
 import { GuildInfoCardAction } from './guild-info-card-action';
 

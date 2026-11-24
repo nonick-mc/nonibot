@@ -17,15 +17,15 @@ import {
   ControlledFieldError,
   ControlledFieldLabel,
 } from '@/components/rhf/field';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/shadcn/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Empty, EmptyContent, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+} from '@/components/shadcn/dropdown-menu';
+import { Empty, EmptyContent, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/shadcn/empty';
+import { Tabs, TabsList, TabsTrigger } from '@/components/shadcn/tabs';
 import { useComponentEditorContext } from '../context';
 import { EditorCard } from '../editor-card';
 import { defaultComponentValues } from '../schema';

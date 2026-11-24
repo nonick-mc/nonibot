@@ -1,14 +1,14 @@
 'use client';
 
 import { CircleAlertIcon } from 'lucide-react';
-import { CardContent } from '@/components/ui/card';
+import { CardContent } from '@/components/shadcn/card';
 import {
   Empty,
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from '@/components/ui/empty';
+} from '@/components/shadcn/empty';
 import { VerificationHeader } from './header';
 
 export default function ErrorPage() {

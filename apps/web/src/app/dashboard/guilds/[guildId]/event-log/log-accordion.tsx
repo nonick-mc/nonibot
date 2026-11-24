@@ -17,8 +17,8 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from '@/components/ui/accordion';
-import { Button } from '@/components/ui/button';
+} from '@/components/shadcn/accordion';
+import { Button } from '@/components/shadcn/button';
 import {
   Dialog,
   DialogContent,
@@ -26,7 +26,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
+} from '@/components/shadcn/dialog';
 import { useDialogState } from '@/hooks/use-dialog-state';
 import { SettingForm as BanForm } from './ban/form';
 import { SettingForm as KickForm } from './kick/form';

@@ -5,8 +5,8 @@ import { ChevronRightIcon, HashIcon, ListIcon, TriangleAlertIcon } from 'lucide-
 import type { Route } from 'next';
 import Link from 'next/link';
 import { Badge } from '@/components/reui/badge';
-import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
-import { Item, ItemActions, ItemContent, ItemMedia, ItemTitle } from '@/components/ui/item';
+import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/shadcn/empty';
+import { Item, ItemActions, ItemContent, ItemMedia, ItemTitle } from '@/components/shadcn/item';
 import { cn } from '@/lib/utils';
 
 type RuleListProps = {

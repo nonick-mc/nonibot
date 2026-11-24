@@ -5,8 +5,8 @@ import {
   FieldDescription,
   FieldLabel,
   FieldTitle,
-} from '@/components/ui/field';
-import { RadioGroupItem } from '@/components/ui/radio-group';
+} from '@/components/shadcn/field';
+import { RadioGroupItem } from '@/components/shadcn/radio-group';
 
 const captchaTypeOptions = [
   {

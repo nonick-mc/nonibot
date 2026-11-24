@@ -4,9 +4,9 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { InfoIcon, SaveIcon } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useFormContext, useFormState } from 'react-hook-form';
-import { Button } from '@/components/ui/button';
-import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia } from '@/components/ui/item';
-import { Spinner } from '@/components/ui/spinner';
+import { Button } from '@/components/shadcn/button';
+import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia } from '@/components/shadcn/item';
+import { Spinner } from '@/components/shadcn/spinner';
 
 const DevTool = dynamic(() => import('@hookform/devtools').then((module) => module.DevTool), {
   ssr: false,

@@ -36,16 +36,16 @@ import {
 } from '@/components/rhf/field';
 import { ControlledRoleSelect } from '@/components/rhf/role-select';
 import { ControlledSwitch } from '@/components/rhf/switch';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/shadcn/button';
+import { Card, CardContent } from '@/components/shadcn/card';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { FieldContent, FieldDescription, FieldGroup, FieldSeparator } from '@/components/ui/field';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+} from '@/components/shadcn/dropdown-menu';
+import { FieldContent, FieldDescription, FieldGroup, FieldSeparator } from '@/components/shadcn/field';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/shadcn/popover';
 import type { stepsSchema } from './schema';
 
 export type Steps = z.infer<typeof stepsSchema>;
