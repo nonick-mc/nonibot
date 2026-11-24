@@ -1,18 +1,19 @@
 'use client';
 
-import { Links } from '@repo/shared/constants';
 import {
-  BookOpenIcon,
-  HouseIcon,
-  LayoutDashboardIcon,
-  LogOutIcon,
-  MessageCircleQuestionIcon,
-  PaletteIcon,
-} from 'lucide-react';
+  ArrowRightFromSquare,
+  BookOpen,
+  CircleQuestion,
+  House,
+  Palette,
+  Sliders,
+} from '@gravity-ui/icons';
+import { Links } from '@repo/shared/constants';
 import type { Route } from 'next';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
+import { GravityIcon } from '@/components/gravity-icon';
 import {
   DropdownMenuGroup,
   DropdownMenuItem,
@@ -23,7 +24,7 @@ import {
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
-} from '@/components/shadcn/dropdown-menu';
+} from '@/components/ui/dropdown-menu';
 import { authClient } from '@/lib/auth-client';
 import { CurrentUserAvatar } from './current-user-avatar';
 
@@ -59,7 +60,7 @@ export function CurrentUserDropdownMenu() {
           <DropdownMenuItem
             render={
               <Link href='/dashboard'>
-                <LayoutDashboardIcon strokeWidth={2} className='mt-0.5' />
+                <GravityIcon icon={Sliders} />
                 ダッシュボード
               </Link>
             }
@@ -69,7 +70,7 @@ export function CurrentUserDropdownMenu() {
         <DropdownMenuItem
           render={
             <Link href={'/docs' as Route} target={inDashboard ? '_blank' : '_self'}>
-              <BookOpenIcon className='mt-0.5' />
+              <GravityIcon icon={BookOpen} />
               ドキュメント
             </Link>
           }
@@ -78,7 +79,7 @@ export function CurrentUserDropdownMenu() {
         <DropdownMenuItem
           render={
             <Link href='/' target={inDashboard ? '_blank' : '_self'}>
-              <HouseIcon className='mt-0.5' />
+              <GravityIcon icon={House} />
               ホームページ
             </Link>
           }
@@ -87,7 +88,7 @@ export function CurrentUserDropdownMenu() {
         <DropdownMenuItem
           render={
             <Link href={Links.SupportServer} target='_blank'>
-              <MessageCircleQuestionIcon className='mt-0.5' />
+              <GravityIcon icon={CircleQuestion} />
               サポートサーバー
             </Link>
           }
@@ -98,7 +99,7 @@ export function CurrentUserDropdownMenu() {
       <DropdownMenuGroup>
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>
-            <PaletteIcon className='mt-0.5' />
+            <GravityIcon icon={Palette} />
             テーマ
           </DropdownMenuSubTrigger>
           <DropdownMenuSubContent>
@@ -128,7 +129,7 @@ export function CurrentUserDropdownMenu() {
           }}
           variant='destructive'
         >
-          <LogOutIcon className='mt-0.5' />
+          <GravityIcon icon={ArrowRightFromSquare} />
           ログアウト
         </DropdownMenuItem>
       </DropdownMenuGroup>

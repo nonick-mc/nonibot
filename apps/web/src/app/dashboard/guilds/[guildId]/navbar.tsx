@@ -1,13 +1,13 @@
 import type { ReactNode } from 'react';
 import { CurrentUserAvatar } from '@/components/current-user-avatar';
 import { CurrentUserDropdownMenu } from '@/components/current-user-dropdown-menu';
+import { Separator } from '@/components/shadcn/separator';
+import { SidebarTrigger } from '@/components/shadcn/sidebar';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from '@/components/shadcn/dropdown-menu';
-import { Separator } from '@/components/shadcn/separator';
-import { SidebarTrigger } from '@/components/shadcn/sidebar';
+} from '@/components/ui/dropdown-menu';
 
 export function Navbar({ breadcrumb }: { breadcrumb: ReactNode }) {
   return (

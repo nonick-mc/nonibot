@@ -1,13 +1,14 @@
 'use client';
 
-import { SearchIcon, XIcon } from 'lucide-react';
+import { Magnifier, Xmark } from '@gravity-ui/icons';
 import { useQueryState } from 'nuqs';
+import { GravityIcon } from '@/components/gravity-icon';
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
-} from '@/components/shadcn/input-group';
+} from '@/components/ui/input-group';
 
 export function SearchInput() {
   const [query, setQuery] = useQueryState('q');
@@ -20,12 +21,12 @@ export function SearchInput() {
         onChange={(e) => setQuery(e.target.value || null)}
       />
       <InputGroupAddon>
-        <SearchIcon />
+        <GravityIcon icon={Magnifier} />
       </InputGroupAddon>
       {query && (
         <InputGroupAddon align='inline-end'>
-          <InputGroupButton onClick={() => setQuery(null)} size='icon-sm'>
-            <XIcon className='mt-0.5' />
+          <InputGroupButton onClick={() => setQuery(null)} size='icon-xs'>
+            <GravityIcon icon={Xmark} />
           </InputGroupButton>
         </InputGroupAddon>
       )}

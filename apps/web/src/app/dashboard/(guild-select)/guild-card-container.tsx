@@ -1,10 +1,11 @@
 'use client';
 
+import { Magnifier, Plus } from '@gravity-ui/icons';
 import type { RESTAPIPartialCurrentUserGuild } from 'discord-api-types/v10';
-import { PlusIcon, SearchIcon } from 'lucide-react';
 import { useQueryState } from 'nuqs';
 import { useDebounceValue } from 'usehooks-ts';
-import { Button } from '@/components/shadcn/button';
+import { GravityIcon } from '@/components/gravity-icon';
+import { Button } from '@/components/ui/button';
 import {
   Empty,
   EmptyContent,
@@ -12,7 +13,7 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from '@/components/shadcn/empty';
+} from '@/components/ui/empty';
 import { GuildCard } from './guild-card';
 
 type GuildCardContainerProps = {
@@ -47,7 +48,7 @@ export function GuildCardContainer({ guilds, inviteUrl }: GuildCardContainerProp
 
   if (!guilds.length) {
     return (
-      <Empty className='border'>
+      <Empty variant='outline'>
         <EmptyHeader>
           <EmptyMedia>
             <StackedCardsIllustration />
@@ -57,9 +58,11 @@ export function GuildCardContainer({ guilds, inviteUrl }: GuildCardContainerProp
         </EmptyHeader>
         <EmptyContent>
           <Button
+            size='sm'
+            variant='outline'
             render={
               <a href={inviteUrl}>
-                <PlusIcon />
+                <GravityIcon icon={Plus} />
                 サーバーを追加
               </a>
             }
@@ -79,10 +82,10 @@ export function GuildCardContainer({ guilds, inviteUrl }: GuildCardContainerProp
 
   if (!filteredGuilds.length) {
     return (
-      <Empty className='border'>
+      <Empty variant='outline'>
         <EmptyHeader>
           <EmptyMedia variant='icon'>
-            <SearchIcon />
+            <Magnifier />
           </EmptyMedia>
           <EmptyTitle>サーバーが見つかりませんでした</EmptyTitle>
           <EmptyDescription>

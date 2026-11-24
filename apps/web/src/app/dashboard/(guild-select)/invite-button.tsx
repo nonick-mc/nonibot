@@ -1,5 +1,6 @@
-import { PlusIcon } from 'lucide-react';
-import { Button } from '@/components/shadcn/button';
+import { Plus } from '@gravity-ui/icons';
+import { GravityIcon } from '@/components/gravity-icon';
+import { Button } from '@/components/ui/button';
 import { getInviteUrl } from '@/lib/discord/invite';
 
 export function InviteButton() {
@@ -8,7 +9,7 @@ export function InviteButton() {
       size='lg'
       render={
         <a href={getInviteUrl()}>
-          <PlusIcon className='mt-0.5' />
+          <GravityIcon icon={Plus} />
           サーバーを追加
         </a>
       }
