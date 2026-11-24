@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { Logo } from '@/components/logo';
-import { Button } from '@/components/shadcn/button';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -11,7 +11,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/shadcn/card';
+} from '@/components/ui/card';
 import { LoginButton } from './login-button';
 
 export const metadata: Metadata = {
@@ -48,18 +48,15 @@ export default function Page() {
           />
         </CardContent>
         <CardFooter>
-          <p className='text-muted-foreground w-full text-center text-xs'>
+          <p className='text-muted-foreground w-full text-center text-sm'>
             ログインすることで、nonibotの{' '}
-            <Link
-              href='/tos'
-              className='transition-colors hover:text-foreground underline underline-offset-4'
-            >
+            <Link href='/tos' className='text-blue-500 hover:text-blue-400 transition-colors'>
               利用規約
             </Link>{' '}
             および{' '}
             <Link
               href='/privacy-policy'
-              className='transition-colors hover:text-foreground underline underline-offset-4'
+              className='text-blue-500 hover:text-blue-400 transition-colors'
             >
               プライバシーポリシー
             </Link>{' '}

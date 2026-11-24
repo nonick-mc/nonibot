@@ -2,29 +2,28 @@
 
 import { SiDiscord } from '@icons-pack/react-simple-icons';
 import { useSearchParams } from 'next/navigation';
-import { useBoolean } from 'usehooks-ts';
-import { Button } from '@/components/shadcn/button';
-import { Spinner } from '@/components/shadcn/spinner';
+import { useState } from 'react';
+import { Button, type ButtonStatus } from '@/components/ui/button';
 import { authClient } from '@/lib/auth-client';
 
 export function LoginButton() {
   const searchParams = useSearchParams();
-  const { value, setTrue } = useBoolean(false);
+  const [status, setStatus] = useState<ButtonStatus>('idle');
 
   return (
     <Button
       onClick={async () => {
-        setTrue();
+        setStatus('loading');
         await authClient.signIn.social({
           provider: 'discord',
           callbackURL: searchParams.get('next') ?? '/dashboard',
         });
       }}
       size='lg'
-      disabled={value}
+      status={status}
     >
-      <div className='pt-0.5'>{value ? <Spinner /> : <SiDiscord />}</div>
-      {value ? 'リダイレクト中...' : 'Discordでログイン'}
+      <SiDiscord className='mt-0.5' />
+      Discordでログイン
     </Button>
   );
 }
