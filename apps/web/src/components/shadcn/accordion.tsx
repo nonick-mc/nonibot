@@ -10,7 +10,7 @@ function AccordionItem({ className, ...props }: AccordionPrimitive.Item.Props) {
   return (
     <AccordionPrimitive.Item
       data-slot='accordion-item'
-      className={cn('border-b last:border-b-0', className)}
+      className={cn('border-b-[1px] last:border-b-0', className)}
       {...props}
     />
   );
@@ -22,7 +22,7 @@ function AccordionTrigger({ className, children, ...props }: AccordionPrimitive.
       <AccordionPrimitive.Trigger
         data-slot='accordion-trigger'
         className={cn(
-          'group/accordion-trigger flex w-full items-center justify-between gap-2 py-2 text-sm font-medium transition-colors',
+          'group/accordion-trigger flex w-full items-center justify-between gap-2 py-2 text-shadcn-sm font-medium transition-colors',
           className,
         )}
         {...props}

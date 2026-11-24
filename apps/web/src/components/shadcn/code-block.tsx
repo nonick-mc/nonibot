@@ -7,13 +7,13 @@ import * as React from 'react';
 import { Button } from '@/components/shadcn/button';
 
 const codeBlockVariants = cva(
-  'group/code-block relative flex w-full min-w-0 flex-col overflow-hidden rounded-xl text-sm has-[>[data-slot=code-block-content]:focus-visible]:ring-[3px] has-[>[data-slot=code-block-content]:focus-visible]:ring-ring/50 data-[size=sm]:rounded-lg data-[size=sm]:text-xs',
+  'group/code-block relative flex w-full min-w-0 flex-col overflow-hidden rounded-shadcn-xl text-shadcn-sm has-[>[data-slot=code-block-content]:focus-visible]:ring-[3px] has-[>[data-slot=code-block-content]:focus-visible]:ring-ring/50 data-[size=sm]:rounded-shadcn-lg data-[size=sm]:text-shadcn-xs',
   {
     variants: {
       variant: {
         default:
-          'border border-input text-foreground has-[>[data-slot=code-block-content]:focus-visible]:border-ring dark:bg-input/30',
-        destructive: 'border border-destructive/30 text-destructive dark:border-destructive/40',
+          'border-[1px] border-input text-foreground has-[>[data-slot=code-block-content]:focus-visible]:border-ring dark:bg-input/30',
+        destructive: 'border-[1px] border-destructive/30 text-destructive dark:border-destructive/40',
       },
     },
     defaultVariants: {
@@ -58,7 +58,7 @@ function CodeBlockTitle({ className, ...props }: React.ComponentProps<'div'>) {
     <div
       data-slot='code-block-title'
       className={cn(
-        "min-w-0 truncate font-sans text-sm font-medium text-foreground group-data-[size=sm]/code-block:text-xs group-data-[variant=destructive]/code-block:text-destructive [&_svg]:pointer-events-none [&_svg]:inline-block [&_svg]:align-middle [&_svg:not([class*='size-'])]:size-4 group-data-[size=sm]/code-block:[&_svg:not([class*='size-'])]:size-3.5 *:[svg]:me-1.5",
+        "min-w-0 truncate font-sans text-shadcn-sm font-medium text-foreground group-data-[size=sm]/code-block:text-shadcn-xs group-data-[variant=destructive]/code-block:text-destructive [&_svg]:pointer-events-none [&_svg]:inline-block [&_svg]:align-middle [&_svg:not([class*='size-'])]:size-4 group-data-[size=sm]/code-block:[&_svg:not([class*='size-'])]:size-3.5 *:[svg]:me-1.5",
         className,
       )}
       {...props}
