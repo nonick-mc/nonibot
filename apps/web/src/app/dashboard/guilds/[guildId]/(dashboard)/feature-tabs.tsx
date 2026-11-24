@@ -1,10 +1,11 @@
 'use client';
 
-import { ArrowRightIcon } from 'lucide-react';
+import { ArrowRight } from '@gravity-ui/icons';
 import Link from 'next/link';
-import { Button } from '@/components/shadcn/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/shadcn/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/shadcn/tabs';
+import { GravityIcon } from '@/components/gravity-icon';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 import { DashboardFeatureCategories } from './features';
 
@@ -19,7 +20,7 @@ export function FeatureTabs({ guildId, featureStatuses }: FeatureTabsProps) {
       <TabsList className='no-scrollbar scroll-fade-x max-w-full justify-start overflow-x-auto'>
         {DashboardFeatureCategories.map((category) => (
           <TabsTrigger key={category.value} value={category.value} className='shrink-0 px-3'>
-            <category.icon />
+            <GravityIcon icon={category.icon} />
             {category.label}
           </TabsTrigger>
         ))}
@@ -34,11 +35,11 @@ export function FeatureTabs({ guildId, featureStatuses }: FeatureTabsProps) {
                     <Icon className='mt-0.5 size-4 shrink-0 text-muted-foreground' />
                     {title}
                   </CardTitle>
-                  <CardDescription>{description}</CardDescription>
+                  <CardDescription className='mt-1'>{description}</CardDescription>
                 </CardHeader>
                 <CardContent
                   className={cn(
-                    'mt-auto flex items-center',
+                    'mt-auto flex flex-row items-center',
                     hasStatus ? 'justify-between' : 'justify-end',
                   )}
                 >
@@ -60,7 +61,7 @@ export function FeatureTabs({ guildId, featureStatuses }: FeatureTabsProps) {
                     nativeButton={false}
                   >
                     設定
-                    <ArrowRightIcon />
+                    <ArrowRight />
                   </Button>
                 </CardContent>
               </Card>

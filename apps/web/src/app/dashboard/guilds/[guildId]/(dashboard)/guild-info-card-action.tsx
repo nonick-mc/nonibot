@@ -1,30 +1,27 @@
 'use client';
 
-import { CheckIcon, CopyIcon } from 'lucide-react';
-import { useState } from 'react';
-import { toast } from 'sonner';
+import { Copy } from '@gravity-ui/icons';
 import { useCopyToClipboard } from 'usehooks-ts';
-import { Button } from '@/components/shadcn/button';
+import { GravityIcon } from '@/components/gravity-icon';
+import { Button } from '@/components/ui/button';
 
 export function GuildInfoCardAction({ guildId }: { guildId: string }) {
   const [, copy] = useCopyToClipboard();
-  const [isDisabled, setIsDisabled] = useState(false);
 
   const handleCopy = async () => {
-    if (!(await copy(guildId))) return toast.error('サーバーIDのコピーに失敗しました');
-    setIsDisabled(true);
-    toast.success('サーバーIDをコピーしました');
-    setTimeout(() => setIsDisabled(false), 3000);
+    if (!(await copy(guildId))) throw new Error('コピーに失敗しました');
   };
 
   return (
     <Button
+      feedback
+      successLabel={<span className='max-sm:sr-only'>コピーしました</span>}
+      errorLabel={<span className='max-sm:sr-only'>コピーに失敗しました</span>}
       variant='outline'
       aria-label='サーバーIDをコピー'
       onClick={handleCopy}
-      disabled={isDisabled}
     >
-      {isDisabled ? <CheckIcon /> : <CopyIcon />}
+      <GravityIcon icon={Copy} className='max-sm:mt-0' />
       <span className='hidden sm:block'>サーバーIDをコピー</span>
     </Button>
   );

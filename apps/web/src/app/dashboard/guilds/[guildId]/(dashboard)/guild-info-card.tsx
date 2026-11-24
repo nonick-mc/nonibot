@@ -1,8 +1,8 @@
 import { CDNRoutes, GuildFeature, ImageFormat, RouteBases } from 'discord-api-types/v10';
 import { BadgeCheckIcon } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/shadcn/avatar';
-import { Card, CardContent } from '@/components/shadcn/card';
-import { Skeleton } from '@/components/shadcn/skeleton';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Card, CardContent } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import { getGuild } from '@/lib/discord/api';
 import { GuildInfoCardAction } from './guild-info-card-action';
 
@@ -29,7 +29,7 @@ export async function GuildInfoCard({ guildId }: { guildId: string }) {
 
   return (
     <Card size='sm'>
-      <CardContent className='flex items-center gap-4'>
+      <CardContent className='flex flex-row items-center gap-4'>
         <Avatar className='size-10'>
           {guild.icon && (
             <AvatarImage
@@ -53,10 +53,10 @@ export async function GuildInfoCard({ guildId }: { guildId: string }) {
 export function GuildInfoCardSkeleton() {
   return (
     <Card size='sm'>
-      <CardContent className='flex items-center gap-4'>
+      <CardContent className='flex flex-row items-center gap-4'>
         <Skeleton className='size-10 rounded-full' />
         <div className='flex flex-1 flex-col gap-1.5'>
-          <Skeleton className='h-5 w-1/2' />
+          <Skeleton className='h-4.5 w-1/2' />
           <Skeleton className='h-4 w-1/4' />
         </div>
         <Skeleton className='h-9 w-9 sm:w-40' />
