@@ -35,7 +35,7 @@ nonibot(Discord BOT + Webダッシュボード)の v6 モノレポ。pnpm worksp
 - `apps/web`: Next.js(App Router)+ better-auth + fumadocs。
   - `src/app/dashboard/guilds/[guildId]/<feature>/`: 機能ごとの設定ページ。典型は `page.tsx`(Server Component、`verifyDashboardAccessPermission` → DB と内部APIから取得)、`form.tsx`(react-hook-form)、`schema.ts`(drizzle-zod)、`action.ts`(`guildActionClient` による Server Action、保存後に `insertSettingAuditLog`)の4点セット。
   - Discord情報は Discord API ではなく Bot の内部API経由で取得する(`src/lib/discord/api.ts`)。
-  - `src/components/rhf/*`: react-hook-form 用の Controlled* ラッパー。`src/components/ui`(shadcn)・`reui`(ReUI)・`discord`(チャンネル/ロール選択など)。
+  - `src/components/rhf/*`: react-hook-form 用の Controlled* ラッパー。`src/components/shadcn`(shadcn)・`ui`(HextaUI の Button / Card など)・`reui`(ReUI)・`discord`(チャンネル/ロール選択など)。
   - ドキュメントは `content/docs/features/*.mdx`(`meta.json` に登録が必要)。
   - `apps/web/AGENTS.md`: この Next.js は既知のものと破壊的変更があるため、実装前に `node_modules/next/dist/docs/` を確認する。
 - `packages/database` (`@repo/database`): drizzle-orm のスキーマとマイグレーション(`drizzle/`)。設定テーブルは `public_setting` スキーマ(`src/schema/setting.ts`)。監査ログの対象名は `src/schema/audit-log.ts` の列挙に追加が必要。

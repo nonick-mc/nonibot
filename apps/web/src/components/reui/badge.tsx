@@ -19,20 +19,20 @@ const badgeVariants = cva(
         focus: 'bg-focus text-focus-foreground',
         invert: 'bg-invert text-invert-foreground',
         'primary-light': 'bg-primary/10 border-none text-primary dark:bg-primary/20',
-        'warning-light': 'bg-warning/10 border-none text-warning-foreground dark:bg-warning/20',
-        'success-light': 'bg-success/10 border-none text-success-foreground dark:bg-success/20',
-        'info-light': 'bg-info/10 border-none text-info-foreground dark:bg-info/20',
+        'warning-light': 'bg-warning/10 border-none text-warning dark:bg-warning/20',
+        'success-light': 'bg-success/10 border-none text-success dark:bg-success/20',
+        'info-light': 'bg-info/10 border-none text-info dark:bg-info/20',
         'destructive-light':
           'bg-destructive/10 border-none text-destructive-foreground dark:bg-destructive/20',
         'invert-light': 'bg-invert/10 border-none text-foreground dark:bg-invert/20',
         'focus-light': 'bg-focus/10 border-none text-focus-foreground dark:bg-focus/20',
         'primary-outline': 'bg-background border-primary text-primary dark:bg-input/30',
         'warning-outline':
-          'bg-background border-warning-foreground text-warning-foreground dark:bg-input/30',
+          'bg-background border-warning text-warning dark:bg-input/30',
         'success-outline':
-          'bg-background border-success-foreground text-success-foreground dark:bg-input/30',
+          'bg-background border-success text-success dark:bg-input/30',
         'info-outline':
-          'bg-background border-info-foreground text-info-foreground dark:bg-input/30',
+          'bg-background border-info text-info dark:bg-input/30',
         'destructive-outline':
           'bg-background border-destructive-foreground text-destructive-foreground dark:bg-input/30',
         'invert-outline':

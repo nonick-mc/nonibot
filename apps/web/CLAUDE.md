@@ -13,7 +13,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Lint/Format: `npx biome check --write <変更したパス>`(ルートから。リポジトリ全体には実行しない)
 - 新しいルートを追加したら `npx next typegen` を実行する。`typedRoutes` が有効で、`PageProps<'/dashboard/...'>` や `Route` の型がこれで生成される。生成前は `PageProps` が `unknown` になる
 - 動的な `router.push` / `href` の文字列は `as Route` が必要
-- shadcn / ReUI の追加は `npx shadcn@latest add <name>`。既存の `components/ui` を上書きしないよう、上書き確認には `n` を答える(`yes n | npx shadcn@latest add ...`)
+- shadcn / ReUI の追加は `npx shadcn@latest add <name>`。shadcn の既存コンポーネントは `components/shadcn` に移してあり、`components/ui` は HextaUI 用。意図せず上書きしないよう、上書き確認には `n` を答える(`yes n | npx shadcn@latest add ...`)
 
 ## アクセス制御の流れ
 

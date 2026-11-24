@@ -94,7 +94,7 @@ export function PlaceholderPickerButton({
                   <ItemTitle className='inline-flex font-mono gap-2'>
                     {key}
                     {deprecated && (
-                      <Badge size='sm' variant='warning-light' className='text-warning-foreground!'>
+                      <Badge size='sm' variant='warning-light' className='text-warning!'>
                         非推奨
                       </Badge>
                     )}
