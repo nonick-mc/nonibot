@@ -11,7 +11,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/shadcn/dialog';
-import { FieldSeparator } from '@/components/shadcn/field';
 import {
   Questionnaire,
   QuestionnaireActions,
@@ -28,6 +27,7 @@ import {
   QuestionnaireTitle,
 } from '@/components/shadcn/questionnaire';
 import { Spinner } from '@/components/shadcn/spinner';
+import { FieldSeparator } from '@/components/ui/field';
 import { uniqueName } from '@/lib/unique-name';
 import { createCustomAction } from './action';
 import { createFormSchema } from './schema';

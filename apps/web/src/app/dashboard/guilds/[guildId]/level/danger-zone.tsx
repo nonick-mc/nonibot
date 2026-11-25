@@ -42,6 +42,8 @@ import {
   CodeBlockContent,
   CodeBlockCopyButton,
 } from '@/components/shadcn/code-block';
+import { Input } from '@/components/shadcn/input';
+import { Spinner } from '@/components/shadcn/spinner';
 import {
   Field,
   FieldContent,
@@ -50,9 +52,7 @@ import {
   FieldLabel,
   FieldSeparator,
   FieldTitle,
-} from '@/components/shadcn/field';
-import { Input } from '@/components/shadcn/input';
-import { Spinner } from '@/components/shadcn/spinner';
+} from '@/components/ui/field';
 import { useDialogState } from '@/hooks/use-dialog-state';
 import {
   exportMemberLevelsAction,

@@ -1,8 +1,8 @@
 'use client';
 
 import type { ComponentProps } from 'react';
-import { Input } from '../shadcn/input';
-import { InputGroupInput } from '../shadcn/input-group';
+import { Input } from '../ui/input';
+import { InputGroupInput } from '../ui/input-group';
 import { useControlledField } from './field';
 
 /** 値を number で扱う入力欄の props。空欄は NaN になる */

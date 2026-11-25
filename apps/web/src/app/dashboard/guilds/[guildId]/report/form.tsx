@@ -46,7 +46,7 @@ import {
   FieldDescription,
   FieldGroup,
   FieldSeparator,
-} from '@/components/shadcn/field';
+} from '@/components/ui/field';
 import { cn } from '@/lib/utils';
 import { updateSettingAction } from './action';
 import { formSchema } from './schema';
@@ -104,7 +104,7 @@ export function SettingForm({ channels, roles, defaultValues }: FormProps) {
                     control={form.control}
                     name='channel'
                     orientation='responsive'
-                    align='center'
+                    className='items-center'
                     disabled={!enabled}
                   >
                     <FieldContent>
@@ -387,7 +387,7 @@ function ForumTagSettingFields({ channels }: { channels: InternalApiChannel[] })
         control={form.control}
         name='resolvedForumTag'
         orientation='responsive'
-        align='center'
+        className='items-center'
         disabled={!enabled}
       >
         <FieldContent>
@@ -401,7 +401,7 @@ function ForumTagSettingFields({ channels }: { channels: InternalApiChannel[] })
         control={form.control}
         name='ignoredForumTag'
         orientation='responsive'
-        align='center'
+        className='items-center'
         disabled={!enabled}
       >
         <FieldContent>

@@ -27,8 +27,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/shadcn/dialog';
-import { FieldContent, FieldDescription, FieldGroup } from '@/components/shadcn/field';
 import { Spinner } from '@/components/shadcn/spinner';
+import { FieldContent, FieldDescription, FieldGroup } from '@/components/ui/field';
 import { createRuleAction } from '../action';
 import { RulesMaxSize } from '../constants';
 import { createRuleFormSchema } from '../schema';

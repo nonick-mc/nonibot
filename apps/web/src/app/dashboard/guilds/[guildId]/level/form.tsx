@@ -25,8 +25,8 @@ import { ControlledRoleSelect } from '@/components/rhf/role-select';
 import { ControlledSelect, ControlledSelectTrigger } from '@/components/rhf/select';
 import { ControlledSwitch } from '@/components/rhf/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/shadcn/card';
-import { FieldContent, FieldDescription, FieldGroup, FieldSeparator } from '@/components/shadcn/field';
 import { SelectContent, SelectGroup, SelectItem, SelectValue } from '@/components/shadcn/select';
+import { FieldContent, FieldDescription, FieldGroup, FieldSeparator } from '@/components/ui/field';
 import { updateSettingAction } from './action';
 import { RoleRewardsField } from './role-rewards';
 import { formSchema } from './schema';
@@ -106,7 +106,7 @@ export function SettingForm({
                       control={form.control}
                       name='notifyMode'
                       orientation='responsive'
-                      align='center'
+                      className='items-center'
                       disabled={!enabled}
                     >
                       <FieldContent>
@@ -145,7 +145,7 @@ export function SettingForm({
                                 control={form.control}
                                 name='notifyChannel'
                                 orientation='responsive'
-                                align='center'
+                                className='items-center'
                                 disabled={!enabled || notifyMode !== 'fixedChannel'}
                               >
                                 <FieldContent>

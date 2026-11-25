@@ -22,7 +22,7 @@ import {
 } from '@/components/rhf/field';
 import { ControlledSwitch } from '@/components/rhf/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/shadcn/card';
-import { FieldContent, FieldDescription, FieldGroup, FieldSeparator } from '@/components/shadcn/field';
+import { FieldContent, FieldDescription, FieldGroup, FieldSeparator } from '@/components/ui/field';
 import { updateSettingAction } from './action';
 import { formSchema } from './schema';
 
@@ -93,7 +93,7 @@ export function SettingForm({
                       control={form.control}
                       name='channel'
                       orientation='responsive'
-                      align='center'
+                      className='items-center'
                       disabled={!enabled}
                     >
                       <FieldContent>

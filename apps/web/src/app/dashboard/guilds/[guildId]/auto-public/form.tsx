@@ -18,7 +18,7 @@ import {
 import { ControlledRoleSelect } from '@/components/rhf/role-select';
 import { ControlledSwitch } from '@/components/rhf/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/shadcn/card';
-import { FieldContent, FieldDescription, FieldGroup, FieldSeparator } from '@/components/shadcn/field';
+import { FieldContent, FieldDescription, FieldGroup, FieldSeparator } from '@/components/ui/field';
 import { updateSettingAction } from './action';
 import { formSchema } from './schema';
 

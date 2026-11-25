@@ -41,10 +41,10 @@ import {
   DropdownMenuTrigger,
 } from '@/components/shadcn/dropdown-menu';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/shadcn/empty';
-import { FieldContent, FieldGroup } from '@/components/shadcn/field';
 import { InputGroupAddon, InputGroupButton } from '@/components/shadcn/input-group';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/shadcn/popover';
 import { Separator } from '@/components/shadcn/separator';
+import { FieldContent, FieldGroup } from '@/components/ui/field';
 import { useComponentEditorContext } from '../context';
 import { EditorCard } from '../editor-card';
 import { defaultComponentValues } from '../schema';
@@ -155,7 +155,7 @@ export function ContainerEditor() {
                 control={form.control}
                 name={`${basePath}.accent_color`}
                 orientation='responsive'
-                align='center'
+                className='items-center'
               >
                 <FieldContent>
                   <ControlledFieldLabel>

@@ -1,6 +1,6 @@
 import type { Select as SelectPrimitive } from '@base-ui/react/select';
 import type { ComponentProps } from 'react';
-import { Select, SelectTrigger } from '../shadcn/select';
+import { Select, SelectTrigger } from '../ui/select';
 import { useControlledField } from './field';
 
 export function ControlledSelect<Value, Multiple extends boolean | undefined = false>(

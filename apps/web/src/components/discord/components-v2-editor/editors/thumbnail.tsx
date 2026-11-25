@@ -40,7 +40,7 @@ export function ThumbnailEditor({
           control={control}
           name={`${basePath}.media.url`}
           orientation='vertical'
-          align='center'
+          className='items-center'
         >
           <ControlledFieldLabel className='sr-only'>画像</ControlledFieldLabel>
           <InputGroup>

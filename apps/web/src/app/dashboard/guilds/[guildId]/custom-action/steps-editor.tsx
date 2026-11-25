@@ -44,8 +44,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/shadcn/dropdown-menu';
-import { FieldContent, FieldDescription, FieldGroup, FieldSeparator } from '@/components/shadcn/field';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/shadcn/popover';
+import { FieldContent, FieldDescription, FieldGroup, FieldSeparator } from '@/components/ui/field';
 import type { stepsSchema } from './schema';
 
 export type Steps = z.infer<typeof stepsSchema>;

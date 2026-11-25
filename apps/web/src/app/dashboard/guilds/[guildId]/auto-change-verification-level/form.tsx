@@ -22,6 +22,8 @@ import { ControlledSelect, ControlledSelectTrigger } from '@/components/rhf/sele
 import { ControlledSwitch } from '@/components/rhf/switch';
 import { Button } from '@/components/shadcn/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/shadcn/card';
+import { InputGroup, InputGroupAddon } from '@/components/shadcn/input-group';
+import { SelectContent, SelectGroup, SelectItem, SelectValue } from '@/components/shadcn/select';
 import {
   Field,
   FieldContent,
@@ -30,9 +32,7 @@ import {
   FieldGroup,
   FieldLabel,
   FieldSeparator,
-} from '@/components/shadcn/field';
-import { InputGroup, InputGroupAddon } from '@/components/shadcn/input-group';
-import { SelectContent, SelectGroup, SelectItem, SelectValue } from '@/components/shadcn/select';
+} from '@/components/ui/field';
 import { updateSettingAction } from './action';
 import { formSchema } from './schema';
 

@@ -1,12 +1,12 @@
 import { ControlledRadioGroup } from '@/components/rhf/radio-group';
+import { RadioGroupItem } from '@/components/shadcn/radio-group';
 import {
   Field,
   FieldContent,
   FieldDescription,
   FieldLabel,
   FieldTitle,
-} from '@/components/shadcn/field';
-import { RadioGroupItem } from '@/components/shadcn/radio-group';
+} from '@/components/ui/field';
 
 const captchaTypeOptions = [
   {

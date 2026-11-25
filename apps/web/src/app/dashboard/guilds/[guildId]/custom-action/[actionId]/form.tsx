@@ -19,7 +19,7 @@ import {
 import { ControlledInput } from '@/components/rhf/input';
 import { Button } from '@/components/shadcn/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/shadcn/card';
-import { FieldContent, FieldGroup } from '@/components/shadcn/field';
+import { FieldContent, FieldGroup } from '@/components/ui/field';
 import { updateCustomAction } from '../action';
 import { DeleteDialog } from '../delete-dialog';
 import { updateFormSchema } from '../schema';
@@ -77,7 +77,7 @@ export function SettingForm({
                 control={form.control}
                 name='name'
                 orientation='responsive'
-                align='center'
+                className='items-center'
               >
                 <FieldContent>
                   <ControlledFieldLabel>アクション名</ControlledFieldLabel>

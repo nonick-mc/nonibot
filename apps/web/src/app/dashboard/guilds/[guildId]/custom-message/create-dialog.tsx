@@ -31,7 +31,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/shadcn/dialog';
-import { FieldContent, FieldDescription, FieldGroup, FieldSeparator } from '@/components/shadcn/field';
 import {
   Questionnaire,
   QuestionnaireActions,
@@ -44,6 +43,7 @@ import {
   QuestionnaireTitle,
 } from '@/components/shadcn/questionnaire';
 import { Spinner } from '@/components/shadcn/spinner';
+import { FieldContent, FieldDescription, FieldGroup, FieldSeparator } from '@/components/ui/field';
 import { uniqueName } from '@/lib/unique-name';
 import { sendMessageAction } from './action';
 import { createFormSchema } from './schema';

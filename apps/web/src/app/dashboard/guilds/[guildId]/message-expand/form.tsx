@@ -18,7 +18,7 @@ import {
 } from '@/components/rhf/field';
 import { ControlledSwitch } from '@/components/rhf/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/shadcn/card';
-import { FieldContent, FieldDescription, FieldGroup, FieldSeparator } from '@/components/shadcn/field';
+import { FieldContent, FieldDescription, FieldGroup, FieldSeparator } from '@/components/ui/field';
 import { updateSettingAction } from './action';
 import { ControlledOptionMultiSelect } from './option-select';
 import { formSchema, ignorePrefixes } from './schema';

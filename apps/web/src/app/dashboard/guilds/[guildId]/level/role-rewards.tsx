@@ -32,9 +32,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/shadcn/dialog';
-import { Field, FieldContent, FieldDescription, FieldGroup } from '@/components/shadcn/field';
 import { SelectContent, SelectGroup, SelectItem, SelectValue } from '@/components/shadcn/select';
 import { Separator } from '@/components/shadcn/separator';
+import { Field, FieldContent, FieldDescription, FieldGroup } from '@/components/ui/field';
 import { useDialogState } from '@/hooks/use-dialog-state';
 import { cn } from '@/lib/utils';
 import { type formSchema, roleRewardSchema } from './schema';

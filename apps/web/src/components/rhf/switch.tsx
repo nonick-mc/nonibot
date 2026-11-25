@@ -1,7 +1,7 @@
 'use client';
 
 import type { ComponentProps } from 'react';
-import { Switch } from '../shadcn/switch';
+import { Switch } from '../ui/switch';
 import { useControlledField } from './field';
 
 export function ControlledSwitch(props: ComponentProps<typeof Switch>) {

@@ -1,7 +1,7 @@
 'use client';
 
 import type { ComponentProps } from 'react';
-import { Input } from '../shadcn/input';
+import { Input } from '../ui/input';
 import { useControlledField } from './field';
 
 export function ControlledInput(props: ComponentProps<typeof Input>) {

@@ -30,11 +30,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/shadcn/dropdown-menu';
-import { FieldContent, FieldDescription, FieldGroup, FieldSeparator } from '@/components/shadcn/field';
 import { InputGroup, InputGroupAddon } from '@/components/shadcn/input-group';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/shadcn/popover';
 import { SelectContent, SelectGroup, SelectItem, SelectValue } from '@/components/shadcn/select';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/shadcn/tooltip';
+import { FieldContent, FieldDescription, FieldGroup, FieldSeparator } from '@/components/ui/field';
 import { DiscordButtonEmoji } from '../../preview/button';
 import { ComponentEditorContext, useEditorResources } from '../context';
 import { EditorCard } from '../editor-card';
@@ -182,7 +182,7 @@ function ButtonLabelField({ basePath }: { basePath: string }) {
       control={control}
       name={`${basePath}.label`}
       orientation='responsive'
-      align='center'
+      className='items-center'
     >
       <FieldContent>
         <ControlledFieldLabel>ラベル</ControlledFieldLabel>
@@ -224,7 +224,7 @@ function InteractiveButtonCard({
                   control={control}
                   name={`${basePath}.style`}
                   orientation='vertical'
-                  align='center'
+                  className='items-center'
                 >
                   <FieldContent>
                     <ControlledFieldLabel>
@@ -263,7 +263,7 @@ export function UserActionButtonEditor(props: ButtonEditorProps) {
         control={control}
         name={`${props.basePath}.custom_id`}
         orientation='responsive'
-        align='center'
+        className='items-center'
       >
         <FieldContent>
           <ControlledFieldLabel>ボタンを押した際のアクション</ControlledFieldLabel>
@@ -311,7 +311,7 @@ export function URLButtonEditor({ basePath, onRemove, withSortableItemHandle }: 
             control={control}
             name={`${basePath}.url`}
             orientation='responsive'
-            align='center'
+            className='items-center'
           >
             <FieldContent>
               <ControlledFieldLabel>URL</ControlledFieldLabel>

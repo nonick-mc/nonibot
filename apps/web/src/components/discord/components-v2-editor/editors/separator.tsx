@@ -11,10 +11,10 @@ import {
 import { ControlledSelect, ControlledSelectTrigger } from '@/components/rhf/select';
 import { ControlledSwitch } from '@/components/rhf/switch';
 import { Button } from '@/components/shadcn/button';
-import { FieldContent, FieldGroup } from '@/components/shadcn/field';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/shadcn/popover';
 import { SelectContent, SelectGroup, SelectItem, SelectValue } from '@/components/shadcn/select';
 import { Separator } from '@/components/shadcn/separator';
+import { FieldContent, FieldGroup } from '@/components/ui/field';
 import { useComponentEditorContext } from '../context';
 import { EditorCard } from '../editor-card';
 
@@ -36,7 +36,7 @@ export function SeparatorEditor() {
                 control={control}
                 name={`${basePath}.spacing`}
                 orientation='horizontal'
-                align='center'
+                className='items-center'
               >
                 <FieldContent>
                   <ControlledFieldLabel>

@@ -24,9 +24,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/shadcn/dialog';
-import { FieldContent, FieldDescription, FieldGroup } from '@/components/shadcn/field';
 import { Spinner } from '@/components/shadcn/spinner';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/shadcn/tooltip';
+import { FieldContent, FieldDescription, FieldGroup } from '@/components/ui/field';
 import { sendPanelAction } from './action';
 import { sendPanelFormSchema } from './schema';
 

@@ -16,8 +16,8 @@ import {
   AlertDialogTrigger,
 } from '@/components/shadcn/alert-dialog';
 import { Checkbox } from '@/components/shadcn/checkbox';
-import { Field, FieldLabel } from '@/components/shadcn/field';
 import { Spinner } from '@/components/shadcn/spinner';
+import { Field, FieldLabel } from '@/components/ui/field';
 import { deleteSavedMessageAction } from './action';
 
 type DeleteDialogProps = {
